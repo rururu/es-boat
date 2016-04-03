@@ -1,0 +1,38 @@
+2016.04.02 11:52:52.317 MSK INFO: *** SYSTEM START ***
+2016.04.02 12:01:36.628 MSK INFO: *** SYSTEM START ***
+2016.04.02 12:03:29.952 MSK INFO: *** SYSTEM START ***
+2016.04.02 12:04:15.561 MSK INFO: *** SYSTEM START ***
+2016.04.02 12:07:50.228 MSK INFO: *** SYSTEM START ***
+2016.04.02 12:07:52.833 MSK INFO: *** SYSTEM START ***
+2016.04.02 12:07:52.847 MSK WARNING: Look and feel not found: com.jgoodies.looks.plastic.PlasticLookAndFeel -- SystemUtilities.setLookAndFeel()
+2016.04.02 12:07:53.223 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.04.02 12:07:53.511 MSK SEVERE: Unable to load project from: file:/home/ru/clojure/proframes/.pprj -- Project.getProjectInstancesReader()
+2016.04.02 12:07:54.876 MSK INFO: Load time for file:/home/ru/clojure/proframes/.pprj = 0 sec (project) + 1 sec (ui) -- ProjectManager$3.run()
+2016.04.02 21:34:26.484 MSK INFO: *** SYSTEM START ***
+2016.04.02 21:34:26.501 MSK WARNING: Look and feel not found: com.jgoodies.looks.plastic.PlasticLookAndFeel -- SystemUtilities.setLookAndFeel()
+2016.04.02 21:34:27.004 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.04.02 21:34:27.528 MSK INFO: Load time for file:/Users/ru/clojure/proframes/projects/Clojure.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.04.02 21:39:16.673 MSK INFO: *** SYSTEM START ***
+2016.04.02 21:39:16.678 MSK WARNING: Look and feel not found: com.jgoodies.looks.plastic.PlasticLookAndFeel -- SystemUtilities.setLookAndFeel()
+2016.04.02 21:39:17.097 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.04.02 21:39:17.592 MSK INFO: Load time for file:/Users/ru/clojure/proframes/projects/Clojure.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.04.02 21:53:46.990 MSK INFO: *** SYSTEM START ***
+2016.04.02 21:53:47.424 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.04.02 21:53:47.981 MSK INFO: Load time for file:/Users/ru/clojure/proframes/projects/Clojure.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.04.02 21:59:11.083 MSK INFO: *** SYSTEM START ***
+2016.04.02 21:59:14.021 MSK INFO: *** SYSTEM START ***
+2016.04.02 21:59:14.424 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.04.02 21:59:14.976 MSK INFO: Load time for file:/Users/ru/clojure/proframes/projects/Clojure.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.04.02 22:04:07.337 MSK INFO: *** SYSTEM START ***
+2016.04.02 22:04:10.235 MSK INFO: *** SYSTEM START ***
+2016.04.02 22:04:10.638 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.04.02 22:04:11.177 MSK INFO: Load time for file:/Users/ru/clojure/proframes/projects/Clojure.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.04.02 22:08:38.630 MSK INFO: *** SYSTEM START ***
+2016.04.02 22:08:39.046 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.04.02 22:08:39.612 MSK INFO: Load time for file:/Users/ru/clojure/proframes/projects/Clojure.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.04.02 22:25:47.621 MSK INFO: *** SYSTEM START ***
+2016.04.02 22:25:48.052 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.04.02 22:25:48.624 MSK INFO: Load time for file:/Users/ru/clojure/proframes/projects/Clojure.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.04.03 13:15:02.401 MSK INFO: *** SYSTEM START ***
+2016.04.03 13:15:03.435 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.04.03 13:15:04.941 MSK INFO: Load time for file:/Users/ru/clojure/proframes/projects/Clojure.pprj = 0 sec (project) + 1 sec (ui) -- ProjectManager$3.run()

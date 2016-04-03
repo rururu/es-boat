@@ -1,0 +1,6 @@
+(str (.toURI (java.io.File. "maven_repository")))
+(-main)
+(exit)
+(-main)
+(exit)
+(-main)
