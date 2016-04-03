@@ -1,0 +1,102 @@
+; Sun Apr 03 22:11:14 MSK 2016
+; 
+;+ (version "3.5")
+;+ (build "Build 663")
+
+([ProServer_Class0] of  CloProgram
+
+	(cloFunctions [ProServer_Class2])
+	(cloNamespace [ProServer_Class1])
+	(title "Clojure Work"))
+
+([ProServer_Class1] of  CloNamespace
+
+	(source "(:use protege.core)\n(:import clojuretab.ClojureTab)")
+	(title "menu.item"))
+
+([ProServer_Class10000] of  CloProgram
+
+	(cloFunctions
+		[ProServer_Class10010]
+		[ProServer_Class10011]
+		[ProServer_Class10012])
+	(cloNamespace [ProServer_Class10001])
+	(cloVars
+		[ProServer_Class10003]
+		[ProServer_Class10004]
+		[ProServer_Class10005]
+		[ProServer_Class10006]
+		[ProServer_Class10007]
+		[ProServer_Class10008]
+		[ProServer_Class10009])
+	(documentation [ProServer_Class10002])
+	(title "Boat Movement"))
+
+([ProServer_Class10001] of  CloNamespace
+
+	(title "boat.mov"))
+
+([ProServer_Class10002] of  CloDocumentation
+
+	(source "All boats data:\n\nBOATS - { id1 <boat_data1> ... }\n\nBoat data:\n\n{:lat<lat-degrees-float> \n :lon <lon-degrees-float> \n :crs <crs-degrees-int> \n :spd <spd-knots-int>\n :helm <:steady/:port/:hard-port/:starboard/:hard-starboard>\n :engine <target speed-knots-int (negative = reverse)>}\n\nBoat constants:\n\nCRS-STP - step of normal course update\nCRS-HRD - step of hard course update\n\nSPD-STP - step of speed update\nSPD-MAX - max speed (positive)\nSPD-MIN - min speed (negative)\n\nBOAT-TIO - timeout interval of boat data update\n\nAPI:\n\n(helm id cmd) ;; cmd=<:steady/:starboard/:hard-starboard/:port/:hard-port>\n(speed id knots) ;; knots-int"))
+
+([ProServer_Class10003] of  CloVar
+
+	(source "(defonce BOATS (volatile! {}))")
+	(title "DEF-BOATS"))
+
+([ProServer_Class10004] of  CloVar
+
+	(source "12")
+	(title "CRS-STP"))
+
+([ProServer_Class10005] of  CloVar
+
+	(source "36")
+	(title "CRS-HRD"))
+
+([ProServer_Class10006] of  CloVar
+
+	(source "0.2")
+	(title "SPD-STP"))
+
+([ProServer_Class10007] of  CloVar
+
+	(source "44")
+	(title "SPD-MAX"))
+
+([ProServer_Class10008] of  CloVar
+
+	(source "-8")
+	(title "SPD-MIN"))
+
+([ProServer_Class10009] of  CloVar
+
+	(source "1000")
+	(title "BOAT-TIO"))
+
+([ProServer_Class10010] of  CloFunction
+
+	(source "([id cmd]\n  (vswap! BOATS assoc-in [id :helm] cmd))\n([bdt]\n  (letfn [(cp [crs] (if (>= crs 360) (- crs 360) crs))\n             (cm [crs] (if (< crs 0) (+ crs 360) crs))]\n    (condp = (:helm bdt)\n      :steady bdt\n      :starboard (assoc bdt :crs (cp (+ (:crs bdt) CRS-STP)))\n      :hard-starboard (assoc bdt :crs (cp (+ (:crs bdt) CRS-HRD)))\n      :port (assoc bdt :crs (cm (- (:crs bdt) CRS-STP)))\n      :hard-port (assoc bdt :crs (cm (- (:crs bdt) CRS-HRD))))))")
+	(title "helm"))
+
+([ProServer_Class10011] of  CloFunction
+
+	(source "([id knots]\n  (vswap! BOATS assoc-in [id :engine] knots))\n([bdt]\n  (let [old (:spd bdt)\n         new (:engine bdt)]\n    (cond\n      (= new old) bdt\n      (and (> new old) (< old SPD-MAX)) (assoc bdt :spd (+ old SPD-STP))\n      (and (< new old) (> old SPD-MIN)) (assoc bdt :spd (- old SPD-STP))\n      true bdt)))")
+	(title "speed"))
+
+([ProServer_Class10012] of  CloFunction
+
+	(title "move [bdt]"))
+
+([ProServer_Class2] of  CloFunction
+
+	(source "(println \"INITIALIZING EXPERT SYSTEM\")\n(println \"1.Loading Clojure Programs...\")\n(if-let [wps (seq (cls-instances \"WorkingPrograms\"))]\n  (loop [i 1 pins (svs (first wps) \"cloPrograms\")]\n    (when (seq pins)\n      (println (str \" 1.\" i \" \" (sv (first pins) \"title\") \" = \" (ClojureTab/loadProgram (first pins)) ))\n      (recur (inc i) (rest pins))))\n  (println \"  Instance of WorkingPrograms not found!\"))\n(println \"2. ...\")\n(println \"EXPERT SYSTEM INITIALIZED\")")
+	(title "clojure-work []"))
+
+([ProServer_Class3] of  WorkingPrograms
+
+	(cloPrograms
+		[Clojure_Class10000]
+		[RuleEngine_Class30000])
+	(title "ProServer Working Programs"))

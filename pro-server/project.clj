@@ -7,7 +7,8 @@
                  [protege/unicode_panel "3.5.0"]
                  [protege/JGo "3.5.0"]
                  [protege/JGoLayout "3.5.0"]
-                 [protege/ClojureTab "1.5.0"]]
+                 [protege/ClojureTab "1.5.0"]
+                 [rete "5.2.4-SNAPSHOT"]]
   :javac-options ["-target" "1.6" "-source" "1.6" "-Xlint:-options"]
   :repositories {"local" ~(str (.toURI (java.io.File. "repo")))}
   :aot [proframes.core]

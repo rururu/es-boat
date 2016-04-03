@@ -1,7 +1,11 @@
-# proframes
+# pro-server
 
-A Clojure app to ... well, that part is up to you.
+A server based on Protege-3.5 ontology editor and rete4frames rule engine.
 
 ## Usage
 
-FIXME
+1. Simple start:
+```
+$ cd <..>/pro-server
+$ lein run
+```
