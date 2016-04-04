@@ -2,16 +2,18 @@
 (:require
   [protege.core :as p]
   [rete.core :as rete]))
+
 (def LOGS (atom {}))
 (defn mk-templates [clss]
-(letfn [(mk-tpl [cls]
+  (letfn [(mk-tpl [cls]
 	(concat [(symbol (.getName cls)) 'INSTANCE]
 	  (map #(symbol (.getName %)) (.getTemplateSlots cls))))]
   (if (seq? clss)
     (map mk-tpl clss)
     (mk-templates (.getSubclasses clss)) )))
+
 (defn mk-rule [rule trace]
-(when-let [ri (if (string? rule)
+  (when-let [ri (if (string? rule)
 	(p/fifos "Rule" "title" rule)
 	rule)]
   (let [nm (p/sv ri "title")
@@ -20,8 +22,9 @@
         lhs (read-string (str "(" (p/sv ri "lhs") ")"))
         rhs (read-string (str "(" (p/sv ri "rhs") ")"))]
     (concat [nm sal] lhs ['=>] rhs))))
+
 (defn mk-frame [ins]
-(letfn [(sval [slt ins]
+  (letfn [(sval [slt ins]
 	(or
  	  (if (.getAllowsMultipleValues slt)
 	    (.getOwnSlotValues ins slt)
@@ -32,10 +35,12 @@
         svs (mapcat #(list (symbol (.getName %)) (sval % ins)) slots)
         svs (cons 'INSTANCE (cons (.getName ins) svs))]
     (cons (symbol (.getName typ)) svs))))
+
 (defn facts-from-classes [fcs]
-(mapcat #(.getInstances %) fcs))
+  (mapcat #(.getInstances %) fcs))
+
 (defn run-engine
-([hm inst]
+  ([hm inst]
   (println [:RUN-ENGINE (p/sv inst "title")])
   (let [mp (into {} hm)
         rss (mp "rule-sets")
@@ -64,27 +69,32 @@
       (doseq [f facts]
           (rete/assert-frame (mk-frame f))
           (rete/fire)) ) )))
+
 (defn assert-instances [inss]
-(doseq [ins inss]
+  (doseq [ins inss]
   (rete/assert-frame (mk-frame ins))))
+
 (defn retract-instances [inss]
-(doseq [ins inss]
+  (doseq [ins inss]
   (doseq [fact (rete/facts-with-slot-value 'INSTANCE = (.getName ins))]
     (rete/retract-fact (first fact) true))))
+
 (defn ass-inss [hm inst]
-(let [mp (into {} hm)
+  (let [mp (into {} hm)
       clw (mp "clsWidget")
       sel (.getSelection (.getSlotWidget clw (p/slt "instances")))]
   (if (seq sel)
     (assert-instances sel))))
+
 (defn retr-inss [hm inst]
-(let [mp (into {} hm)
+  (let [mp (into {} hm)
       clw (mp "clsWidget")
       sel (.getSelection (.getSlotWidget clw (p/slt "instances")))]
   (if (seq sel)
     (retract-instances sel))))
+
 (defn pp [typ]
-(let [all (rete/fact-list)
+  (let [all (rete/fact-list)
       sel (if (= typ :all) all (filter #(= (second %) typ) all))]
   (doseq [fact sel]
     (p/ctpl "")
@@ -92,8 +102,9 @@
       (p/ctpl (str "Fact" n " " typ))
       (doseq [sv rp]
         (p/ctpl (str "  " (first sv) " " (second sv))) ) ))))
+
 (defn sp [typ]
-(let [all (rete/fact-list)
+  (let [all (rete/fact-list)
       sel (if (= typ :all) all (filter #(= (second %) typ) all))]
   (def k 0)
   (doseq [fact sel]
@@ -101,8 +112,9 @@
           mp (apply hash-map rp)]
       (p/ctpl (str k " " typ " " (or (mp 'title) (mp 'label)) " status: " (mp 'status) " fact: " n))
       (def k (inc k)) ) )))
+
 (defn cv [val]
-(let [all (rete/fact-list)
+  (let [all (rete/fact-list)
       sel (filter #(some #{val} %) all)]
   (def k 0)
   (doseq [fact sel]
@@ -110,16 +122,18 @@
           mp (apply hash-map rp)]
       (p/ctpl (str k " " typ " " (or (mp 'title) (mp 'label)) " status: " (mp 'status) " fact: " n))
       (def k (inc k)) ) )))
+
 (defn f [n]
-(let [all (rete/fact-list)
+  (let [all (rete/fact-list)
       fact (first (filter #(= (first %) n) all))]
   (if fact
     (let [[[n typ] & rp] (partition-all 2 fact)]
       (p/ctpl (str "Fact" n " " typ))
       (doseq [sv rp]
         (p/ctpl (str "  " (first sv) " " (second sv))) ) ))))
+
 (defn dr []
-(if-let [rr (seq (p/cls-instances "Rule"))]
+  (if-let [rr (seq (p/cls-instances "Rule"))]
   (let [fn "Rules.clj"]
     (with-open [wrtr (clojure.java.io/writer fn)]
       (doseq [r rr]
@@ -128,8 +142,9 @@
         (.write wrtr "=>\n")
         (.write wrtr (str (p/sv r "rhs") ")\n\n")) ))
     (str "Written " (count rr) " rules into " fn))))
+
 (defn sts []
-(letfn [(ads [stm [fid typ mp]]
+  (letfn [(ads [stm [fid typ mp]]
 	(if-let [ste (typ stm)]
 	  (assoc stm typ (inc ste))
 	  (assoc stm typ 1)))]
@@ -139,20 +154,26 @@
          str (reverse sto)]
     (p/ctpls str)
     (count fl))))
+
 (defn typmap-by-id [fid]
-(let [funarg (@rete/IDFACT fid)]
+  (let [funarg (@rete/IDFACT fid)]
   (if (not= funarg :deleted)
     (let [[typ mp] (rete/to-typmap funarg)]
       [typ mp fid]))))
+
 (defn typmapfids
-([]
+  ([]
  (filter #(not= (second %) nil)
           (for [i (range @rete/FCNT)](typmap-by-id i))))
 ([typ]
  (filter #(= (first %) typ) (typmapfids))))
+
 (defn fire-all-rules [hm inst]
-(rete/fire))
+  (rete/fire))
+
 (defn do-reset [hm inst]
-(rete/reset))
+  (rete/reset))
+
 (defn bnp []
-(rete/log-lst "beta-net-plan.txt" rete/BPLAN))
+  (rete/log-lst "beta-net-plan.txt" rete/BPLAN))
+

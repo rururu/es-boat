@@ -5,48 +5,61 @@
  edu.stanford.smi.protege.model.ValueType
  edu.stanford.smi.protege.model.Instance
  clojuretab.ClojureTab))
+
 (def ^:dynamic *prj* (.getCurrentProject (ProjectManager/getProjectManager)))
 (def ^:dynamic *kb* (.getKnowledgeBase *prj*))
 (defn ins [name]
-(.getInstance *kb* name))
+  (.getInstance *kb* name))
+
 (defn cls-instances [cls-name]
-; Returns instances of cls
+  ; Returns instances of cls
 (.getInstances (.getCls *kb* cls-name)))
+
 (defn ctp [s]
-; Print s into REPL and return s
+  ; Print s into REPL and return s
 (clojuretab.ClojureTab/replappend (print-str s))
 s)
+
 (defn ctpl [s]
-; Print s as line into REPL and return s
+  ; Print s as line into REPL and return s
 (clojuretab.ClojureTab/replappend (str s "\n"))
 s)
+
 (defn ctpls [s]
-(doall (map ctpl s))
+  (doall (map ctpl s))
 s)
+
 (defn cls [name]
-(.getCls *kb* name))
+  (.getCls *kb* name))
+
 (defn slt [name]
-(.getSlot *kb* name))
+  (.getSlot *kb* name))
+
 (defn sv [instance slot-name]
-; Return singl slot value of instance
+  ; Return singl slot value of instance
 (.getOwnSlotValue instance (.getSlot *kb* slot-name)))
+
 (defn svs [instance slot-name]
-; Return multiple slot values of instance
+  ; Return multiple slot values of instance
 (.getOwnSlotValues instance (.getSlot *kb* slot-name)))
+
 (defn ssv [instance slot-name value]
-; Set singl slot value of instance
+  ; Set singl slot value of instance
 (.setOwnSlotValue instance (.getSlot *kb* slot-name) value))
+
 (defn ssvs [instance slot-name values]
-; Set multiple slot values of instance
+  ; Set multiple slot values of instance
 (.setOwnSlotValues instance (.getSlot *kb* slot-name) values))
+
 (defn crec [name & parents]
-; Create and return class with parent classes
+  ; Create and return class with parent classes
 (let [prs (if parents
                 (map #(.getCls *kb* %) parents)
                 (list (.getCls *kb* ":THING")))]
  (.createCls *kb* name prs)))
+
 (defn cres [name & options]
-; Create and return slot.
+  ; Create and return slot.
 ; Key parameters: :type, :cardinality, :classes, :default
 (let [opts (apply hash-map options)
        typ (condp = (opts :type)
@@ -78,42 +91,52 @@ s)
   (if (= typ (ValueType/INSTANCE))
       (.setAllowedClses slot cls))
   slot))
+
 (defn crin [cls]
-; Return new instance of class cls
+  ; Return new instance of class cls
 (.createInstance *kb* nil (.getCls *kb* cls)))
+
 (defn delin [instance]
-; Delete instance
+  ; Delete instance
 (.deleteInstance *kb* instance))
+
 (defn fifos [cls slot value]
-;; Find insance of class cls with slot of value, or create it
+  ;; Find insance of class cls with slot of value, or create it
 (ClojureTab/findForSlotValue cls slot value))
+
 (defn foc [cls slot value]
-;; Find insance of class cls with slot of value, or create it
+  ;; Find insance of class cls with slot of value, or create it
 (let [ins (fifos cls slot value)]
   (or ins (let [ins (crin cls)] (ssv ins slot value) ins))))
+
 (defn see [x]
-(if (or (seq? x) (vector? x) (map? x))
+  (if (or (seq? x) (vector? x) (map? x))
     (do (ctpls x) (count x))
     (do (ctpl x) 1)))
+
 (defn selection [mp slot]
-;; working inside context containing ClsWidget for corresponding instance
+  ;; working inside context containing ClsWidget for corresponding instance
 (.getSelection (.getSlotWidget (mp "clsWidget") (slt slot))))
+
 (defmacro picat [code]
-`(try
+  `(try
    ~code
    (catch Throwable th#
       (print-cause-trace th#)
       (println))))
+
 (defmacro dbg [x]
-`(let [x# ~x]
+  `(let [x# ~x]
     (println "dbg:" '~x "=" x#)
     x#))
+
 (defn is? [boolslot]
-(not (or (nil? boolslot) 
+  (not (or (nil? boolslot) 
            (= boolslot Boolean/FALSE)
            (= boolslot '?))))
+
 (defn fainst [inss text]
-;; Find annotated instance
+  ;; Find annotated instance
 (let [sfs (.getSystemFrames *kb*)
        acl (.getAnnotationCls sfs)
        tsl (.getAnnotationTextSlot sfs)
@@ -128,8 +151,9 @@ s)
 	(or (nil? text) (.startsWith txt text)))
                ins
                (recur (rest ail)) ))) )))
+
 (defn itm [val dep]
-(if (instance? Instance val)
+  (if (instance? Instance val)
   (let [typ (.getDirectType val)
          sls (.getTemplateSlots typ)
          mp (apply hash-map (mapcat #(list (keyword (.getName %))
@@ -142,8 +166,9 @@ s)
 		    (itm (.getOwnSlotValue val %) (dec dep))))) sls))]
     (assoc mp :DIRTYP (.getName typ) :DEPTH dep))
   val))
+
 (defn mti
-([mp]
+  ([mp]
   (if (and (map? mp) (>= (:DEPTH mp) 0))
     (mti mp (:DEPTH mp))))
 ([mp dep]
@@ -159,16 +184,18 @@ s)
     (map? vmis) (ssv ins slt (mti vmis (dec dep)))
     true (ssv ins slt vmis))
   ins))
+
 (defn get-itom [path itm]
-(if (and (seq path) itm)
+  (if (and (seq path) itm)
   (let [[kv & rst] path]
     (get-itom rst 
       (if (and (vector? kv) (vector? itm))
         (first (filter #(= (get % (first kv)) (second kv)) itm))
         (kv itm))))
   itm))
+
 (defn put-itom [path itm val]
-(if (seq path)
+  (if (seq path)
   (let [[kv & rst] path]
     (if (and (vector? kv) (vector? itm))
       (if-let [fnd (first (filter #(= (get % (first kv)) (second kv)) itm))]
@@ -181,22 +208,27 @@ s)
             (put-itom rst fnd val)
             itm)))))
   val))
+
 (defmacro condp-> [expr & clauses]
-(let [g (gensym) 
+  (let [g (gensym) 
       pstep (fn [[pred step]] `(if (~pred ~g) (-> ~g ~step) ~g))] 
   `(let [~g ~expr 
            ~@(interleave (repeat g) (map pstep (partition 2 clauses)))] 
        ~g)))
+
 (defmacro condas-> [expr name & clauses]
-(assert (even? (count clauses)))
+  (assert (even? (count clauses)))
 (let [pstep (fn [[test step]] `(if ~test ~step ~name))]
   `(let [~name ~expr
            ~@(interleave (repeat name) (map pstep (partition 2 clauses)))]
        ~name)))
+
 (defn reg-gen [pfx atm]
-(let [old (or (@atm pfx) 0)
+  (let [old (or (@atm pfx) 0)
        num (inc old)]
   (swap! atm assoc pfx num)
   (str pfx num)))
+
 (defn pins? [x]
-(instance? Instance x))
+  (instance? Instance x))
+

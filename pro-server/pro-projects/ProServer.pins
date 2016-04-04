@@ -1,4 +1,4 @@
-; Mon Apr 04 08:11:31 MSK 2016
+; Mon Apr 04 13:34:27 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -22,7 +22,10 @@
 		[ProServer_Class10012]
 		[ProServer_Class20000]
 		[ProServer_Class20001]
-		[ProServer_Class20002])
+		[ProServer_Class20002]
+		[ProServer_Class50000]
+		[ProServer_Class50003]
+		[ProServer_Class50004])
 	(cloNamespace [ProServer_Class10001])
 	(cloVars
 		[ProServer_Class10003]
@@ -32,17 +35,19 @@
 		[ProServer_Class10007]
 		[ProServer_Class10008]
 		[ProServer_Class10009]
-		[ProServer_Class30000])
+		[ProServer_Class30000]
+		[ProServer_Class50002])
 	(documentation [ProServer_Class10002])
 	(title "Boat Movement"))
 
 ([ProServer_Class10001] of  CloNamespace
 
+	(source "(:require\n  [geo.calc :as geo]\n  [async.proc :as ap])")
 	(title "boat.mov"))
 
 ([ProServer_Class10002] of  CloDocumentation
 
-	(source "All boats data:\n\nBOATS - { id1 <boat_data1> ... }\n\nBoat data:\n\n{:coord [lat<lat-degrees-float> lon <lon-degrees-float>] \n :course <crs-degrees-int> \n :speed <spd-knots-int>\n :helm <:steady/:port/:hard-port/:starboard/:hard-starboard>\n :engine <target speed-knots-int (negative = reverse)>}\n\nBoat constants:\n\nCRS-STP - step of normal course update\nCRS-HRD - step of hard course update\n\nSPD-STP - step of speed update\nSPD-MAX - max speed (positive)\nSPD-MIN - min speed (negative)\n\nBOAT-TIO - timeout interval of boat data update\n\n\nAPI:\n\n(helm id cmd) ;; cmd=<:steady/:starboard/:hard-starboard/:port/:hard-port>\n(engine id knots) ;; knots-int\n(speed id)\n(course id)\n(coord id)"))
+	(source "All boats data:\n\nBOATS - { id1 <boat_data1> ... }\n\nBoat data:\n\n{:coord [lat<lat-degrees-float> lon <lon-degrees-float>] \n :course <crs-degrees-int> \n :speed <spd-knots-int>\n :helm <:steady/:port/:hard-port/:starboard/:hard-starboard>\n :engine <target speed-knots-int (negative = reverse)>}\n\nBoat constants:\n\nCRS-STP - step of normal course update\nCRS-HRD - step of hard course update\n\nSPD-STP - step of speed update\nSPD-MAX - max speed (positive)\nSPD-MIN - min speed (negative)\n\nBOAT-TIO - timeout interval of boat data update\n\n\nAPI:\n\n(helm id cmd) ;; cmd=<:steady/:starboard/:hard-starboard/:port/:hard-port>\n(engine id knots) ;; knots-int\n(speed id)\n(course id)\n(coord id)\n(add-boat id coord crs spd)"))
 
 ([ProServer_Class10003] of  CloVar
 
@@ -118,7 +123,10 @@
 
 	(cloPrograms
 		[Clojure_Class10000]
-		[RuleEngine_Class30000])
+		[RuleEngine_Class30000]
+		[ProServer_Class30001]
+		[ProServer_Class40001]
+		[ProServer_Class10000])
 	(title "ProServer Working Programs"))
 
 ([ProServer_Class30000] of  CloVar
@@ -195,3 +203,68 @@
 
 	(source "(let [ca (course-angle crs crd1 crd2)]\n    (or (> ca 90) (< ca -90)))")
 	(title "abaft [crs crd1 crd2]"))
+
+([ProServer_Class40000] of  ShareOnto
+
+	(but-deep-copy "Deep Copy Instance/share.onto/deep-copy")
+	(but-del-fil "Delete Filtered Instances/share.onto/delfil")
+	(but-del-unref "Delete Unreferenced/share.onto/delete-unref")
+	(but-find-unref "Find Unreferenced/share.onto/find-unref")
+	(but-load-prj "Load Source Project/share.onto/load-src-prj")
+	(but-shal-copy "Shallow Copy Instances/share.onto/shal-copy")
+	(source-project "DefaultKnowledgeBase(AdvisorSkipper)"))
+
+([ProServer_Class40001] of  CloProgram
+
+	(cloFunctions
+		[ProServer_Class40002]
+		[ProServer_Class40003]
+		[ProServer_Class40004]
+		[ProServer_Class40005])
+	(cloNamespace [ProServer_Class40006])
+	(title "Async Processing"))
+
+([ProServer_Class40002] of  CloFunction
+
+	(source "(when (not= @status-vol \"RUNNING\") \n  (if start-mess\n    (println start-mess))\n  (go (do \n          (while (and (= @status-vol \"RUNNING\")\n                          (or (nil? cond-func) (cond-func)))\n                (proc-func)\n                (<! (timeout time-out)))\n          (vreset! status-vol \"STOPPED\")))\n  (vreset! status-vol \"RUNNING\"))")
+	(title "start-proc [status-vol proc-func time-out cond-func start-mess]"))
+
+([ProServer_Class40003] of  CloFunction
+
+	(source "(vreset! status-vol \"STOP\")")
+	(title "stop-proc [status-vol]"))
+
+([ProServer_Class40004] of  CloFunction
+
+	(source "(= @status-vol \"RUNNING\")")
+	(title "running? [status-vol]"))
+
+([ProServer_Class40005] of  CloFunction
+
+	(source "(if start-mess\n  (println start-mess))\n(go (while true\n           (proc-func)\n           (<! (timeout time-out))))")
+	(title "repeater [proc-func time-out  start-mess]"))
+
+([ProServer_Class40006] of  CloNamespace
+
+	(source "(:require \n  [clojure.core.async :as async :refer [chan alts!! put! <! go timeout]])")
+	(title "async.proc"))
+
+([ProServer_Class50000] of  CloFunction
+
+	(source "(letfn [(mov []\n            (doseq [[id bdt] @BOATS]\n              (-> bdt\n                (engine)\n                (helm)\n                (move))))]\n  (ap/start-proc mov-status #(mov) BOAT-TIO nil \"Boats movement started..\"))")
+	(title "start-boats-movement []"))
+
+([ProServer_Class50002] of  CloVar
+
+	(source "\"START\"")
+	(title "mov-status"))
+
+([ProServer_Class50003] of  CloFunction
+
+	(source "(vreset! BOATS assoc id\n  [:coord coord\n   :course crs\n   :speed spd\n   :helm :steady\n   :engine spd])")
+	(title "add-boat [id coord crs spd]"))
+
+([ProServer_Class50004] of  CloFunction
+
+	(source "(vreset! BOATS dissoc id)")
+	(title "rem-boat [id]"))
