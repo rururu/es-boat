@@ -1,4 +1,4 @@
-; Sun Apr 03 23:17:10 MSK 2016
+; Mon Apr 04 08:11:31 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -31,7 +31,8 @@
 		[ProServer_Class10006]
 		[ProServer_Class10007]
 		[ProServer_Class10008]
-		[ProServer_Class10009])
+		[ProServer_Class10009]
+		[ProServer_Class30000])
 	(documentation [ProServer_Class10002])
 	(title "Boat Movement"))
 
@@ -41,7 +42,7 @@
 
 ([ProServer_Class10002] of  CloDocumentation
 
-	(source "All boats data:\n\nBOATS - { id1 <boat_data1> ... }\n\nBoat data:\n\n{:lat<lat-degrees-float> \n :lon <lon-degrees-float> \n :crs <crs-degrees-int> \n :spd <spd-knots-int>\n :helm <:steady/:port/:hard-port/:starboard/:hard-starboard>\n :engine <target speed-knots-int (negative = reverse)>}\n\nBoat constants:\n\nCRS-STP - step of normal course update\nCRS-HRD - step of hard course update\n\nSPD-STP - step of speed update\nSPD-MAX - max speed (positive)\nSPD-MIN - min speed (negative)\n\nBOAT-TIO - timeout interval of boat data update\n\nAPI:\n\n(helm id cmd) ;; cmd=<:steady/:starboard/:hard-starboard/:port/:hard-port>\n(engine id knots) ;; knots-int\n(speed id)\n(course id)\n(coord id)"))
+	(source "All boats data:\n\nBOATS - { id1 <boat_data1> ... }\n\nBoat data:\n\n{:coord [lat<lat-degrees-float> lon <lon-degrees-float>] \n :course <crs-degrees-int> \n :speed <spd-knots-int>\n :helm <:steady/:port/:hard-port/:starboard/:hard-starboard>\n :engine <target speed-knots-int (negative = reverse)>}\n\nBoat constants:\n\nCRS-STP - step of normal course update\nCRS-HRD - step of hard course update\n\nSPD-STP - step of speed update\nSPD-MAX - max speed (positive)\nSPD-MIN - min speed (negative)\n\nBOAT-TIO - timeout interval of boat data update\n\n\nAPI:\n\n(helm id cmd) ;; cmd=<:steady/:starboard/:hard-starboard/:port/:hard-port>\n(engine id knots) ;; knots-int\n(speed id)\n(course id)\n(coord id)"))
 
 ([ProServer_Class10003] of  CloVar
 
@@ -80,16 +81,17 @@
 
 ([ProServer_Class10010] of  CloFunction
 
-	(source "([id cmd]\n  (vswap! BOATS assoc-in [id :helm] cmd))\n([bdt]\n  (letfn [(cp [crs] (if (>= crs 360) (- crs 360) crs))\n             (cm [crs] (if (< crs 0) (+ crs 360) crs))]\n    (condp = (:helm bdt)\n      :steady bdt\n      :starboard (assoc bdt :crs (cp (+ (:crs bdt) CRS-STP)))\n      :hard-starboard (assoc bdt :crs (cp (+ (:crs bdt) CRS-HRD)))\n      :port (assoc bdt :crs (cm (- (:crs bdt) CRS-STP)))\n      :hard-port (assoc bdt :crs (cm (- (:crs bdt) CRS-HRD))))))")
+	(source "([id cmd]\n  (vswap! BOATS assoc-in [id :helm] cmd))\n([bdt]\n  (letfn [(cp [crs] (if (>= crs 360) (- crs 360) crs))\n             (cm [crs] (if (< crs 0) (+ crs 360) crs))]\n    (condp = (:helm bdt)\n      :steady bdt\n      :starboard (assoc bdt :course (cp (+ (:course bdt) CRS-STP)))\n      :hard-starboard (assoc bdt :course (cp (+ (:course bdt) CRS-HRD)))\n      :port (assoc bdt :course (cm (- (:course bdt) CRS-STP)))\n      :hard-port (assoc bdt :course (cm (- (:course bdt) CRS-HRD))))))")
 	(title "helm"))
 
 ([ProServer_Class10011] of  CloFunction
 
-	(source "([id knots]\n  (vswap! BOATS assoc-in [id :engine] knots))\n([bdt]\n  (let [old (:spd bdt)\n         new (:engine bdt)]\n    (cond\n      (= new old) bdt\n      (and (> new old) (< old SPD-MAX)) (assoc bdt :spd (+ old SPD-STP))\n      (and (< new old) (> old SPD-MIN)) (assoc bdt :spd (- old SPD-STP))\n      true bdt)))")
+	(source "([id knots]\n  (vswap! BOATS assoc-in [id :engine] knots))\n([bdt]\n  (let [old (:speed bdt)\n         new (:engine bdt)]\n    (cond\n      (= new old) bdt\n      (and (> new old) (< old SPD-MAX)) (assoc bdt :speed (+ old SPD-STP))\n      (and (< new old) (> old SPD-MIN)) (assoc bdt :speed (- old SPD-STP))\n      true bdt)))")
 	(title "engine"))
 
 ([ProServer_Class10012] of  CloFunction
 
+	(source "(vswap! bdt assoc :coord (geo/future-pos (:coord bdt) (:course bdt) (:speed bdt) tio-hrs))")
 	(title "move [bdt]"))
 
 ([ProServer_Class2] of  CloFunction
@@ -99,17 +101,17 @@
 
 ([ProServer_Class20000] of  CloFunction
 
-	(source "(get-in @BOATS [id :spd])")
+	(source "(get-in @BOATS [id :speed])")
 	(title "speed [id]"))
 
 ([ProServer_Class20001] of  CloFunction
 
-	(source "(get-in @BOATS [id :crs])")
+	(source "(get-in @BOATS [id :course])")
 	(title "course [id]"))
 
 ([ProServer_Class20002] of  CloFunction
 
-	(source "[(get-in @BOATS [id :lat])\n (get-in @BOATS [id :lon])]")
+	(source "(get-in @BOATS [id :coord])")
 	(title "coord [id]"))
 
 ([ProServer_Class3] of  WorkingPrograms
@@ -118,3 +120,78 @@
 		[Clojure_Class10000]
 		[RuleEngine_Class30000])
 	(title "ProServer Working Programs"))
+
+([ProServer_Class30000] of  CloVar
+
+	(source "(double (/ BOAT-TIO 3600000))")
+	(title "tio-hrs"))
+
+([ProServer_Class30001] of  CloProgram
+
+	(cloFunctions
+		[ProServer_Class30003]
+		[ProServer_Class30004]
+		[ProServer_Class30005]
+		[ProServer_Class30006]
+		[ProServer_Class30007]
+		[ProServer_Class30008]
+		[ProServer_Class30009]
+		[ProServer_Class30010]
+		[ProServer_Class30011]
+		[ProServer_Class30012])
+	(cloNamespace [ProServer_Class30002])
+	(title "Geo Calculus"))
+
+([ProServer_Class30002] of  CloNamespace
+
+	(title "geo.calc"))
+
+([ProServer_Class30003] of  CloFunction
+
+	(source "(let [cosphi1 (Math/cos phi1)\n        sinphi1 (Math/sin phi1)\n        cosaz (Math/cos az)\n        sinaz (Math/sin az)\n        sinc (Math/sin c)\n        cosc (Math/cos c)\n        phi2 (Math/asin (+ (* sinphi1 cosc) (* cosphi1 sinc cosaz)))\n        lam2 (+ (Math/atan2 (* sinc sinaz) (- (* cosphi1 cosc) (* sinphi1 sinc cosaz))) lambda0)]\n    [phi2 lam2])")
+	(title "spherical-between [^double phi1 ^double lambda0 ^double c ^double az]"))
+
+([ProServer_Class30004] of  CloFunction
+
+	(source "(let [pdiff (Math/sin (/ (- phi phi1) 2.0))\n        ldiff (Math/sin (/ (- lambda lambda0) 2.0))\n        rval (Math/sqrt (+ (* pdiff pdiff) (* (Math/cos phi1) (Math/cos phi) ldiff ldiff)))]\n    (* 2.0 (Math/asin rval)))")
+	(title "spherical-distance [^double phi1 ^double lambda0 ^double phi ^double lambda]"))
+
+([ProServer_Class30005] of  CloFunction
+
+	(source "(let [ldiff (- lambda lambda0)\n        cosphi (Math/cos phi)]\n    (Math/atan2 (* cosphi (Math/sin ldiff))\n                  (- (* (Math/cos phi1) (Math/sin phi)) (* (Math/sin phi1) cosphi (Math/cos ldiff)))))")
+	(title "spherical-azimuth [^double phi1 ^double lambda0 ^double phi ^double lambda]"))
+
+([ProServer_Class30006] of  CloFunction
+
+	(source "(let [phi (Math/toRadians lat)\n        lam (Math/toRadians lon)\n        dir (Math/toRadians crs)\n        way (* spd tim)\n        way (Math/toRadians (/ way 60))\n        [phi2 lam2] (spherical-between phi lam way dir)]\n    [(Math/toDegrees phi2) (Math/toDegrees lam2)])")
+	(title "future-pos [[lat lon] crs spd tim]"))
+
+([ProServer_Class30007] of  CloFunction
+
+	(source "(let [fi1 (Math/toRadians la1)\n        ld1 (Math/toRadians lo1)\n        fi2 (Math/toRadians la2)\n        ld2 (Math/toRadians lo2)\n        rad (spherical-distance fi1 ld1 fi2 ld2)]\n    (* (Math/toDegrees rad) 60))")
+	(title "distance-nm [[la1 lo1] [la2 lo2]]"))
+
+([ProServer_Class30008] of  CloFunction
+
+	(source "(let [fi1 (Math/toRadians la1)\n        ld1 (Math/toRadians lo1)\n        fi2 (Math/toRadians la2)\n        ld2 (Math/toRadians lo2)\n        rad (spherical-azimuth fi1 ld1 fi2 ld2)\n        deg (Math/toDegrees rad)]\n    (cond\n       (< deg 0) (+ deg 360.0)\n       (> deg 360.0) (- deg 360.0)\n       true deg))")
+	(title "bear-deg [[la1 lo1] [la2 lo2]]"))
+
+([ProServer_Class30009] of  CloFunction
+
+	(source "(let [denom (- (* (- y4 y3) (- x2 x1)) (* (- x4 x3) (- y2 y1)))]\n    (if (not (== denom 0.0))\n      (let [ua (/ (- (* (- x4 x3) (- y1 y3)) (* (- y4 y3) (- x1 x3))) denom)\n            ub (/ (- (* (- x2 x1) (- y1 y3)) (* (- y2 y1) (- x1 x3))) denom)]\n        (if (and (<= 0.0 ua 1.0) (<= 0.0 ub 1.0))\n          [(+ y1 (* ua (- y2 y1))) (+ x1 (* ua (- x2 x1)))]))))")
+	(title "seg-intersect [x1 y1 x2 y2 x3 y3 x4 y4]"))
+
+([ProServer_Class30010] of  CloFunction
+
+	(source "(let [rb (+ b 180)]\n    (if (> rb 360) (- rb 360) rb))")
+	(title "rev-bear [b]"))
+
+([ProServer_Class30011] of  CloFunction
+
+	(source "(let [bea (bear-deg [lat1 lon1] [lat2 lon2])\n        ca1 (- bea crs)]\n    (cond\n     (> ca1 180) (- ca1 360)\n     (< ca1 -180) (+ ca1 360)\n     true ca1))")
+	(title "course-angle [crs [lat1 lon1] [lat2 lon2]]"))
+
+([ProServer_Class30012] of  CloFunction
+
+	(source "(let [ca (course-angle crs crd1 crd2)]\n    (or (> ca 90) (< ca -90)))")
+	(title "abaft [crs crd1 crd2]"))
