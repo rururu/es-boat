@@ -11,61 +11,78 @@
 (def SPD-MIN -8)
 (def BOAT-TIO 1000)
 (def tio-hrs (double (/ BOAT-TIO 3600000)))
-(def mov-status "START")
-(defn helm
-  ([id cmd]
-  (vswap! BOATS assoc-in [id :helm] cmd))
-([bdt]
-  (letfn [(cp [crs] (if (>= crs 360) (- crs 360) crs))
-             (cm [crs] (if (< crs 0) (+ crs 360) crs))]
-    (condp = (:helm bdt)
-      :steady bdt
-      :starboard (assoc bdt :course (cp (+ (:course bdt) CRS-STP)))
-      :hard-starboard (assoc bdt :course (cp (+ (:course bdt) CRS-HRD)))
-      :port (assoc bdt :course (cm (- (:course bdt) CRS-STP)))
-      :hard-port (assoc bdt :course (cm (- (:course bdt) CRS-HRD)))))))
-
-(defn engine
-  ([id knots]
-  (vswap! BOATS assoc-in [id :engine] knots))
-([bdt]
+(def mov-status (volatile! "START"))
+(defn engine [bdt f]
   (let [old (:speed bdt)
-         new (:engine bdt)]
-    (cond
-      (= new old) bdt
-      (and (> new old) (< old SPD-MAX)) (assoc bdt :speed (+ old SPD-STP))
-      (and (< new old) (> old SPD-MIN)) (assoc bdt :speed (- old SPD-STP))
-      true bdt))))
+       tgt (:engine bdt)]
+  (cond
+    (= tgt old) 
+      bdt
+    (and (> tgt old) (< old SPD-MAX)) 
+      (let [nbd (assoc bdt :speed (+ old SPD-STP))] (f nbd) nbd)
+    (and (< tgt old) (> old SPD-MIN))
+      (let [nbd (assoc bdt :speed (- old SPD-STP))] (f nbd) nbd)
+    true 
+      bdt)))
+
+(defn helm [bdt f]
+  (let [cp (fn [crs] (if (>= crs 360) (- crs 360) crs))
+       cm (fn [crs] (if (< crs 0) (+ crs 360) crs))
+       tgt (:helm bdt)]
+  (if (not= tgt :steady)
+    (let [nbd (condp = tgt
+                    :starboard (assoc bdt :course (cp (+ (:course bdt) CRS-STP)))
+                    :hard-starboard (assoc bdt :course (cp (+ (:course bdt) CRS-HRD)))
+                    :port (assoc bdt :course (cm (- (:course bdt) CRS-STP)))
+                    :hard-port (assoc bdt :course (cm (- (:course bdt) CRS-HRD))))]
+      (f nbd)
+      nbd)
+    bdt)))
 
 (defn move [bdt]
-  (vswap! bdt assoc :coord (geo/future-pos (:coord bdt) (:course bdt) (:speed bdt) tio-hrs)))
+  (let [pos (geo/future-pos (:coord bdt) (:course bdt) (:speed bdt) tio-hrs)]
+  (println [:POS pos])
+  (assoc bdt :coord pos)))
+
+(defn start-boat-movement [f]
+  (letfn [(mov []
+            (doseq [[id bdt] (seq @BOATS)]
+              (let [g (partial f id)]
+                (vswap! BOATS assoc id 
+                  (-> bdt
+                    (engine g)
+                    (helm g)
+                    (move))))))]
+  (ap/start-proc mov-status #(mov) BOAT-TIO nil "Boats movement started..")))
+
+(defn stop-boat-movement []
+  (ap/stop-proc mov-status))
+
+(defn boat-add [id coord crs spd f]
+  (let [bdt {:coord coord
+               :course crs
+               :speed spd
+               :helm :steady
+               :engine spd}]
+  (vswap! BOATS assoc id bdt)
+  (f id bdt)))
+
+(defn boat-rem [id f]
+  (f id (@BOATS id))
+(vswap! BOATS dissoc id))
+
+(defn boat-helm [id cmd]
+  (vswap! BOATS assoc-in [id :helm] cmd))
+
+(defn boat-engine [id knots]
+  (vswap! BOATS assoc-in [id :engine] knots))
+
+(defn coord [id]
+  (get-in @BOATS [id :coord]))
 
 (defn speed [id]
   (get-in @BOATS [id :speed]))
 
 (defn course [id]
   (get-in @BOATS [id :course]))
-
-(defn coord [id]
-  (get-in @BOATS [id :coord]))
-
-(defn start-boats-movement []
-  (letfn [(mov []
-            (doseq [[id bdt] @BOATS]
-              (-> bdt
-                (engine)
-                (helm)
-                (move))))]
-  (ap/start-proc mov-status #(mov) BOAT-TIO nil "Boats movement started..")))
-
-(defn add-boat [id coord crs spd]
-  (vreset! BOATS assoc id
-  [:coord coord
-   :course crs
-   :speed spd
-   :helm :steady
-   :engine spd]))
-
-(defn rem-boat [id]
-  (vreset! BOATS dissoc id))
 

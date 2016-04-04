@@ -1,4 +1,4 @@
-; Mon Apr 04 13:34:27 MSK 2016
+; Mon Apr 04 19:28:36 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -17,15 +17,18 @@
 ([ProServer_Class10000] of  CloProgram
 
 	(cloFunctions
-		[ProServer_Class10010]
 		[ProServer_Class10011]
+		[ProServer_Class10010]
 		[ProServer_Class10012]
-		[ProServer_Class20000]
-		[ProServer_Class20001]
-		[ProServer_Class20002]
 		[ProServer_Class50000]
+		[ProServer_Class60003]
 		[ProServer_Class50003]
-		[ProServer_Class50004])
+		[ProServer_Class50004]
+		[ProServer_Class60000]
+		[ProServer_Class60001]
+		[ProServer_Class20002]
+		[ProServer_Class20000]
+		[ProServer_Class20001])
 	(cloNamespace [ProServer_Class10001])
 	(cloVars
 		[ProServer_Class10003]
@@ -47,7 +50,7 @@
 
 ([ProServer_Class10002] of  CloDocumentation
 
-	(source "All boats data:\n\nBOATS - { id1 <boat_data1> ... }\n\nBoat data:\n\n{:coord [lat<lat-degrees-float> lon <lon-degrees-float>] \n :course <crs-degrees-int> \n :speed <spd-knots-int>\n :helm <:steady/:port/:hard-port/:starboard/:hard-starboard>\n :engine <target speed-knots-int (negative = reverse)>}\n\nBoat constants:\n\nCRS-STP - step of normal course update\nCRS-HRD - step of hard course update\n\nSPD-STP - step of speed update\nSPD-MAX - max speed (positive)\nSPD-MIN - min speed (negative)\n\nBOAT-TIO - timeout interval of boat data update\n\n\nAPI:\n\n(helm id cmd) ;; cmd=<:steady/:starboard/:hard-starboard/:port/:hard-port>\n(engine id knots) ;; knots-int\n(speed id)\n(course id)\n(coord id)\n(add-boat id coord crs spd)"))
+	(source "All boats data:\n\nBOATS - { id1 <boat_data1> ... }\n\nBoat data:\n\n{:coord [lat<lat-degrees-float> lon <lon-degrees-float>] \n :course <crs-degrees-int> \n :speed <spd-knots-int>\n :helm <:steady/:port/:hard-port/:starboard/:hard-starboard>\n :engine <target speed-knots-int (negative = reverse)>}\n\nBoat constants:\n\nCRS-STP - step of normal course update\nCRS-HRD - step of hard course update\n\nSPD-STP - step of speed update\nSPD-MAX - max speed (positive)\nSPD-MIN - min speed (negative)\n\nBOAT-TIO - timeout interval of boat data update\n\nAPI:\n\nstart-boats-movement [f] ;; (f <boat_data>)- func of sending mees when\n                                          ;; speed or course changing\n(boat-add id coord crs spd f) ;; or boat adding\n(boat-rem id f)                       ;;  or removing\n(boat-helm id cmd) ;; cmd=<:steady/:starboard/:hard-starboard/:port/:hard-port>\n(boat-engine id knots) ;; knots-int\n(coord id)\n(speed id)\n(course id)"))
 
 ([ProServer_Class10003] of  CloVar
 
@@ -86,17 +89,17 @@
 
 ([ProServer_Class10010] of  CloFunction
 
-	(source "([id cmd]\n  (vswap! BOATS assoc-in [id :helm] cmd))\n([bdt]\n  (letfn [(cp [crs] (if (>= crs 360) (- crs 360) crs))\n             (cm [crs] (if (< crs 0) (+ crs 360) crs))]\n    (condp = (:helm bdt)\n      :steady bdt\n      :starboard (assoc bdt :course (cp (+ (:course bdt) CRS-STP)))\n      :hard-starboard (assoc bdt :course (cp (+ (:course bdt) CRS-HRD)))\n      :port (assoc bdt :course (cm (- (:course bdt) CRS-STP)))\n      :hard-port (assoc bdt :course (cm (- (:course bdt) CRS-HRD))))))")
-	(title "helm"))
+	(source "(let [cp (fn [crs] (if (>= crs 360) (- crs 360) crs))\n       cm (fn [crs] (if (< crs 0) (+ crs 360) crs))\n       tgt (:helm bdt)]\n  (if (not= tgt :steady)\n    (let [nbd (condp = tgt\n                    :starboard (assoc bdt :course (cp (+ (:course bdt) CRS-STP)))\n                    :hard-starboard (assoc bdt :course (cp (+ (:course bdt) CRS-HRD)))\n                    :port (assoc bdt :course (cm (- (:course bdt) CRS-STP)))\n                    :hard-port (assoc bdt :course (cm (- (:course bdt) CRS-HRD)))\n                    bdt)]\n      (f nbd)\n      nbd)\n    bdt))")
+	(title "helm [bdt f]"))
 
 ([ProServer_Class10011] of  CloFunction
 
-	(source "([id knots]\n  (vswap! BOATS assoc-in [id :engine] knots))\n([bdt]\n  (let [old (:speed bdt)\n         new (:engine bdt)]\n    (cond\n      (= new old) bdt\n      (and (> new old) (< old SPD-MAX)) (assoc bdt :speed (+ old SPD-STP))\n      (and (< new old) (> old SPD-MIN)) (assoc bdt :speed (- old SPD-STP))\n      true bdt)))")
-	(title "engine"))
+	(source "(let [old (:speed bdt)\n       tgt (:engine bdt)]\n  (if (not= old tgt)\n    (let [up (> tgt old)\n            tgt (cond (> tgt SPD-MAX) SPD-MAX\n                      (< tgt SPD-MIN) SPD-MIN\n                      tgt)]\n      (cond\n      (= old tgt) bdt\n      (and up (>= old tgt)) (let [nbd (assoc bdt :speed tgt)] (f nbd) nbd)\n      (and up (< old tgt)) (assoc bdt :speed (+ old SPD-STP))\n      (and (not up) (<= old tgt)) (let [nbd (assoc bdt :speed tgt)] (f nbd) nbd)\n      (and (not up) (> old tgt)) (assoc bdt :speed (- old SPD-STP))\n      bdt))")
+	(title "engine [bdt f]"))
 
 ([ProServer_Class10012] of  CloFunction
 
-	(source "(vswap! bdt assoc :coord (geo/future-pos (:coord bdt) (:course bdt) (:speed bdt) tio-hrs))")
+	(source "(let [pos (geo/future-pos (:coord bdt) (:course bdt) (:speed bdt) tio-hrs)]\n  (println [:POS pos])\n  (assoc bdt :coord pos))")
 	(title "move [bdt]"))
 
 ([ProServer_Class2] of  CloFunction
@@ -251,20 +254,87 @@
 
 ([ProServer_Class50000] of  CloFunction
 
-	(source "(letfn [(mov []\n            (doseq [[id bdt] @BOATS]\n              (-> bdt\n                (engine)\n                (helm)\n                (move))))]\n  (ap/start-proc mov-status #(mov) BOAT-TIO nil \"Boats movement started..\"))")
-	(title "start-boats-movement []"))
+	(source "(letfn [(mov []\n            (doseq [[id bdt] (seq @BOATS)]\n              (let [g (partial f id)]\n                (vswap! BOATS assoc id \n                  (-> bdt\n                    (engine g)\n                    (helm g)\n                    (move))))))]\n  (ap/start-proc mov-status #(mov) BOAT-TIO nil \"Boats movement started..\"))")
+	(title "start-boat-movement [f]"))
 
 ([ProServer_Class50002] of  CloVar
 
-	(source "\"START\"")
+	(source "(volatile! \"START\")")
 	(title "mov-status"))
 
 ([ProServer_Class50003] of  CloFunction
 
-	(source "(vreset! BOATS assoc id\n  [:coord coord\n   :course crs\n   :speed spd\n   :helm :steady\n   :engine spd])")
-	(title "add-boat [id coord crs spd]"))
+	(source "(let [bdt {:coord coord\n               :course crs\n               :speed spd\n               :helm :steady\n               :engine spd}]\n  (vswap! BOATS assoc id bdt)\n  (f id bdt))")
+	(title "boat-add [id coord crs spd f]"))
 
 ([ProServer_Class50004] of  CloFunction
 
-	(source "(vreset! BOATS dissoc id)")
-	(title "rem-boat [id]"))
+	(source "(f id (@BOATS id))\n(vswap! BOATS dissoc id)")
+	(title "boat-rem [id f]"))
+
+([ProServer_Class60000] of  CloFunction
+
+	(source "(vswap! BOATS assoc-in [id :helm] cmd)")
+	(title "boat-helm [id cmd]"))
+
+([ProServer_Class60001] of  CloFunction
+
+	(source "(vswap! BOATS assoc-in [id :engine] knots)")
+	(title "boat-engine [id knots]"))
+
+([ProServer_Class60002] of  CloFuncall
+
+	(source "(boat.move"))
+
+([ProServer_Class60003] of  CloFunction
+
+	(source "(ap/stop-proc mov-status)")
+	(title "stop-boat-movement []"))
+
+([ProServer_Class60004] of  CloFuncall
+
+	(source "(boat.mov/start-boat-movement #(println [%1 %2]))"))
+
+([ProServer_Class60005] of  CloFuncall
+
+	(source "@BOATS"))
+
+([ProServer_Class70000] of  CloFuncall
+
+	(source "(boat.mov/boat-add \"b1\" [60.0 30.0] 270 2 #(println [%1 %2]))"))
+
+([ProServer_Class70001] of  CloFuncall
+
+	(source "(boat.mov/stop-boat-movement)"))
+
+([ProServer_Class70002] of  CloFuncall
+
+	(source "(vreset! boat.mov/BOATS {})"))
+
+([ProServer_Class70003] of  CloFuncall
+
+	(source "(start-boat-movement #(println [%1 %2]))"))
+
+([ProServer_Class70004] of  CloFuncall
+
+	(source "(boat-add \"b1\" [60.0 30.0] 270 2 #(println [%1 %2]))"))
+
+([ProServer_Class70005] of  CloFuncall
+
+	(source "(stop-boat-movement)"))
+
+([ProServer_Class70006] of  CloFuncall
+
+	(source "tio-hrs"))
+
+([ProServer_Class70007] of  CloFuncall
+
+	(source "(boat-engine \"b1\" 12)"))
+
+([ProServer_Class70008] of  CloFuncall
+
+	(source "(boat-helm \"b1\" :port)"))
+
+([ProServer_Class70009] of  CloFuncall
+
+	(source "(boat-helm \"b1\" :steady)"))
