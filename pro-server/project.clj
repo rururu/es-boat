@@ -9,7 +9,10 @@
                  [protege/JGoLayout "3.5.0"]
                  [protege/ClojureTab "1.5.0"]
                  [rete "5.2.4-SNAPSHOT"]
-                 [org.clojure/core.async "0.2.374"]]
+                 [org.clojure/core.async "0.2.374"]
+                 [ring "1.4.0"]
+                 [compojure "1.4.0"]
+                 [com.cognitect/transit-clj "0.8.285"]]
   :javac-options ["-target" "1.6" "-source" "1.6" "-Xlint:-options"]
   :repositories {"local" ~(str (.toURI (java.io.File. "repo")))}
   :aot [proframes.core]
