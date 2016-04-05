@@ -1,4 +1,4 @@
-; Tue Apr 05 16:31:19 MSK 2016
+; Tue Apr 05 22:55:00 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -328,9 +328,15 @@
 
 	(source "(boat.mov/boat-helm \"b1\" :steady)"))
 
+([ProServer_Class80000] of  CloFunction
+
+	(source "(slurp (str ROOT \"index.html\"))")
+	(title "index-page []"))
+
 ([ProServer_Class80003] of  CloProgram
 
 	(cloFunctions
+		[ProServer_Class80000]
 		[ProServer_Class80018]
 		[ProServer_Class80019]
 		[ProServer_Class70000]
@@ -354,7 +360,7 @@
 
 ([ProServer_Class80007] of  CloFunction
 
-	(source "(def ROOT (str (System/getProperty \"user.dir\") \"/resources/public/\"))\n\n(defroutes app-routes\n  (GET \"/events/\" [& params] (events))\n  (route/files \"/\" (do (println [:ROOT-FILES ROOT]) {:root ROOT}))\n  (route/resources \"/\")\n  (route/not-found \"Not Found\"))\n\n(def APP\n  (handler/site app-routes))")
+	(source "(def ROOT (str (System/getProperty \"user.dir\") \"/resources/public/\"))\n\n(defroutes app-routes\n  (GET \"/\" [] (index-page))\n  (GET \"/events/\" [& params] (events))\n  (route/files \"/\" (do (println [:ROOT-FILES ROOT]) {:root ROOT}))\n  (route/resources \"/\")\n  (route/not-found \"Not Found\"))\n\n(def APP\n  (handler/site app-routes))")
 	(title "init-server []"))
 
 ([ProServer_Class80008] of  CloFunction
