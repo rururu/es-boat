@@ -9,6 +9,8 @@
 
 (enable-console-print!)
 
+(println [1])
+
 ;; ---------------------- General constants ------------------------------------
 
 (def pid180 (/ Math.PI 180)) ;; 1 degree in radians
@@ -22,11 +24,12 @@
 (def CLS-HRS (/ CLK-STP 3600000)) ;; clock step in hours
 (def DLT-EVT 1000) ;; check event queue from server every 1000 msec (1 sec)
 (def DLT-MOV 200) ;; move flight every 200 msec (5 times per sec)
+(def DLT-MOV-HRS (double (/ DLT-MOV 3600000))) ;; DLT-MOV in hours
 (def DLT-LKS 300) ;; update links every 300 msec (3 times per sec)
 (def REM-CAL (volatile! {})) ;; remote call params
 (def MYFS-INTL 1000) ;; my flights simulation interval (1 sec)
 (def URL-CAL "http://localhost:3000/call/")
-(def URL-EVT "http://localhost:3000/events/")
+(def URL-EVT "http://localhost:4444/events/")
 (def URL-NVI "http://localhost:3000/new-visible/")
 (def URL-WVI "http://localhost:3000/watch-visible/")
 (def URL-FLS "http://localhost:3000/flight-states/")
@@ -44,11 +47,7 @@
 (def URL-GHB "http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}")
 (def URL-GTR "http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}")
 (def URL-GSA "http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}")
-(def URL-ICO {"INTERSECT" "http://localhost:3000/img/redpln32.png"
-              "DESCEND" "http://localhost:3000/img/greenpln32.png"
-              "CLIMB" "http://localhost:3000/img/bluepln32.png"
-              "LEVEL" "http://localhost:3000/img/purplepln32.png"
-              "GROUND" "http://localhost:3000/img/greypln32.png"})
+(def URL-ICO "http://localhost:4444/img/yachtr.png")
 
 ;; ----------------- Chart creation and control -------------------------
 
@@ -86,9 +85,9 @@
         (task)
         (<! (timeout timo)))))
 
-(defn create-marker [lat lon sta]
+(defn create-marker [lat lon]
   (let [pos (js/L.LatLng. lat lon)
-        ico (js/L.icon #js{:iconUrl (URL-ICO sta) :iconSize #js[32, 32]})
+        ico (js/L.icon #js{:iconUrl URL-ICO :iconSize #js[32, 32]})
         opt #js{:icon ico :draggable true}
         mk (-> js/L (.rotatedMarker pos opt))]
     mk))
@@ -104,52 +103,36 @@
         lam2 (+ (js/Math.atan2 (* sinc sinaz) (- (* cosphi1 cosc) (* sinphi1 sinc cosaz))) lambda0)]
     [phi2 lam2]))
 
+(defn future-pos [[lat lon] crs spd tim]
+  (let [phi (* pid180 lat)
+        lam (* pid180 lon)
+        dir (* pid180 crs)
+        way (* spd tim)
+        way (* pid180 (/ way 60))
+        [phi2 lam2] (spherical-between phi lam way dir)]
+    [(/ phi2 pid180) (/ lam2 pid180)]))
+
 (defn move [id]
-  (if-let [mob (@mapobs id)]
-    (let [rdh (mob :anc-rdh)]
-      (if (> rdh 0)
-        (let [cur @clock
-              dir (mob :anc-dir)
-              phi (mob :anc-phi)
-              lam (mob :anc-lam)
-              tim (- cur (mob :anc-clk))
-              way (* rdh tim)
-              [phi2 lam2] (spherical-between phi lam way dir)
-              lat (/ phi2 pid180)
-              lon (/ lam2 pid180)
-              pos (js/L.LatLng. lat lon)
-              mrk (mob :marker)]
-          (.setLatLng mrk pos)
-          (vswap! mapobs assoc-in [id :anc-phi] phi2)
-          (vswap! mapobs assoc-in [id :anc-lam] lam2)
-          (vswap! mapobs assoc-in [id :anc-clk] cur))))))
+  (if-let [data (@mapobs id)]
+    (let [spd (:speed data)]
+      (if (> spd 0)
+        (let [[lat lon] (future-pos (:coord data)
+                                    (:course data)
+                                    spd
+                                    DLT-MOV-HRS)
+              pos (js/L.LatLng. lat lon)]
+          (.setLatLng (:marker data) pos)
+          (vswap! mapobs assoc-in [id :coord] [lat lon]))))))
 
-(defn set-anchor [id lat lon crs spd]
-  (vswap! mapobs assoc-in [id :anc-phi] (* lat pid180))
-  (vswap! mapobs assoc-in [id :anc-lam] (* lon pid180))
-  (vswap! mapobs assoc-in [id :anc-dir] (* crs pid180))
-  (vswap! mapobs assoc-in [id :anc-rdh] (* spd nmrad))
-  (vswap! mapobs assoc-in [id :anc-clk] @clock))
-
-(defn mapobPopup [id callsign alt lat lon crs spd sta]
-  (str "<h3>" callsign "</h3>"
-       "<table>"
-       "<tr><td>id</td><td>" id "</td></tr>"
-       "<tr><td>altitude</td><td>" alt "</td></tr>"
-       "<tr><td>latitude</td><td>" lat "</td></tr>"
-       "<tr><td>longitude</td><td>" lon "</td></tr>"
-       "<tr><td>course</td><td>" crs "</td></tr>"
-       "<tr><td>speed</td><td>" spd "</td></tr>"
-       "<tr><td>state</td><td>" sta "</td></tr>"
-       "<tr><td><input type='button' style='color:green' value='Inform'
-                 onclick='rete4flight.core.info(\"" id "\")' ></td>
-            <td><input type='button' style='color:purple' value='Trail'
-                 onclick='rete4flight.core.trail(\"" id "\")' ></td></tr>"
-       "<tr><td><input type='button' style='color:blue' value='Follow'
-                 onclick='rete4flight.core.follow(\"" id "\")' ></td>
-            <td><input type='button' style='color:red' value='Stop'
-                 onclick='rete4flight.core.stopfollow()' ></td></tr>"
-       "</table>"))
+(defn mapobPopup [id data]
+  (let [[lat lon] (:coord data)]
+    (str "<h3>" id "</h3>"
+         "<table>"
+         "<tr><td>latitude</td><td>" lat "</td></tr>"
+         "<tr><td>longitude</td><td>" lon "</td></tr>"
+         "<tr><td>course</td><td>" (:course data) "</td></tr>"
+         "<tr><td>speed</td><td>" (:speed data) "</td></tr>"
+         "</table>")))
 
 (defn delete-mapob [id]
   (when-let [mob (@mapobs id)]
@@ -158,20 +141,23 @@
     (.removeLayer @chart (mob :marker))
     (vswap! mapobs dissoc id)))
 
-(defn create-mapob [id callsign lat lon crs spd alt sta]
+(defn boat-add [id data]
   (if (@mapobs id)
     (delete-mapob id))
-  (let [mrk (create-marker lat lon sta)]
-    (vswap! mapobs assoc-in [id :marker] mrk)
-    (vswap! mapobs assoc-in [id :radhrs] (* spd nmrad))
-    (vswap! mapobs assoc-in [id :altitude] alt)
-    (vswap! mapobs assoc-in [callsign :laloalcs] [lat lon alt crs spd])
+  (let [[lat lon] (:coord data)
+        mrk (create-marker lat lon)]
     (.addTo mrk @chart)
-    (set! (.. mrk -options -angle) crs)
-    (.bindPopup mrk (mapobPopup id callsign alt lat lon crs spd sta))
-    (set-anchor id lat lon crs spd)
-    (vswap! mapobs assoc-in [id :mover]
-           (repeater #(move id) DLT-MOV))))
+    (set! (.. mrk -options -angle) (:course data))
+    (.bindPopup mrk (mapobPopup id data))
+    (vswap! mapobs assoc id
+            (merge data
+                   {:marker mrk}
+                   {:mover (repeater #(move id) DLT-MOV)}))))
+
+(defn boat-maneuver [id data]
+  (when-let [old (@mapobs id)]
+    (vswap! mapobs assoc id (merge old data))
+    (set! (.. (:marker old) -options -angle) (:course data))))
 
 (defn clear-mapobs []
   (doseq [id (keys @mapobs)]
@@ -334,27 +320,12 @@
   (doseq [{:keys [event] :as evt} (read-transit response)]
     ;;(println [:EVENT evt])
     (condp = event
-      :create-mapob (let [{:keys [id callsign lat lon crs spd alt state]} evt]
-                      (create-mapob id callsign lat lon crs spd alt state))
-      :delete-mapob (let [{:keys [id]} evt]
+      :boat-add (let [{:keys [id data]} evt]
+                      (boat-add id data))
+      :boat-remove (let [{:keys [id]} evt]
                       (delete-mapob id))
-      :clear-mapobs (clear-mapobs)
-      :add-link (let [{:keys [ids options]} evt]
-                  (add-link ids options))
-      :delete-link (let [{:keys [ids]} evt]
-                     (delete-link ids))
-      :clear-links (clear-links)
-      :clear-dialog (clear-dialog)
-      :add-popup (let [{:keys [id lat lon html time]} evt]
-                   (cond
-                    id (add-popup id html time)
-                    (and lat lon) (add-popup lat lon html time)))
-      :add-trail (let [{:keys [id lla options time]} evt]
-                   (add-trail id lla options time))
-      :set-map-view (let [{:keys [lat lon]} evt]
-                      (set-map-view lat lon))
-      :turn (let [{:keys [id on-course]} evt]
-                   (turn id on-course))
+      :boat-maneuver (let [{:keys [id data]} evt]
+                      (boat-maneuver id data))
       (println (str "Unknown event: " [event evt])))))
 
 (defn error-handler [{:keys [status status-text]}]
@@ -732,3 +703,5 @@
 ;; ----------------------------- Start ---------------------------------
 
 (set! (.-onload js/window) (init))
+
+  (println [2])

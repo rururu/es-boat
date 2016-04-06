@@ -9,10 +9,14 @@
               [clojure.core.async :as async :refer [chan alts!! put! <! go timeout]]
               [boat.mov :as bm]))
 
+(def ROOT (str (System/getProperty "user.dir") "/resources/public/"))
 (def EVT-CHN (chan))
 (def PORT 4444)
 (def APP nil)
 (def SERV nil)
+(defn index-page []
+  (slurp (str ROOT "index.html")))
+
 (defn pump-out [chn]
   (loop [[bit ch] (alts!! [chn] :default :none) bits []]
   (if (= bit :none)
@@ -21,9 +25,6 @@
 
 (defn pump-in-evt [val]
   (put! EVT-CHN val))
-
-(defn boat-maneuver [id bdt]
-  (pump-in-evt {:event :boat-maneuver :id id :data bdt}))
 
 (defn write-transit [x]
   (let [baos (ByteArrayOutputStream.)
@@ -34,12 +35,12 @@
     ret))
 
 (defn events []
-  (write-transit (deref (future (pump-out EVT-CHN)))))
+  (-> (r/response (write-transit (deref (future (pump-out EVT-CHN)))))
+       (r/header "Access-Control-Allow-Origin" "*")))
 
 (defn init-server []
-  (def ROOT (str (System/getProperty "user.dir") "/resources/public/"))
-
-(defroutes app-routes
+  (defroutes app-routes
+  (GET "/" [] (index-page))
   (GET "/events/" [& params] (events))
   (route/files "/" (do (println [:ROOT-FILES ROOT]) {:root ROOT}))
   (route/resources "/")

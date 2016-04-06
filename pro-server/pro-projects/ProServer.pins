@@ -1,4 +1,4 @@
-; Tue Apr 05 22:55:00 MSK 2016
+; Wed Apr 06 13:10:16 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -91,12 +91,12 @@
 
 ([ProServer_Class10010] of  CloFunction
 
-	(source "(let [cp (fn [crs] (if (>= crs 360) (- crs 360) crs))\n       cm (fn [crs] (if (< crs 0) (+ crs 360) crs))\n       old (:course bdt)\n       tgt (:helm bdt)]\n  (if (not= tgt :steady)\n    (assoc bdt :old-crs old\n                      :course (condp = tgt\n                                     :starboard (cp (+ old CRS-STP))\n                                     :hard-a-starboard (cp (+ old CRS-HRD))\n                                     :port (cm (- old CRS-STP))\n                                     :hard-a-port (cm (- old CRS-HRD))\n                                     old))\n    (if (= (:old-crs bdt) old)\n      bdt\n      (do (f bdt)\n         (assoc bdt :old-crs old)))))")
+	(source "(let [cp (fn [crs] (if (>= crs 360) (- crs 360) crs))\n       cm (fn [crs] (if (< crs 0) (+ crs 360) crs))\n       old (:course bdt)\n       tgt (:helm bdt)]\n  (if (not= tgt :steady)\n    (let [nbd (assoc bdt :course \n                                   (condp = tgt\n                                     :starboard (cp (+ old CRS-STP))\n                                     :hard-a-starboard (cp (+ old CRS-HRD))\n                                     :port (cm (- old CRS-STP))\n                                     :hard-a-port (cm (- old CRS-HRD))\n                                     old))]\n      (f nbd)\n      nbd)\n    bdt))")
 	(title "helm [bdt f]"))
 
 ([ProServer_Class10011] of  CloFunction
 
-	(source "(let [old (:speed bdt)\n       tgt (:engine bdt)\n       new (cond\n                (> tgt old) (+ old SPD-STP)\n                (< tgt old) (- old SPD-STP)\n                true 0)]\n  (cond\n    (= new 0)\n      bdt\n    (or (and (< old tgt) (>= new tgt))\n          (and (> old tgt) (<= new tgt)))\n      (let [nbd (assoc bdt :speed tgt)] (f nbd) nbd)\n    true (assoc bdt :speed new)))")
+	(source "(let [old (:speed bdt)\n       tgt (:engine bdt)\n       new (cond\n                (> tgt old) (+ old SPD-STP)\n                (< tgt old) (- old SPD-STP)\n                true 0)]\n  (if (= new 0)\n    bdt\n    (let [nbd (assoc bdt :speed \n                     (if (or (and (< old tgt) (>= new tgt))\n                         (and (> old tgt) (<= new tgt)))\n                       tgt\n                       new))]\n      (f nbd)\n      nbd))))")
 	(title "engine [bdt f]"))
 
 ([ProServer_Class10012] of  CloFunction
@@ -290,11 +290,6 @@
 	(source "(ap/stop-proc mov-status)")
 	(title "stop-boat-movement []"))
 
-([ProServer_Class70000] of  CloFunction
-
-	(source "(pump-in-evt {:event :boat-maneuver :id id :data bdt})")
-	(title "boat-maneuver [id bdt]"))
-
 ([ProServer_Class70001] of  CloFuncall
 
 	(source "(pro.server/start-server)"))
@@ -339,7 +334,6 @@
 		[ProServer_Class80000]
 		[ProServer_Class80018]
 		[ProServer_Class80019]
-		[ProServer_Class70000]
 		[ProServer_Class80004]
 		[ProServer_Class80017]
 		[ProServer_Class80007]
@@ -347,6 +341,7 @@
 		[ProServer_Class80009])
 	(cloNamespace [ProServer_Class80016])
 	(cloVars
+		[ProServer_Class90000]
 		[ProServer_Class80012]
 		[ProServer_Class80013]
 		[ProServer_Class80014]
@@ -360,7 +355,7 @@
 
 ([ProServer_Class80007] of  CloFunction
 
-	(source "(def ROOT (str (System/getProperty \"user.dir\") \"/resources/public/\"))\n\n(defroutes app-routes\n  (GET \"/\" [] (index-page))\n  (GET \"/events/\" [& params] (events))\n  (route/files \"/\" (do (println [:ROOT-FILES ROOT]) {:root ROOT}))\n  (route/resources \"/\")\n  (route/not-found \"Not Found\"))\n\n(def APP\n  (handler/site app-routes))")
+	(source "(defroutes app-routes\n  (GET \"/\" [] (index-page))\n  (GET \"/events/\" [& params] (events))\n  (route/files \"/\" (do (println [:ROOT-FILES ROOT]) {:root ROOT}))\n  (route/resources \"/\")\n  (route/not-found \"Not Found\"))\n\n(def APP\n  (handler/site app-routes))")
 	(title "init-server []"))
 
 ([ProServer_Class80008] of  CloFunction
@@ -400,7 +395,7 @@
 
 ([ProServer_Class80017] of  CloFunction
 
-	(source "(write-transit (deref (future (pump-out EVT-CHN))))")
+	(source "(-> (r/response (write-transit (deref (future (pump-out EVT-CHN)))))\n       (r/header \"Access-Control-Allow-Origin\" \"*\"))")
 	(title "events []"))
 
 ([ProServer_Class80018] of  CloFunction
@@ -412,3 +407,28 @@
 
 	(source "(put! EVT-CHN val)")
 	(title "pump-in-evt [val]"))
+
+([ProServer_Class90000] of  CloVar
+
+	(source "(str (System/getProperty \"user.dir\") \"/resources/public/\")")
+	(title "ROOT"))
+
+([ProServer_Class90002] of  CloFuncall
+
+	(source "(boat.mov/boat-add \"b1\" [40.7535 -74.0053] 270 12)"))
+
+([ProServer_Class90003] of  CloFuncall
+
+	(source "(boat.mov/boat-add \"b2\" [40.7535 -74.0053] 270 12)"))
+
+([ProServer_Class90004] of  CloFuncall
+
+	(source "(boat.mov/boat-add \"b3\" [40.7535 -74.0053] 270 12)"))
+
+([ProServer_Class90005] of  CloFuncall
+
+	(source "(boat.mov/boat-helm \"b3\" :starboard)"))
+
+([ProServer_Class90006] of  CloFuncall
+
+	(source "(boat.mov/boat-helm \"b3\" :steady)"))
