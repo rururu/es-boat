@@ -1,7 +1,9 @@
 (ns boat.mov
 (:require
   [geo.calc :as geo]
-  [async.proc :as ap]))
+  [async.proc :as ap])
+(:import 
+  java.util.Calendar))
 
 (def DEF-BOATS (defonce BOATS (volatile! {})))
 (def CRS-STP 6)
@@ -10,10 +12,12 @@
 (def SPD-MAX 44)
 (def SPD-MIN -8)
 (def BOAT-TIO 1000)
-(def tio-hrs (double (/ BOAT-TIO 3600000)))
 (def mov-status (volatile! "START"))
 (def rem-func nil)
 (def add-func )
+(defn current-time []
+  (.getTimeInMillis (Calendar/getInstance)))
+
 (defn engine [bdt f]
   (let [old (:speed bdt)
        tgt (:engine bdt)
@@ -21,13 +25,16 @@
                 (> tgt old) (+ old SPD-STP)
                 (< tgt old) (- old SPD-STP)
                 true 0)]
-  (cond
-    (= new 0)
-      bdt
-    (or (and (< old tgt) (>= new tgt))
-          (and (> old tgt) (<= new tgt)))
-      (let [nbd (assoc bdt :speed tgt)] (f nbd) nbd)
-    true (assoc bdt :speed new))))
+  (if (= new 0)
+    bdt
+    (let [nbd (assoc bdt :speed 
+                     (if (or (and (< old tgt) (>= new tgt))
+                              (and (> old tgt) (<= new tgt)))
+                       tgt
+                       new))]
+      (f nbd)
+      (assoc nbd :ancor 
+        {:time (current-time) :coord (:coord nbd)})))))
 
 (defn helm [bdt f]
   (let [cp (fn [crs] (if (>= crs 360) (- crs 360) crs))
@@ -35,20 +42,22 @@
        old (:course bdt)
        tgt (:helm bdt)]
   (if (not= tgt :steady)
-    (assoc bdt :old-crs old
-                      :course (condp = tgt
+    (let [nbd (assoc bdt :course 
+                                   (condp = tgt
                                      :starboard (cp (+ old CRS-STP))
                                      :hard-a-starboard (cp (+ old CRS-HRD))
                                      :port (cm (- old CRS-STP))
                                      :hard-a-port (cm (- old CRS-HRD))
-                                     old))
-    (if (= (:old-crs bdt) old)
-      bdt
-      (do (f bdt)
-         (assoc bdt :old-crs old))))))
+                                     bdt))]
+      (f nbd)
+      (assoc nbd :ancor 
+        {:time (current-time) :coord (:coord nbd)}))
+    bdt)))
 
 (defn move [bdt]
-  (assoc bdt :coord (geo/future-pos (:coord bdt) (:course bdt) (:speed bdt) tio-hrs)))
+  (let [elat (- (current-time) (:time (:anchor bdt)))
+       ehrs (/ elat 36000000)]
+  (assoc bdt :coord (geo/future-pos (:coord (:anchor bdt)) (:course bdt) (:speed bdt) ehrs))))
 
 (defn start-boat-movement [mf af rf]
   (letfn [(mov []

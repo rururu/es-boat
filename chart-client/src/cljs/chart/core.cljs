@@ -9,23 +9,18 @@
 
 (enable-console-print!)
 
-(println [1])
-
 ;; ---------------------- General constants ------------------------------------
 
 (def pid180 (/ Math.PI 180)) ;; 1 degree in radians
 (def nmrad (/ Math.PI 10800)) ;; 1 nautical mile in radians
 (def chart (volatile! nil)) ;; chart object
-(def clock (volatile! 0.0)) ;; clock in hrs
 (def mapobs (volatile! {})) ;; map of all flights on chart
 (def links (volatile! {})) ;; map of all links on chart
 (def trails (volatile! {})) ;; map of all trails on chart
-(def CLK-STP 100) ;; clock step 100 msec (0.1 sec)
-(def CLS-HRS (/ CLK-STP 3600000)) ;; clock step in hours
 (def DLT-EVT 1000) ;; check event queue from server every 1000 msec (1 sec)
 (def DLT-MOV 200) ;; move flight every 200 msec (5 times per sec)
 (def DLT-MOV-HRS (double (/ DLT-MOV 3600000))) ;; DLT-MOV in hours
-(def DLT-LKS 300) ;; update links every 300 msec (3 times per sec)
+(def DLT-POP 10000) ;; update popup every 10000 msec (10 sec)
 (def REM-CAL (volatile! {})) ;; remote call params
 (def MYFS-INTL 1000) ;; my flights simulation interval (1 sec)
 (def URL-CAL "http://localhost:3000/call/")
@@ -76,9 +71,6 @@
 (defn write-transit [x]
   (t/write (t/writer :json) x))
 
-(defn clock-step []
-  (vswap! clock + CLS-HRS))
-
 (defn repeater [task timo]
   "Channel that repeats task (function call) forever"
   (go (while true
@@ -112,6 +104,20 @@
         [phi2 lam2] (spherical-between phi lam way dir)]
     [(/ phi2 pid180) (/ lam2 pid180)]))
 
+(defn mapobPopup [id data]
+  (let [[lat lon] (:coord data)]
+    (str "<h3>" id "</h3>"
+         "<table>"
+         "<tr><td>latitude</td><td>" (format "%.4f" lat) "</td></tr>"
+         "<tr><td>longitude</td><td>" (format "%.4f" lon) "</td></tr>"
+         "<tr><td>course</td><td>" (:course data) "</td></tr>"
+         "<tr><td>speed</td><td>" (format "%.1f" (:speed data)) "</td></tr>"
+         "</table>")))
+
+(defn popup [id]
+  (if-let [data (@mapobs id)]
+    (.bindPopup (:marker data) (mapobPopup id data))))
+
 (defn move [id]
   (if-let [data (@mapobs id)]
     (let [spd (:speed data)]
@@ -124,20 +130,12 @@
           (.setLatLng (:marker data) pos)
           (vswap! mapobs assoc-in [id :coord] [lat lon]))))))
 
-(defn mapobPopup [id data]
-  (let [[lat lon] (:coord data)]
-    (str "<h3>" id "</h3>"
-         "<table>"
-         "<tr><td>latitude</td><td>" lat "</td></tr>"
-         "<tr><td>longitude</td><td>" lon "</td></tr>"
-         "<tr><td>course</td><td>" (:course data) "</td></tr>"
-         "<tr><td>speed</td><td>" (:speed data) "</td></tr>"
-         "</table>")))
-
 (defn delete-mapob [id]
   (when-let [mob (@mapobs id)]
     (if-let [mvr (mob :mover)]
       (close! mvr))
+    (if-let [pop (mob :poper)]
+      (close! pop))
     (.removeLayer @chart (mob :marker))
     (vswap! mapobs dissoc id)))
 
@@ -151,8 +149,9 @@
     (.bindPopup mrk (mapobPopup id data))
     (vswap! mapobs assoc id
             (merge data
-                   {:marker mrk}
-                   {:mover (repeater #(move id) DLT-MOV)}))))
+                   {:marker mrk
+                    :mover (repeater #(move id) DLT-MOV)
+                    :poper (repeater #(popup id) DLT-POP)}))))
 
 (defn boat-maneuver [id data]
   (when-let [old (@mapobs id)]
@@ -664,7 +663,7 @@
 (defn init []
   (let [m (-> js/L
             (.map "map")
-            (.setView (array 40.8, -74.0) 9)) ;; New York City
+            (.setView (array 62.8260 34.7436) 11)) ;; 40.8, -74.0) 9)) ;; New York City
         tile1 (-> js/L (.tileLayer URL-OSM
                          #js{:maxZoom 16
                              :attribution "OOGIS RL, OpenStreetMap &copy;"}))
@@ -696,12 +695,9 @@
       (fn [e] (mouse-move (.. e -latlng -lat) (.. e -latlng -lng))))
     (vreset! chart m)
     (set-html! "commands" COMMANDS)
-    (repeater #(check-events) DLT-EVT)
-    (repeater #(shift-links) DLT-LKS)
-    (.setInterval js/window #(clock-step) CLK-STP)))
+    (repeater #(check-events) DLT-EVT)))
 
 ;; ----------------------------- Start ---------------------------------
 
 (set! (.-onload js/window) (init))
 
-  (println [2])
