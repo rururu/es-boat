@@ -56048,7 +56048,7 @@ chart.core.move = function chart$core$move(id) {
       var lon = cljs.core.nth.call(null, vec__12420, 1, null);
       var pos = new L.LatLng(lat, lon);
       (new cljs.core.Keyword(null, "marker", "marker", 865118313)).cljs$core$IFn$_invoke$arity$1(data).setLatLng(pos);
-      return cljs.core._vreset_BANG_.call(null, chart.core.mapobs, cljs.core.assoc_in.call(null, cljs.core._deref.call(null, chart.core.mapobs), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [id, new cljs.core.Keyword(null, "coord", "coord", -1453656639)], null), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [lat, lon], null)));
+      return cljs.core._vreset_BANG_.call(null, chart.core.mapobs, cljs.core.assoc.call(null, cljs.core._deref.call(null, chart.core.mapobs), id, cljs.core.merge.call(null, data, new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "coord", "coord", -1453656639), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [lat, lon], null), new cljs.core.Keyword(null, "time-from-turn", "time-from-turn", -1358887180), etim], null))));
     } else {
       return null;
     }
@@ -56105,7 +56105,8 @@ chart.core.boat_maneuver = function chart$core$boat_maneuver(id, data) {
   if (cljs.core.truth_(temp__4657__auto__)) {
     var old = temp__4657__auto__;
     cljs.core._vreset_BANG_.call(null, chart.core.mapobs, cljs.core.assoc.call(null, cljs.core._deref.call(null, chart.core.mapobs), id, cljs.core.merge.call(null, old, data)));
-    return (new cljs.core.Keyword(null, "marker", "marker", 865118313)).cljs$core$IFn$_invoke$arity$1(old).options.angle = (new cljs.core.Keyword(null, "course", "course", 1455432948)).cljs$core$IFn$_invoke$arity$1(data);
+    (new cljs.core.Keyword(null, "marker", "marker", 865118313)).cljs$core$IFn$_invoke$arity$1(old).options.angle = (new cljs.core.Keyword(null, "course", "course", 1455432948)).cljs$core$IFn$_invoke$arity$1(data);
+    return cljs.core.println.call(null, new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "DATA", "DATA", 1093243194), cljs.core.deref.call(null, chart.core.mapobs).call(null, id)], null));
   } else {
     return null;
   }
@@ -56955,6 +56956,7 @@ chart.core.event_handler = function chart$core$event_handler(response) {
       var map__12746__$1 = (!(map__12746 == null) ? map__12746.cljs$lang$protocol_mask$partition0$ & 64 || map__12746.cljs$core$ISeq$ ? true : false : false) ? cljs.core.apply.call(null, cljs.core.hash_map, map__12746) : map__12746;
       var evt = map__12746__$1;
       var event = cljs.core.get.call(null, map__12746__$1, new cljs.core.Keyword(null, "event", "event", 301435442));
+      cljs.core.println.call(null, new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "EVENT", "EVENT", 449814061), evt], null));
       var pred__12748_12768 = cljs.core._EQ_;
       var expr__12749_12769 = event;
       if (cljs.core.truth_(pred__12748_12768.call(null, new cljs.core.Keyword(null, "boat-add", "boat-add", 594095838), expr__12749_12769))) {
@@ -57010,6 +57012,7 @@ chart.core.event_handler = function chart$core$event_handler(response) {
           var map__12757__$1 = (!(map__12757 == null) ? map__12757.cljs$lang$protocol_mask$partition0$ & 64 || map__12757.cljs$core$ISeq$ ? true : false : false) ? cljs.core.apply.call(null, cljs.core.hash_map, map__12757) : map__12757;
           var evt = map__12757__$1;
           var event = cljs.core.get.call(null, map__12757__$1, new cljs.core.Keyword(null, "event", "event", 301435442));
+          cljs.core.println.call(null, new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "EVENT", "EVENT", 449814061), evt], null));
           var pred__12759_12789 = cljs.core._EQ_;
           var expr__12760_12790 = event;
           if (cljs.core.truth_(pred__12759_12789.call(null, new cljs.core.Keyword(null, "boat-add", "boat-add", 594095838), expr__12760_12790))) {

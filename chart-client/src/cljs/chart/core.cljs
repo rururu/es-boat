@@ -120,7 +120,6 @@
 (defn move [id]
   (if-let [data (@mapobs id)]
     (let [spd (:speed data)]
-      (println [:MOVE :ID id :DATA data])
       (if (> spd 0)
         (let [etim (+ (:time-from-turn data) DLT-MOV)
               ehrs (/ etim 36000000)
@@ -130,7 +129,10 @@
                                     ehrs)
               pos (js/L.LatLng. lat lon)]
           (.setLatLng (:marker data) pos)
-          (vswap! mapobs assoc-in [id :coord] [lat lon]))))))
+          (vswap! mapobs assoc id
+                  (merge data
+                         {:coord [lat lon]
+                          :time-from-turn etim})))))))
 
 
 (defn delete-mapob [id]

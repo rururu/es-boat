@@ -1,4 +1,4 @@
-; Thu Apr 07 19:26:10 MSK 2016
+; Thu Apr 07 23:35:55 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -75,7 +75,7 @@
 
 ([ProServer_Class10006] of  CloVar
 
-	(source "0.4")
+	(source "0.6")
 	(title "SPD-STP"))
 
 ([ProServer_Class10007] of  CloVar
@@ -95,12 +95,12 @@
 
 ([ProServer_Class10010] of  CloFunction
 
-	(source "(let [cp (fn [crs] (if (>= crs 360) (- crs 360) crs))\n       cm (fn [crs] (if (< crs 0) (+ crs 360) crs))\n       old (:course bdt)\n       tgt (:helm bdt)]\n  (if (not= tgt :steady)\n    (let [nbd (assoc bdt :course \n                                   (condp = tgt\n                                     :starboard (cp (+ old CRS-STP))\n                                     :hard-a-starboard (cp (+ old CRS-HRD))\n                                     :port (cm (- old CRS-STP))\n                                     :hard-a-port (cm (- old CRS-HRD))\n                                     bdt))]\n      (f nbd)\n      (assoc nbd :time-from-turn 0\n                        :turn-coord (:coord nbd)))\n    bdt))")
+	(source "(let [cp (fn [crs] (if (>= crs 360) (- crs 360) crs))\n       cm (fn [crs] (if (< crs 0) (+ crs 360) crs))\n       old (:course bdt)\n       tgt (:helm bdt)]\n  (if (not= tgt :steady)\n    (let [nbd (assoc bdt \n                    :course (condp = tgt\n                                  :starboard (cp (+ old CRS-STP))\n                                  :hard-a-starboard (cp (+ old CRS-HRD))\n                                  :port (cm (- old CRS-STP))\n                                  :hard-a-port (cm (- old CRS-HRD))\n                                  bdt)\n                    :time-from-turn 0\n                    :turn-coord (:coord bdt))]\n      (f nbd)\n      nbd)\n    bdt))")
 	(title "helm [bdt f]"))
 
 ([ProServer_Class10011] of  CloFunction
 
-	(source "(let [old (:speed bdt)\n       tgt (:engine bdt)\n       new (cond\n                (> tgt old) (+ old SPD-STP)\n                (< tgt old) (- old SPD-STP)\n                true 0)]\n  (if (= new 0)\n    bdt\n    (let [nbd (assoc bdt :speed \n                     (if (or (and (< old tgt) (>= new tgt))\n                              (and (> old tgt) (<= new tgt)))\n                       tgt\n                       new))]\n      (f nbd)\n      (assoc nbd :time-from-turn 0\n                        :turn-coord (:coord nbd)))))")
+	(source "(let [old (:speed bdt)\n       tgt (:engine bdt)\n       new (cond\n                (> tgt old) (+ old SPD-STP)\n                (< tgt old) (- old SPD-STP)\n                true 0)]\n  (if (= new 0)\n    bdt\n    (let [nbd (assoc bdt \n                    :speed (if (or (and (< old tgt) (>= new tgt))\n                                         (and (> old tgt) (<= new tgt)))\n                                 tgt\n                                 new)\n                    :time-from-turn 0\n                    :turn-coord (:coord bdt))]\n      (f nbd)\n      nbd)))")
 	(title "engine [bdt f]"))
 
 ([ProServer_Class10012] of  CloFunction
@@ -141,7 +141,7 @@
 
 ([ProServer_Class30000] of  CloFuncall
 
-	(source "boat.mov/BOATS"))
+	(source "(pro.server/start-server)"))
 
 ([ProServer_Class30001] of  CloProgram
 
@@ -294,7 +294,7 @@
 
 ([ProServer_Class60002] of  CloFuncall
 
-	(source "(boat.mov/boat-engine \"b1\" 1000)"))
+	(source "(boat.mov/boat-helm \"b1\" :port)"))
 
 ([ProServer_Class60003] of  CloFunction
 
@@ -303,7 +303,11 @@
 
 ([ProServer_Class70003] of  CloFuncall
 
-	(source "(boat.mov/boat-helm \"b1\" :starboard)"))
+	(source "(boat.mov/boat-engine \"b1\" 10)"))
+
+([ProServer_Class70004] of  CloFuncall
+
+	(source "(boat.mov/boat-engine \"b1\" 45)"))
 
 ([ProServer_Class70008] of  CloVar
 
@@ -404,10 +408,14 @@
 	(source "(str (System/getProperty \"user.dir\") \"/resources/public/\")")
 	(title "ROOT"))
 
-([ProServer_Class90017] of  CloFuncall
+([ProServer_Class90012] of  CloFuncall
 
-	(source "boat.mov/BOAT-TIO"))
+	(source "(boat.mov/boat-rem \"b1\")"))
 
-([ProServer_Class90018] of  CloFuncall
+([ProServer_Class90019] of  CloFuncall
 
-	(source "(pro.server/stop-server)"))
+	(source "(boat.mov/boat-add \"b1\" [62.8111 34.7629] 170 44)"))
+
+([ProServer_Class90024] of  CloFuncall
+
+	(source "(boat.mov/boat-helm \"b1\" :starboard)"))

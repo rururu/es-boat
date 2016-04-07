@@ -22,14 +22,15 @@
                 true 0)]
   (if (= new 0)
     bdt
-    (let [nbd (assoc bdt :speed 
-                     (if (or (and (< old tgt) (>= new tgt))
-                              (and (> old tgt) (<= new tgt)))
-                       tgt
-                       new))]
+    (let [nbd (assoc bdt 
+                    :speed (if (or (and (< old tgt) (>= new tgt))
+                                         (and (> old tgt) (<= new tgt)))
+                                 tgt
+                                 new)
+                    :time-from-turn 0
+                    :turn-coord (:coord bdt))]
       (f nbd)
-      (assoc nbd :time-from-turn 0
-                        :turn-coord (:coord nbd))))))
+      nbd))))
 
 (defn helm [bdt f]
   (let [cp (fn [crs] (if (>= crs 360) (- crs 360) crs))
@@ -37,16 +38,17 @@
        old (:course bdt)
        tgt (:helm bdt)]
   (if (not= tgt :steady)
-    (let [nbd (assoc bdt :course 
-                                   (condp = tgt
-                                     :starboard (cp (+ old CRS-STP))
-                                     :hard-a-starboard (cp (+ old CRS-HRD))
-                                     :port (cm (- old CRS-STP))
-                                     :hard-a-port (cm (- old CRS-HRD))
-                                     bdt))]
+    (let [nbd (assoc bdt 
+                    :course (condp = tgt
+                                  :starboard (cp (+ old CRS-STP))
+                                  :hard-a-starboard (cp (+ old CRS-HRD))
+                                  :port (cm (- old CRS-STP))
+                                  :hard-a-port (cm (- old CRS-HRD))
+                                  bdt)
+                    :time-from-turn 0
+                    :turn-coord (:coord bdt))]
       (f nbd)
-      (assoc nbd :time-from-turn 0
-                        :turn-coord (:coord nbd)))
+      nbd)
     bdt)))
 
 (defn move [bdt]
