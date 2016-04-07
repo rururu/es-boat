@@ -1,9 +1,7 @@
 (ns boat.mov
 (:require
   [geo.calc :as geo]
-  [async.proc :as ap])
-(:import 
-  java.util.Calendar))
+  [async.proc :as ap]))
 
 (def DEF-BOATS (defonce BOATS (volatile! {})))
 (def CRS-STP 6)
@@ -15,9 +13,6 @@
 (def mov-status (volatile! "START"))
 (def rem-func nil)
 (def add-func )
-(defn current-time []
-  (.getTimeInMillis (Calendar/getInstance)))
-
 (defn engine [bdt f]
   (let [old (:speed bdt)
        tgt (:engine bdt)
@@ -33,8 +28,8 @@
                        tgt
                        new))]
       (f nbd)
-      (assoc nbd :ancor 
-        {:time (current-time) :coord (:coord nbd)})))))
+      (assoc nbd :time-from-turn 0
+                        :turn-coord (:coord nbd))))))
 
 (defn helm [bdt f]
   (let [cp (fn [crs] (if (>= crs 360) (- crs 360) crs))
@@ -50,14 +45,15 @@
                                      :hard-a-port (cm (- old CRS-HRD))
                                      bdt))]
       (f nbd)
-      (assoc nbd :ancor 
-        {:time (current-time) :coord (:coord nbd)}))
+      (assoc nbd :time-from-turn 0
+                        :turn-coord (:coord nbd)))
     bdt)))
 
 (defn move [bdt]
-  (let [elat (- (current-time) (:time (:anchor bdt)))
-       ehrs (/ elat 36000000)]
-  (assoc bdt :coord (geo/future-pos (:coord (:anchor bdt)) (:course bdt) (:speed bdt) ehrs))))
+  (let [etim (+ (:time-from-turn bdt) BOAT-TIO)
+       ehrs (/ etim 36000000)]
+  (assoc bdt :coord (geo/future-pos (:turn-coord bdt) (:course bdt) (:speed bdt) ehrs)
+                    :time-from-turn etim)))
 
 (defn start-boat-movement [mf af rf]
   (letfn [(mov []
