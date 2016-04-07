@@ -19,7 +19,6 @@
 (def trails (volatile! {})) ;; map of all trails on chart
 (def DLT-EVT 1000) ;; check event queue from server every 1000 msec (1 sec)
 (def DLT-MOV 200) ;; move flight every 200 msec (5 times per sec)
-(def DLT-MOV-HRS (double (/ DLT-MOV 3600000))) ;; DLT-MOV in hours
 (def DLT-POP 10000) ;; update popup every 10000 msec (10 sec)
 (def REM-CAL (volatile! {})) ;; remote call params
 (def MYFS-INTL 1000) ;; my flights simulation interval (1 sec)
@@ -121,14 +120,18 @@
 (defn move [id]
   (if-let [data (@mapobs id)]
     (let [spd (:speed data)]
+      (println [:MOVE :ID id :DATA data])
       (if (> spd 0)
-        (let [[lat lon] (future-pos (:coord data)
+        (let [etim (+ (:time-from-turn data) DLT-MOV)
+              ehrs (/ etim 36000000)
+              [lat lon] (future-pos (:turn-coord data)
                                     (:course data)
                                     spd
-                                    DLT-MOV-HRS)
+                                    ehrs)
               pos (js/L.LatLng. lat lon)]
           (.setLatLng (:marker data) pos)
           (vswap! mapobs assoc-in [id :coord] [lat lon]))))))
+
 
 (defn delete-mapob [id]
   (when-let [mob (@mapobs id)]

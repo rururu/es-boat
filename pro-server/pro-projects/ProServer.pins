@@ -1,4 +1,4 @@
-; Thu Apr 07 12:26:00 MSK 2016
+; Thu Apr 07 19:26:10 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -44,51 +44,15 @@
 	(documentation [ProServer_Class10002])
 	(title "Boat Movement"))
 
-([ProServer_Class100003] of  CloFuncall
-
-	(source "(boat.mov/boat-engine \"b1\" 1000)"))
-
-([ProServer_Class100004] of  CloFuncall
-
-	(source "(boat.mov/boat-helm \"b2\" :port)"))
-
-([ProServer_Class100005] of  CloFuncall
-
-	(source "(boat.mov/boat-helm \"b2\" :steady)"))
-
-([ProServer_Class100006] of  CloFuncall
-
-	(source "(boat.mov/boat-engine \"b2\" 1000)"))
-
-([ProServer_Class100007] of  CloFuncall
-
-	(source "(boat.mov/boat-add \"b1\" [62.8260 34.7436] 180 12)"))
-
-([ProServer_Class100008] of  CloFuncall
-
-	(source "(boat.mov/boat-add \"b2\" [62.8260 34.7446] 180 12)"))
-
-([ProServer_Class100009] of  CloFuncall
-
-	(source "(boat.mov/boat-helm \"b2\" :hard-a-starboard)"))
-
 ([ProServer_Class10001] of  CloNamespace
 
 	(source "(:require\n  [geo.calc :as geo]\n  [async.proc :as ap])")
 	(title "boat.mov"))
 
-([ProServer_Class100010] of  CloFuncall
-
-	(source "(boat.mov/boat-helm \"b1\" :steady)"))
-
 ([ProServer_Class100011] of  CloFunction
 
 	(source "(.getTimeInMillis (Calendar/getInstance))")
 	(title "current-time []"))
-
-([ProServer_Class100012] of  CloFuncall
-
-	(source "(pro.server/stop-server)"))
 
 ([ProServer_Class10002] of  CloDocumentation
 
@@ -174,6 +138,10 @@
 		[ProServer_Class10000]
 		[ProServer_Class80003])
 	(title "ProServer Working Programs"))
+
+([ProServer_Class30000] of  CloFuncall
+
+	(source "boat.mov/BOATS"))
 
 ([ProServer_Class30001] of  CloProgram
 
@@ -292,12 +260,12 @@
 
 ([ProServer_Class50000] of  CloFunction
 
-	(source "(letfn [(mov []\n            (doseq [[id bdt] (seq @BOATS)]\n              (let [man-func (partial mf id)]\n                (vswap! BOATS assoc id \n                  (-> bdt\n                    (engine man-func)\n                    (helm man-func)\n                    (move))))))]\n  (def add-func af)\n  (def rem-func rf)\n  (ap/start-proc mov-status #(mov) BOAT-TIO nil \"Boats movement started..\"))")
+	(source "(letfn [(mov []\n            (doseq [[id bdt] (seq @BOATS)]\n              (let [man-func (partial mf id)]\n                (vswap! BOATS assoc id \n                  (-> bdt\n                    (move)\n                    (engine man-func)\n                    (helm man-func))))))]\n  (def add-func af)\n  (def rem-func rf)\n  (ap/start-proc mov-status #(mov) BOAT-TIO nil \"Boats movement started..\"))")
 	(title "start-boat-movement [mf af rf]"))
 
 ([ProServer_Class50001] of  CloFuncall
 
-	(source "(pro.server/start-server)"))
+	(source "(boat.mov/boat-helm \"b1\" :steady)"))
 
 ([ProServer_Class50002] of  CloVar
 
@@ -306,7 +274,7 @@
 
 ([ProServer_Class50003] of  CloFunction
 
-	(source "(let [bdt {:coord coord\n               :course crs\n               :speed spd\n               :helm :steady\n               :engine spd\n               :old-crs crs}]\n  (vswap! BOATS assoc id bdt)\n  (add-func id bdt))")
+	(source "(let [bdt {:coord coord\n               :course crs\n               :speed spd\n               :helm :steady\n               :engine spd\n               :time-from-turn 0\n               :turn-coord coord}]\n  (vswap! BOATS assoc id bdt)\n  (add-func id bdt))")
 	(title "boat-add [id coord crs spd]"))
 
 ([ProServer_Class50004] of  CloFunction
@@ -324,14 +292,18 @@
 	(source "(let [knots (max (min knots SPD-MAX) SPD-MIN)]\n  (vswap! BOATS assoc-in [id :engine] knots))")
 	(title "boat-engine [id knots]"))
 
+([ProServer_Class60002] of  CloFuncall
+
+	(source "(boat.mov/boat-engine \"b1\" 1000)"))
+
 ([ProServer_Class60003] of  CloFunction
 
 	(source "(ap/stop-proc mov-status)")
 	(title "stop-boat-movement []"))
 
-([ProServer_Class70000] of  CloFuncall
+([ProServer_Class70003] of  CloFuncall
 
-	(source "(boat.mov/boat-helm \"b1\" :port)"))
+	(source "(boat.mov/boat-helm \"b1\" :starboard)"))
 
 ([ProServer_Class70008] of  CloVar
 
@@ -346,14 +318,6 @@
 
 	(source "(slurp (str ROOT \"index.html\"))")
 	(title "index-page []"))
-
-([ProServer_Class80001] of  CloFuncall
-
-	(source "(boat.mov/boat-helm \"b1\" :hard-a-port)"))
-
-([ProServer_Class80002] of  CloFuncall
-
-	(source "(boat.mov/boat-helm \"b1\" :hard-a-starboard)"))
 
 ([ProServer_Class80003] of  CloProgram
 
@@ -439,3 +403,11 @@
 
 	(source "(str (System/getProperty \"user.dir\") \"/resources/public/\")")
 	(title "ROOT"))
+
+([ProServer_Class90017] of  CloFuncall
+
+	(source "boat.mov/BOAT-TIO"))
+
+([ProServer_Class90018] of  CloFuncall
+
+	(source "(pro.server/stop-server)"))

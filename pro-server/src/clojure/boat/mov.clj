@@ -61,9 +61,9 @@
               (let [man-func (partial mf id)]
                 (vswap! BOATS assoc id 
                   (-> bdt
+                    (move)
                     (engine man-func)
-                    (helm man-func)
-                    (move))))))]
+                    (helm man-func))))))]
   (def add-func af)
   (def rem-func rf)
   (ap/start-proc mov-status #(mov) BOAT-TIO nil "Boats movement started..")))
@@ -77,7 +77,8 @@
                :speed spd
                :helm :steady
                :engine spd
-               :old-crs crs}]
+               :time-from-turn 0
+               :turn-coord coord}]
   (vswap! BOATS assoc id bdt)
   (add-func id bdt)))
 
