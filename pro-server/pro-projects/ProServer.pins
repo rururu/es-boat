@@ -1,4 +1,4 @@
-; Thu Apr 07 23:35:55 MSK 2016
+; Fri Apr 08 12:26:49 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -300,6 +300,14 @@
 
 	(source "(ap/stop-proc mov-status)")
 	(title "stop-boat-movement []"))
+
+([ProServer_Class70000] of  CloFuncall
+
+	(source "(boat.mov/boat-add \"b1\" [62.2935 5.4987] 30 6)"))
+
+([ProServer_Class70001] of  CloFuncall
+
+	(source "(pro.server/stop-server)"))
 
 ([ProServer_Class70003] of  CloFuncall
 

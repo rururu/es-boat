@@ -6,7 +6,7 @@
 (def DEF-BOATS (defonce BOATS (volatile! {})))
 (def CRS-STP 6)
 (def CRS-HRD 18)
-(def SPD-STP 0.4)
+(def SPD-STP 0.6)
 (def SPD-MAX 44)
 (def SPD-MIN -8)
 (def BOAT-TIO 1000)

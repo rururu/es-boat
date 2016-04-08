@@ -17,6 +17,9 @@
 (defn index-page []
   (slurp (str ROOT "index.html")))
 
+(defn view3d-page []
+  (slurp (str ROOT "terrain3D.html")))
+
 (defn pump-out [chn]
   (loop [[bit ch] (alts!! [chn] :default :none) bits []]
   (if (= bit :none)
@@ -41,6 +44,7 @@
 (defn init-server []
   (defroutes app-routes
   (GET "/" [] (index-page))
+  (GET "/view3d/" [] (view3d-page))
   (GET "/events/" [& params] (events))
   (route/files "/" (do (println [:ROOT-FILES ROOT]) {:root ROOT}))
   (route/resources "/")
