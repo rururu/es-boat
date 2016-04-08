@@ -1,65 +1,62 @@
-(ns view3d.core)
+(ns view3d.core
+  (:require
+    [ajax.core :refer (GET)]))
 
 (enable-console-print!)
 
-(def SRC-URL "http://localhost:4444/view3d/")
-(def DAT-SRC nil)
+;; ---------------------- General constants ------------------------------------
 
-(defn czmlProc [e]
-  (let [data (.-data e)
-        _ (println data)
-        data (-> js/JSON (.parse data))]
-    (.process DAT-SRC data)))
+(def URL-CMD "http://localhost:4444/command/")
 
-(defn flyProc [e])
+(defn by-id  [id]
+  (.getElementById js/document id))
+
+(defn get-html [id]
+  (.-innerHTML (by-id id)))
+
+(defn set-html! [id msg]
+  (set! (.-innerHTML (by-id id)) msg))
+
+(defn error-handler [{:keys [status status-text]}]
+  (println (str "AJAX ERROR: " status " " status-text)))
+
+(defn no-handler [response])
+
+;; --------------------------- Controls -------------------------------
+
+(def helm-control
+  "<input type='range' min='-100' max='100' step='10' value='0'
+  onchange='javascript:view3d.core.helm(this.value)'>")
+
+(defn helm [val]
+  (let [cmd (cond
+              (<= -20 val 20) "steady"
+              (> val 80) "hard-a-starboard"
+              (> val 20) "starboard"
+              (< val -80) "hard-a-port"
+              (< val -20) "port")
+        url (str URL-CMD "?helm=" cmd)]
+    (GET url {:handler no-handler
+              :error-handler error-handler})))
+
+(def throttle-control
+  "<input type='test' value='0' style='width:40px'
+  onchange='javascript:view3d.core.throttle(this.value)'>")
+
+(defn throttle [val]
+  (let [url (str URL-CMD "?throttle=" val)]
+    (GET url {:handler no-handler
+              :error-handler error-handler})))
+
+;; ----------------------------- Init ---------------------------------
 
 (defn init []
-  (let [viewer (js/Cesium.Viewer. "cesiumContainer")
-        provid (js/Cesium.CesiumTerrainProvider.
-                              #js{:url "//assets.agi.com/stk-terrain/world"
-                                  :requestWaterMask false
-                                  :requestVertexNormals false})
-        _ (set! (.-terrainProvider viewer) provid)
-        scene (.-scene viewer)
-        _ (set! (.. scene -globe -depthTestAgainstTerrain) false)
-        ellip (.. scene -globe -ellipsoid)
-        entyt (.add (.-entities viewer) #js{:label #js{:show false}})
-        handl (js/Cesium.ScreenSpaceEventHandler. (.-canvas scene))
-        _ (def DAT-SRC (js/Cesium.CzmlDataSource.))
-        _ (.add (.-dataSources viewer) DAT-SRC)
-        sourc (js/EventSource. SRC-URL)]
-    (.addEventListener sourc "czml" czmlProc false)
-    (.addEventListener sourc "fly" flyProc false)))
+  (let [x 1]
+    (set-html! "helm-title" "helm")
+    (set-html! "helm" helm-control)
+    (set-html! "throttle-title" "throttle")
+    (set-html! "throttle" throttle-control)))
+
+;; ----------------------------- Start ---------------------------------
 
 (set! (.-onload js/window) (init))
-
-
-;;       source.addEventListener('czml', function(e) {
-;;         console.log(e.data);
-;;         var data = JSON.parse(e.data);
-;;         dataSource.process(data);
-;;       }, false);
-;;       source.addEventListener('fly', function(e) {
-;;         console.log(e.data);
-;;         var data = JSON.parse(e.data);
-;;         if (data.ctrl == "fly"){
-;;           viewer.camera.flyTo({
-;;             destination : Cesium.Cartesian3.fromDegrees(data.lon, data.lat, data.altitude),
-;;             orientation : {
-;;               heading : Cesium.Math.toRadians(data.heading),
-;;               pitch : Cesium.Math.toRadians(data.pitch),
-;;               roll : Cesium.Math.toRadians(data.roll)
-;;             },
-;;             duration : data.duration,
-;;             easingFunction : function(time) { return time; }
-;;           });
-;;         } else if (data.ctrl == "view") {
-;;           viewer.camera.setView({
-;;             position : Cesium.Cartesian3.fromDegrees(data.lon, data.lat, data.altitude),
-;;             heading : Cesium.Math.toRadians(data.heading),
-;;             pitch : Cesium.Math.toRadians(data.pitch),
-;;             roll : Cesium.Math.toRadians(data.roll)
-;;           });
-;;         }
-;;       }, false);
-;;     </script>

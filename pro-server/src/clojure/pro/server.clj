@@ -14,11 +14,9 @@
 (def PORT 4444)
 (def APP nil)
 (def SERV nil)
+(def ONBOARD "b1")
 (defn index-page []
   (slurp (str ROOT "index.html")))
-
-(defn view3d-page []
-  (slurp (str ROOT "terrain3D.html")))
 
 (defn pump-out [chn]
   (loop [[bit ch] (alts!! [chn] :default :none) bits []]
@@ -41,11 +39,16 @@
   (-> (r/response (write-transit (deref (future (pump-out EVT-CHN)))))
        (r/header "Access-Control-Allow-Origin" "*")))
 
+(defn command [params]
+  (println [:PARAMS params])
+"")
+
 (defn init-server []
   (defroutes app-routes
   (GET "/" [] (index-page))
-  (GET "/view3d/" [] (view3d-page))
-  (GET "/events/" [& params] (events))
+  (GET "/events/" [] (events))
+  (GET "/command/" [& params] (command params))
+  (GET "/czml/" [] "")
   (route/files "/" (do (println [:ROOT-FILES ROOT]) {:root ROOT}))
   (route/resources "/")
   (route/not-found "Not Found"))

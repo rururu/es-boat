@@ -1,4 +1,4 @@
-; Fri Apr 08 12:26:49 MSK 2016
+; Fri Apr 08 18:47:29 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -162,28 +162,28 @@
 	(name "instances_file_name")
 	(string_value "ProServer.pins"))
 
-([KB_939252_Class430] of  Map
+([KB_851295_Class430] of  Map
 
 	(entries
-		[KB_939252_Class431]
-		[KB_939252_Class432]
-		[KB_939252_Class433]))
+		[KB_851295_Class431]
+		[KB_851295_Class432]
+		[KB_851295_Class433]))
 
-([KB_939252_Class431] of  Map_Entry
+([KB_851295_Class431] of  Map_Entry
 
 	(key "suppress_instance_counting")
 	(key_class "java.lang.String")
 	(value "false")
 	(value_class "java.lang.String"))
 
-([KB_939252_Class432] of  Map_Entry
+([KB_851295_Class432] of  Map_Entry
 
 	(key "add_name_on_instance_form")
 	(key_class "java.lang.String")
 	(value "false")
 	(value_class "java.lang.String"))
 
-([KB_939252_Class433] of  Map_Entry
+([KB_851295_Class433] of  Map_Entry
 
 	(key "change_tracking_active")
 	(key_class "java.lang.String")

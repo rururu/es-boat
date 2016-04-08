@@ -1,4 +1,4 @@
-; Fri Apr 08 12:26:49 MSK 2016
+; Fri Apr 08 18:47:29 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -43,6 +43,16 @@
 		[ProServer_Class70009])
 	(documentation [ProServer_Class10002])
 	(title "Boat Movement"))
+
+([ProServer_Class100000] of  CloFunction
+
+	(source "(println [:PARAMS params])\n\"\"")
+	(title "command [params]"))
+
+([ProServer_Class100001] of  CloVar
+
+	(source "\"b1\"")
+	(title "ONBOARD"))
 
 ([ProServer_Class10001] of  CloNamespace
 
@@ -263,10 +273,6 @@
 	(source "(letfn [(mov []\n            (doseq [[id bdt] (seq @BOATS)]\n              (let [man-func (partial mf id)]\n                (vswap! BOATS assoc id \n                  (-> bdt\n                    (move)\n                    (engine man-func)\n                    (helm man-func))))))]\n  (def add-func af)\n  (def rem-func rf)\n  (ap/start-proc mov-status #(mov) BOAT-TIO nil \"Boats movement started..\"))")
 	(title "start-boat-movement [mf af rf]"))
 
-([ProServer_Class50001] of  CloFuncall
-
-	(source "(boat.mov/boat-helm \"b1\" :steady)"))
-
 ([ProServer_Class50002] of  CloVar
 
 	(source "(volatile! \"START\")")
@@ -292,10 +298,6 @@
 	(source "(let [knots (max (min knots SPD-MAX) SPD-MIN)]\n  (vswap! BOATS assoc-in [id :engine] knots))")
 	(title "boat-engine [id knots]"))
 
-([ProServer_Class60002] of  CloFuncall
-
-	(source "(boat.mov/boat-helm \"b1\" :port)"))
-
 ([ProServer_Class60003] of  CloFunction
 
 	(source "(ap/stop-proc mov-status)")
@@ -303,19 +305,11 @@
 
 ([ProServer_Class70000] of  CloFuncall
 
-	(source "(boat.mov/boat-add \"b1\" [62.2935 5.4987] 30 6)"))
+	(source "(boat.mov/boat-add pro.server/ONBOARD [62.2935 5.4987] 30 6)"))
 
 ([ProServer_Class70001] of  CloFuncall
 
 	(source "(pro.server/stop-server)"))
-
-([ProServer_Class70003] of  CloFuncall
-
-	(source "(boat.mov/boat-engine \"b1\" 10)"))
-
-([ProServer_Class70004] of  CloFuncall
-
-	(source "(boat.mov/boat-engine \"b1\" 45)"))
 
 ([ProServer_Class70008] of  CloVar
 
@@ -339,6 +333,7 @@
 		[ProServer_Class80019]
 		[ProServer_Class80004]
 		[ProServer_Class80017]
+		[ProServer_Class100000]
 		[ProServer_Class80007]
 		[ProServer_Class80008]
 		[ProServer_Class80009])
@@ -348,7 +343,8 @@
 		[ProServer_Class80012]
 		[ProServer_Class80013]
 		[ProServer_Class80014]
-		[ProServer_Class80015])
+		[ProServer_Class80015]
+		[ProServer_Class100001])
 	(title "Pro Server"))
 
 ([ProServer_Class80004] of  CloFunction
@@ -358,7 +354,7 @@
 
 ([ProServer_Class80007] of  CloFunction
 
-	(source "(defroutes app-routes\n  (GET \"/\" [] (index-page))\n  (GET \"/events/\" [& params] (events))\n  (route/files \"/\" (do (println [:ROOT-FILES ROOT]) {:root ROOT}))\n  (route/resources \"/\")\n  (route/not-found \"Not Found\"))\n\n(def APP\n  (handler/site app-routes))")
+	(source "(defroutes app-routes\n  (GET \"/\" [] (index-page))\n  (GET \"/events/\" [] (events))\n  (GET \"/command/\" [& params] (command params))\n  (GET \"/czml/\" [] \"\")\n  (route/files \"/\" (do (println [:ROOT-FILES ROOT]) {:root ROOT}))\n  (route/resources \"/\")\n  (route/not-found \"Not Found\"))\n\n(def APP\n  (handler/site app-routes))")
 	(title "init-server []"))
 
 ([ProServer_Class80008] of  CloFunction
@@ -418,12 +414,4 @@
 
 ([ProServer_Class90012] of  CloFuncall
 
-	(source "(boat.mov/boat-rem \"b1\")"))
-
-([ProServer_Class90019] of  CloFuncall
-
-	(source "(boat.mov/boat-add \"b1\" [62.8111 34.7629] 170 44)"))
-
-([ProServer_Class90024] of  CloFuncall
-
-	(source "(boat.mov/boat-helm \"b1\" :starboard)"))
+	(source "(boat.mov/boat-rem pro.server/ONBOARD)"))
