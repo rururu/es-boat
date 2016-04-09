@@ -7,7 +7,8 @@
               [compojure.route :as route]
               [cognitect.transit :as t]
               [clojure.core.async :as async :refer [chan alts!! put! <! go timeout]]
-              [boat.mov :as bm]))
+              [boat.mov :as bm]
+              [cesium.core :as cz]))
 
 (def ROOT (str (System/getProperty "user.dir") "/resources/public/"))
 (def EVT-CHN (chan))
@@ -15,6 +16,7 @@
 (def APP nil)
 (def SERV nil)
 (def ONBOARD "b1")
+(def MAP-CENTER [62.2935 5.4987])
 (defn index-page []
   (slurp (str ROOT "index.html")))
 
@@ -41,14 +43,19 @@
 
 (defn command [params]
   (println [:PARAMS params])
+(if-let [trt (:throttle params)]
+  (bm/boat-engine ONBOARD (read-string trt))
+  (if-let [cmd (:helm params)]
+    (bm/boat-helm ONBOARD (keyword cmd))))
 "")
 
 (defn init-server []
   (defroutes app-routes
   (GET "/" [] (index-page))
+  (GET "/map-center/" [] (write-transit MAP-CENTER))
   (GET "/events/" [] (events))
   (GET "/command/" [& params] (command params))
-  (GET "/czml/" [] "")
+  (GET "/czml/" [] (cz/events))
   (route/files "/" (do (println [:ROOT-FILES ROOT]) {:root ROOT}))
   (route/resources "/")
   (route/not-found "Not Found"))

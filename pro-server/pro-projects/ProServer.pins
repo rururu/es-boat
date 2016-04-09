@@ -1,4 +1,4 @@
-; Fri Apr 08 18:47:29 MSK 2016
+; Sat Apr 09 11:11:18 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -46,7 +46,7 @@
 
 ([ProServer_Class100000] of  CloFunction
 
-	(source "(println [:PARAMS params])\n\"\"")
+	(source "(println [:PARAMS params])\n(if-let [trt (:throttle params)]\n  (bm/boat-engine ONBOARD (read-string trt))\n  (if-let [cmd (:helm params)]\n    (bm/boat-helm ONBOARD (keyword cmd))))\n\"\"")
 	(title "command [params]"))
 
 ([ProServer_Class100001] of  CloVar
@@ -118,9 +118,140 @@
 	(source "(let [etim (+ (:time-from-turn bdt) BOAT-TIO)\n       ehrs (/ etim 36000000)]\n  (assoc bdt :coord (geo/future-pos (:turn-coord bdt) (:course bdt) (:speed bdt) ehrs)\n                    :time-from-turn etim))")
 	(title "move [bdt]"))
 
+([ProServer_Class110000] of  CloVar
+
+	(source "[62.2935 5.4987]")
+	(title "MAP-CENTER"))
+
+([ProServer_Class120000] of  CloProgram
+
+	(cloFunctions
+		[ProServer_Class120003]
+		[ProServer_Class120004]
+		[ProServer_Class120005]
+		[ProServer_Class120006]
+		[ProServer_Class120007]
+		[ProServer_Class120008]
+		[ProServer_Class120010]
+		[ProServer_Class120011]
+		[ProServer_Class120012]
+		[ProServer_Class120014]
+		[ProServer_Class120015]
+		[ProServer_Class120016]
+		[ProServer_Class130001]
+		[ProServer_Class130002]
+		[ProServer_Class130003])
+	(cloNamespace [ProServer_Class120001])
+	(cloVars
+		[ProServer_Class120002]
+		[ProServer_Class120009]
+		[ProServer_Class120013]
+		[ProServer_Class130000])
+	(title "Cesium Server"))
+
+([ProServer_Class120001] of  CloNamespace
+
+	(source "(:require\n    [ring.adapter.jetty :as jetty]\n    [ring.util.response :as r]\n    [compojure.core :refer [defroutes routes GET]]\n    [compojure.handler :as handler]\n    [compojure.route :as route]\n    [clojure.core.async :as async :refer [chan put! alts!!]]\n    [boat.mov :as bm]\n    [async.proc :as ap])\n(:import java.util.Calendar)")
+	(title "cesium.core"))
+
+([ProServer_Class120002] of  CloVar
+
+	(source "(defonce CAM (volatile! {:onboard nil\n                         :id nil\n                         :heading \"FORWARD\"\n                         :pitch -10.0\n                         :roll 0.0\n                         :chan nil}))")
+	(title "DEF-CAM"))
+
+([ProServer_Class120003] of  CloFunction
+
+	(source "(if-let [ch (:chan @CAM)]\n    (async/put! ch [typ (.trim dat)]))")
+	(title "send-event [typ dat]"))
+
+([ProServer_Class120004] of  CloFunction
+
+	(source "(loop [[bit ch] (alts!! [chn] :default :none) bits []]\n    (if (= bit :none)\n      bits\n      (recur (alts!! [chn] :default :none) (conj bits bit))))")
+	(title "pump-out-events [chn]"))
+
+([ProServer_Class120005] of  CloFunction
+
+	(source "(if-let [ch (:chan @CAM)]\n    (let [evt-hr (fn [[typ dat]]\n                   (str \"event: \" typ \"\\ndata: \" dat \"\\n\\n\"))\n          ee (deref (future (pump-out-events ch)))\n          resp (if (seq ee)\n                 (apply str (map evt-hr ee))\n                 \"\")]\n      (->\n        (r/response resp)\n        (r/header \"Access-Control-Allow-Origin\" \"*\")\n        (r/header \"Content-Type\" \"text/event-stream;charset=utf-8\"))))")
+	(title "events []"))
+
+([ProServer_Class120006] of  CloFunction
+
+	(source "(when (nil? (:chan @CAM))\n    (vswap! CAM assoc :chan (async/chan))\n    (println (str \"SSE Server started on channel: \" (:chan @CAM))))")
+	(title "start-sse-server []"))
+
+([ProServer_Class120007] of  CloFunction
+
+	(source "(when (:chan @CAM)\n    (vswap! CAM dissoc :chan)\n    (println \"SSE Server stopped.\"))")
+	(title "stop-sse-server []"))
+
+([ProServer_Class120008] of  CloFunction
+
+	(source "(let [p (str \"{\\\"ctrl\\\":\\\"\"\n               ctrl \"\\\",\\\"lat\\\":\"\n               lat \",\\\"lon\\\":\"\n               lon \",\\\"altitude\\\":\"\n               alt \",\\\"heading\\\":\"\n               hea \",\\\"pitch\\\":\"\n               pit \",\\\"roll\\\":\"\n               rol \",\\\"duration\\\":\"\n               per \"}\")]\n    (send-event \"fly\" p))")
+	(title "fly-control [ctrl lat lon alt hea pit rol per]"))
+
+([ProServer_Class120009] of  CloVar
+
+	(source "(volatile! 0)")
+	(title "OLD-CRS"))
+
+([ProServer_Class120010] of  CloFunction
+
+	(source "(if (> on-course crs)\n    (if (< (- on-course crs) 180)\n      :right\n      :left)\n    (if (< (- crs on-course) 180)\n      :left\n      :right))")
+	(title "what-side [crs on-course]"))
+
+([ProServer_Class120011] of  CloFunction
+
+	(source "(let [pitch (:pitch @CAM)\n        roll (:roll @CAM)\n        direct (fn [x] (cond\n                         (> x 360) (- x 360)\n                         (< x 0) (+ x 360)\n                         true x))\n        head (condp = (:heading @CAM)\n               \"FORWARD\" (direct crs)\n               \"BACKWARD\" (direct (+ crs 180))\n               \"RIGHT\" (direct (+ crs 90))\n               \"LEFT\" (direct (- crs 90))\n               \"UP\" (direct crs)\n               \"DOWN\" (direct crs))\n        dif (- crs @OLD-CRS)]\n    (vreset! OLD-CRS crs)\n    (fly-control \"fly\" lat lon alt head pitch roll per))")
+	(title "fly-to [lat lon alt crs per]"))
+
+([ProServer_Class120012] of  CloFunction
+
+	(source "(let [cld (Calendar/getInstance)\n        yar (.get cld Calendar/YEAR )\n        mon (inc (.get cld Calendar/MONTH))\n        dat (.get cld Calendar/DATE)\n        hor (.get cld Calendar/HOUR_OF_DAY)\n        min (.get cld Calendar/MINUTE)\n        sec (.get cld Calendar/SECOND)]\n    (format \"%04d-%02d-%02dT%02d:%02d:%02dZ\" yar mon dat hor min sec))")
+	(title "iso8601curt []"))
+
+([ProServer_Class120013] of  CloVar
+
+	(source "(volatile! true)")
+	(title "DOC-SND"))
+
+([ProServer_Class120014] of  CloFunction
+
+	(source "\"{\\\"id\\\":\\\"document\\\",\\\"version\\\":\\\"1.0\\\"}\"")
+	(title "doc []"))
+
+([ProServer_Class120015] of  CloFunction
+
+	(source "(when @DOC-SND\n    (send-event \"czml\" (doc))\n    (vreset! DOC-SND false))\n  (let [p (str \"{\\\"id\\\":\\\"\"\n               label\n               \"\\\",\\\"label\\\":{\\\"scale\\\":0.25,\\\"pixelOffset\\\":{\\\"cartesian2\\\":[8, -8]},\\\"text\\\":\\\"\"\n               label\n               \"\\\"},\\\"billboard\\\":{\\\"image\\\":\\\"\"\n               img-url\n               \"\\\"},\\\"position\\\":{\\\"cartographicDegrees\\\":[\"\n               lon\n               \", \"\n               lat\n               \", \"\n               alt\n               \"]}}\")]\n    (send-event \"czml\" p))")
+	(title "location [label img-url lat lon alt]"))
+
+([ProServer_Class120016] of  CloFunction
+
+	(source "(when @DOC-SND\n    (send-event \"czml\" (doc))\n    (vreset! DOC-SND false))\n  (let [p (str \"{\\\"id\\\":\\\"\"\n               label\n               \"\\\",\\\"label\\\":{\\\"scale\\\":\"\n               (/ scale 2)\n               \",\\\"pixelOffset\\\":{\\\"cartesian2\\\":[8, -8]},\\\"text\\\":\\\"\"\n               label\n               \"\\\"},\\\"billboard\\\":{\\\"scale\\\":\"\n               scale\n               \",\\\"image\\\":\\\"\"\n               img-url\n               \"\\\"},\\\"position\\\":{\\\"cartographicDegrees\\\":[\\\"\"\n               tim1\n               \"\\\", \"\n               lon1\n               \", \"\n               lat1\n               \", \"\n               alt1\n               \",\\\"\"\n               tim2\n               \"\\\", \"\n               lon2\n               \", \"\n               lat2\n               \", \"\n               alt2\n               \"]}}\")]\n    (send-event \"czml\" p))")
+	(title "leg [label img-url scale [lat1 lon1 alt1 tim1] [lat2 lon2 alt2 tim2]]"))
+
+([ProServer_Class130000] of  CloVar
+
+	(source "20000")
+	(title "CZMW-INTL"))
+
+([ProServer_Class130001] of  CloFunction
+
+	(source "(let [id (:id @CAM)]\n    (let [[lat lon] (bm/coord id)\n           alt 40 ;; feets\n           crs (bm/course id)\n           per (/ CZMW-INTL 1000)] ;; msec to sec\n      (fly-to lat lon alt crs per)))")
+	(title "cesium-work []"))
+
+([ProServer_Class130002] of  CloFunction
+
+	(source "(when (nil? (:id @CAM))\n    (ap/repeater #(cesium-work) CZMW-INTL \"Start (cesium-work)..\")\n    (vswap! CAM assoc :id 0))\n(start-sse-server)")
+	(title "start-cesium []"))
+
+([ProServer_Class130003] of  CloFunction
+
+	(source "(println [:CAMERA params])\n  (vswap! CAM merge params)\n  (condp = (params :camera)\n    \"on\" (start-cesium)\n    \"off\"(stop-sse-server)\n    true)\n  (condp = (params :heading)\n    \"UP\" (vswap! CAM assoc :pitch 90.0)\n    \"DOWN\" (vswap! CAM assoc :pitch -90.0)\n    nil true\n    (vswap! cz/CAM assoc :pitch 0.0))\n  \"\"")
+	(title "camera [params]"))
+
 ([ProServer_Class2] of  CloFunction
 
-	(source "(println \"INITIALIZING EXPERT SYSTEM\")\n(println \"1.Loading Clojure Programs...\")\n(if-let [wps (seq (cls-instances \"WorkingPrograms\"))]\n  (loop [i 1 pins (svs (first wps) \"cloPrograms\")]\n    (when (seq pins)\n      (println (str \" 1.\" i \" \" (sv (first pins) \"title\") \" = \" (ClojureTab/loadProgram (first pins)) ))\n      (recur (inc i) (rest pins))))\n  (println \"  Instance of WorkingPrograms not found!\"))\n(println \"2. ...\")\n(println \"EXPERT SYSTEM INITIALIZED\")")
+	(source "(println \"INITIALIZING EXPERT SYSTEM\")\n(println \"1.Loading Clojure Programs...\")\n(if-let [wps (seq (cls-instances \"WorkingPrograms\"))]\n  (loop [i 1 pins (svs (first wps) \"cloPrograms\")]\n    (when (seq pins)\n      (println (str \" 1.\" i \" \" (sv (first pins) \"title\") \" = \" (ClojureTab/loadProgram (first pins)) ))\n      (recur (inc i) (rest pins))))\n  (println \"  Instance of WorkingPrograms not found!\"))\n(println \"2. Starting server...\")\n(eval (read-string \"(pro.server/start-server)\"))\n(println \"3. Adding boat...\")\n(println (str \"    Map center: \" (eval (read-string \"pro.server/MAP-CENTER\"))))\n(eval (read-string \"(boat.mov/boat-add pro.server/ONBOARD pro.server/MAP-CENTER 0 0)\"))\n(println \"EXPERT SYSTEM INITIALIZED\")")
 	(title "clojure-work []"))
 
 ([ProServer_Class20000] of  CloFunction
@@ -146,6 +277,7 @@
 		[ProServer_Class30001]
 		[ProServer_Class40001]
 		[ProServer_Class10000]
+		[ProServer_Class120000]
 		[ProServer_Class80003])
 	(title "ProServer Working Programs"))
 
@@ -305,7 +437,7 @@
 
 ([ProServer_Class70000] of  CloFuncall
 
-	(source "(boat.mov/boat-add pro.server/ONBOARD [62.2935 5.4987] 30 6)"))
+	(source "(boat.mov/boat-add pro.server/ONBOARD pro.server/MAP-CENTER 0 0)"))
 
 ([ProServer_Class70001] of  CloFuncall
 
@@ -344,7 +476,8 @@
 		[ProServer_Class80013]
 		[ProServer_Class80014]
 		[ProServer_Class80015]
-		[ProServer_Class100001])
+		[ProServer_Class100001]
+		[ProServer_Class110000])
 	(title "Pro Server"))
 
 ([ProServer_Class80004] of  CloFunction
@@ -354,7 +487,7 @@
 
 ([ProServer_Class80007] of  CloFunction
 
-	(source "(defroutes app-routes\n  (GET \"/\" [] (index-page))\n  (GET \"/events/\" [] (events))\n  (GET \"/command/\" [& params] (command params))\n  (GET \"/czml/\" [] \"\")\n  (route/files \"/\" (do (println [:ROOT-FILES ROOT]) {:root ROOT}))\n  (route/resources \"/\")\n  (route/not-found \"Not Found\"))\n\n(def APP\n  (handler/site app-routes))")
+	(source "(defroutes app-routes\n  (GET \"/\" [] (index-page))\n  (GET \"/map-center/\" [] (write-transit MAP-CENTER))\n  (GET \"/events/\" [] (events))\n  (GET \"/command/\" [& params] (command params))\n  (GET \"/czml/\" [] (cz/events))\n  (route/files \"/\" (do (println [:ROOT-FILES ROOT]) {:root ROOT}))\n  (route/resources \"/\")\n  (route/not-found \"Not Found\"))\n\n(def APP\n  (handler/site app-routes))")
 	(title "init-server []"))
 
 ([ProServer_Class80008] of  CloFunction
@@ -389,7 +522,7 @@
 
 ([ProServer_Class80016] of  CloNamespace
 
-	(source "(:import java.io.ByteArrayOutputStream)\n(:require [ring.adapter.jetty :as jetty]\n              [ring.util.response :as r]\n              [compojure.core :refer [defroutes GET]]\n              [compojure.handler :as handler]\n              [compojure.route :as route]\n              [cognitect.transit :as t]\n              [clojure.core.async :as async :refer [chan alts!! put! <! go timeout]]\n              [boat.mov :as bm])")
+	(source "(:import java.io.ByteArrayOutputStream)\n(:require [ring.adapter.jetty :as jetty]\n              [ring.util.response :as r]\n              [compojure.core :refer [defroutes GET]]\n              [compojure.handler :as handler]\n              [compojure.route :as route]\n              [cognitect.transit :as t]\n              [clojure.core.async :as async :refer [chan alts!! put! <! go timeout]]\n              [boat.mov :as bm]\n              [cesium.core :as cz])")
 	(title "pro.server"))
 
 ([ProServer_Class80017] of  CloFunction

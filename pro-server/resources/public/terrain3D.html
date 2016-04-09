@@ -30,62 +30,15 @@
   </head>
   <body>
     <div id="cesiumContainer"></div>
-    <div id="helm-title"></div><div id="helm"></div>
-    <div id="throttle-title"></div><div id="throttle"></div>
-    <script>
-      var sourceURL = "http://localhost:4444/czml/";
-      console.log(sourceURL);
-      var viewer = new Cesium.Viewer('cesiumContainer');
-      // Terrain providers
-      var cesiumTerrainProviderMeshes = new Cesium.CesiumTerrainProvider({
-        url : '//assets.agi.com/stk-terrain/world',
-        requestWaterMask : false,
-        requestVertexNormals : false});
-      viewer.terrainProvider = cesiumTerrainProviderMeshes;
-      var scene = viewer.scene;
-      // Display undersurface parts of objects
-      scene.globe.depthTestAgainstTerrain = false;
-      var ellipsoid = scene.globe.ellipsoid;
-      var entity = viewer.entities.add({
-        label : {
-          show : false
-        }
-      });
-      var handler = new Cesium.ScreenSpaceEventHandler(scene.canvas);
-      // STREAMING FROM CZML SERVER
-      console.log("Streaming from czml server: "+sourceURL);
-      var dataSource = new Cesium.CzmlDataSource();
-      viewer.dataSources.add(dataSource);
-      var source = new EventSource(sourceURL);
-      source.addEventListener('czml', function(e) {
-        console.log(e.data);
-        var data = JSON.parse(e.data);
-        dataSource.process(data);
-      }, false);
-      source.addEventListener('fly', function(e) {
-        console.log(e.data);
-        var data = JSON.parse(e.data);
-        if (data.ctrl == "fly"){
-          viewer.camera.flyTo({
-            destination : Cesium.Cartesian3.fromDegrees(data.lon, data.lat, data.altitude),
-            orientation : {
-              heading : Cesium.Math.toRadians(data.heading),
-              pitch : Cesium.Math.toRadians(data.pitch),
-              roll : Cesium.Math.toRadians(data.roll)
-            },
-            duration : data.duration,
-            easingFunction : function(time) { return time; }
-          });
-        } else if (data.ctrl == "view") {
-          viewer.camera.setView({
-            position : Cesium.Cartesian3.fromDegrees(data.lon, data.lat, data.altitude),
-            heading : Cesium.Math.toRadians(data.heading),
-            pitch : Cesium.Math.toRadians(data.pitch),
-            roll : Cesium.Math.toRadians(data.roll)
-          });
-        }
-      }, false);
-    </script>
+    <div id="course"></div><div id="helm"></div>
+    <div id="latitude"></div>
+    <div id="longitude"></div>
+    <div id="speed"></div>
+   	<div id="view"></div><div id="view-fld"></div>
+   	<div id="pitch"></div><div id="pitch-fld"></div>
+   	<div id="roll"></div><div id="roll-fld"></div>
+    <div id="throttle"></div><div id="throttle-fld"></div>
+   	<div id="altitude"></div><div id="altitude-fld"></div>
     <script src="js/terrain3d.js"></script>
   </body>
 </html>

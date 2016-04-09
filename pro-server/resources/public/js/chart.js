@@ -55777,6 +55777,7 @@ chart.core.DLT_EVT = 1E3;
 chart.core.DLT_MOV = 200;
 chart.core.DLT_POP = 1E4;
 chart.core.URL_EVT = "http://localhost:4444/events/";
+chart.core.URL_MAP = "http://localhost:4444/map-center/";
 chart.core.URL_OSM = "http://{s}.tile.osm.org/{z}/{x}/{y}.png";
 chart.core.URL_GST = "http://{s}.google.com/vt/lyrs\x3dm\x26x\x3d{x}\x26y\x3d{y}\x26z\x3d{z}";
 chart.core.URL_GHB = "http://{s}.google.com/vt/lyrs\x3ds,h\x26x\x3d{x}\x26y\x3d{y}\x26z\x3d{z}";
@@ -56267,27 +56268,38 @@ chart.core.check_events = function chart$core$check_events() {
 chart.core.no_handler = function chart$core$no_handler(response) {
   return null;
 };
+chart.core.start_map = function chart$core$start_map(response) {
+  var temp__4655__auto__ = chart.core.read_transit.call(null, response);
+  if (cljs.core.truth_(temp__4655__auto__)) {
+    var vec__12543 = temp__4655__auto__;
+    var lat = cljs.core.nth.call(null, vec__12543, 0, null);
+    var lon = cljs.core.nth.call(null, vec__12543, 1, null);
+    var m = L.map("map").setView([lat, lon], 10);
+    var tile1 = L.tileLayer(chart.core.URL_OSM, {"maxZoom":16, "attribution":"OOGIS RL, OpenStreetMap \x26copy;"});
+    var tile2 = L.tileLayer(chart.core.URL_GSA, {"maxZoom":20, "subdomains":["mt0", "mt1", "mt2", "mt3"], "attribution":"OOGIS RL, Google \x26copy;"});
+    var tile3 = L.tileLayer(chart.core.URL_GST, {"maxZoom":20, "subdomains":["mt0", "mt1", "mt2", "mt3"], "attribution":"OOGIS RL, Google \x26copy;"});
+    var tile4 = L.tileLayer(chart.core.URL_GHB, {"maxZoom":20, "subdomains":["mt0", "mt1", "mt2", "mt3"], "attribution":"OOGIS RL, Google \x26copy;"});
+    var tile5 = L.tileLayer(chart.core.URL_GTR, {"maxZoom":20, "subdomains":["mt0", "mt1", "mt2", "mt3"], "attribution":"OOGIS RL, Google \x26copy;"});
+    var base = cljs.core.clj__GT_js.call(null, new cljs.core.PersistentArrayMap(null, 5, ["OpenStreetMap", tile1, "Google Satellite", tile2, "Google Streets", tile3, "Google Hybrid", tile4, "Google Terrain", tile5], null));
+    var ctrl = L.control.layers(base, null);
+    tile1.addTo(m);
+    ctrl.addTo(m);
+    m.on("mousemove", function(m, tile1, tile2, tile3, tile4, tile5, base, ctrl, vec__12543, lat, lon, temp__4655__auto__) {
+      return function(e) {
+        return chart.core.mouse_move.call(null, e.latlng.lat, e.latlng.lng);
+      };
+    }(m, tile1, tile2, tile3, tile4, tile5, base, ctrl, vec__12543, lat, lon, temp__4655__auto__));
+    cljs.core.vreset_BANG_.call(null, chart.core.chart, m);
+    return chart.core.repeater.call(null, function(m, tile1, tile2, tile3, tile4, tile5, base, ctrl, vec__12543, lat, lon, temp__4655__auto__) {
+      return function() {
+        return chart.core.check_events.call(null);
+      };
+    }(m, tile1, tile2, tile3, tile4, tile5, base, ctrl, vec__12543, lat, lon, temp__4655__auto__), chart.core.DLT_EVT);
+  } else {
+    return alert("No map center from server!");
+  }
+};
 chart.core.init = function chart$core$init() {
-  var m = L.map("map").setView([62.2935, 5.4987], 10);
-  var tile1 = L.tileLayer(chart.core.URL_OSM, {"maxZoom":16, "attribution":"OOGIS RL, OpenStreetMap \x26copy;"});
-  var tile2 = L.tileLayer(chart.core.URL_GSA, {"maxZoom":20, "subdomains":["mt0", "mt1", "mt2", "mt3"], "attribution":"OOGIS RL, Google \x26copy;"});
-  var tile3 = L.tileLayer(chart.core.URL_GST, {"maxZoom":20, "subdomains":["mt0", "mt1", "mt2", "mt3"], "attribution":"OOGIS RL, Google \x26copy;"});
-  var tile4 = L.tileLayer(chart.core.URL_GHB, {"maxZoom":20, "subdomains":["mt0", "mt1", "mt2", "mt3"], "attribution":"OOGIS RL, Google \x26copy;"});
-  var tile5 = L.tileLayer(chart.core.URL_GTR, {"maxZoom":20, "subdomains":["mt0", "mt1", "mt2", "mt3"], "attribution":"OOGIS RL, Google \x26copy;"});
-  var base = cljs.core.clj__GT_js.call(null, new cljs.core.PersistentArrayMap(null, 5, ["OpenStreetMap", tile1, "Google Satellite", tile2, "Google Streets", tile3, "Google Hybrid", tile4, "Google Terrain", tile5], null));
-  var ctrl = L.control.layers(base, null);
-  tile1.addTo(m);
-  ctrl.addTo(m);
-  m.on("mousemove", function(m, tile1, tile2, tile3, tile4, tile5, base, ctrl) {
-    return function(e) {
-      return chart.core.mouse_move.call(null, e.latlng.lat, e.latlng.lng);
-    };
-  }(m, tile1, tile2, tile3, tile4, tile5, base, ctrl));
-  cljs.core.vreset_BANG_.call(null, chart.core.chart, m);
-  return chart.core.repeater.call(null, function(m, tile1, tile2, tile3, tile4, tile5, base, ctrl) {
-    return function() {
-      return chart.core.check_events.call(null);
-    };
-  }(m, tile1, tile2, tile3, tile4, tile5, base, ctrl), chart.core.DLT_EVT);
+  return ajax.core.GET.call(null, chart.core.URL_MAP, new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "handler", "handler", -195596612), chart.core.start_map, new cljs.core.Keyword(null, "error-handler", "error-handler", -484945776), chart.core.error_handler], null));
 };
 window.onload = chart.core.init.call(null);

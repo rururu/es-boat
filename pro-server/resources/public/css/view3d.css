@@ -1,7 +1,7 @@
-#helm-title {
+#course {
   position:fixed;
   bottom:110px;
-  right:130px;
+  right:256px;
   padding:5px;
   z-index:100;
   color:yellow
@@ -9,22 +9,107 @@
 #helm {
   position:fixed;
   bottom:80px;
-  right:80px;
+  right:200px;
   padding:5px;
   z-index:100;
 }
-#throttle-title {
+#latitude {
   position:fixed;
-  bottom:110px;
+  bottom:220px;
   right:10px;
   padding:5px;
   z-index:100;
   color:yellow
 }
+#longitude {
+  position:fixed;
+  bottom:200px;
+  right:10px;
+  padding:5px;
+  z-index:100;
+  color:yellow
+}
+#speed {
+  position:fixed;
+  bottom:180px;
+  right:10px;
+  padding:5px;
+  z-index:100;
+  color:yellow
+}
+#view {
+  position:fixed;
+  bottom:160px;
+  right:120px;
+  padding:5px;
+  z-index:100;
+  color:yellow
+}
+#view-fld {
+  position:fixed;
+  bottom:160px;
+  right:10px;
+  padding:5px;
+  z-index:100;
+}
+#pitch {
+  position:fixed;
+  bottom:140px;
+  right:120px;
+  padding:5px;
+  z-index:100;
+  color:yellow
+}
+#pitch-fld {
+  position:fixed;
+  bottom:140px;
+  right:10px;
+  padding:5px;
+  z-index:100;
+}
+#roll {
+  position:fixed;
+  bottom:120px;
+  right:120px;
+  padding:5px;
+  z-index:100;
+  color:yellow
+}
+#roll-fld {
+  position:fixed;
+  bottom:120px;
+  right:10px;
+  padding:5px;
+  z-index:100;
+}
+#altitude {
+  position:fixed;
+  bottom:100px;
+  right:120px;
+  padding:5px;
+  z-index:100;
+  color:yellow
+}
+#altitude-fld {
+  position:fixed;
+  bottom:100px;
+  right:10px;
+  padding:5px;
+  z-index:100;
+}
 #throttle {
+  position:fixed;
+  bottom:80px;
+  right:120px;
+  padding:5px;
+  z-index:100;
+  color:yellow
+}
+#throttle-fld {
   position:fixed;
   bottom:80px;
   right:10px;
   padding:5px;
   z-index:100;
 }
+

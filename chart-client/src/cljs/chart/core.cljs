@@ -18,6 +18,7 @@
 (def DLT-MOV 200) ;; move flight every 200 msec (5 times per sec)
 (def DLT-POP 10000) ;; update popup every 10000 msec (10 sec)
 (def URL-EVT "http://localhost:4444/events/")
+(def URL-MAP "http://localhost:4444/map-center/")
 (def URL-OSM "http://{s}.tile.osm.org/{z}/{x}/{y}.png")
 (def URL-GST "http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}")
 (def URL-GHB "http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}")
@@ -174,41 +175,47 @@
 
 ;; ------------------------ Initialization ----------------------------
 
+(defn start-map [response]
+  (if-let [[lat lon] (read-transit response)]
+    (let [m (-> js/L
+                (.map "map")
+                (.setView (array lat lon) 10)) ;; 40.8, -74.0) 9)) ;; New York City
+          tile1 (-> js/L (.tileLayer URL-OSM
+                                     #js{:maxZoom 16
+                                         :attribution "OOGIS RL, OpenStreetMap &copy;"}))
+          tile2 (-> js/L (.tileLayer URL-GSA
+                                     #js{:maxZoom 20
+                                         :subdomains #js["mt0" "mt1" "mt2" "mt3"]
+                                         :attribution "OOGIS RL, Google &copy;"}))
+          tile3 (-> js/L (.tileLayer URL-GST
+                                     #js{:maxZoom 20
+                                         :subdomains #js["mt0" "mt1" "mt2" "mt3"]
+                                         :attribution "OOGIS RL, Google &copy;"}))
+          tile4 (-> js/L (.tileLayer URL-GHB
+                                     #js{:maxZoom 20
+                                         :subdomains #js["mt0" "mt1" "mt2" "mt3"]
+                                         :attribution "OOGIS RL, Google &copy;"}))
+          tile5 (-> js/L (.tileLayer URL-GTR
+                                     #js{:maxZoom 20
+                                         :subdomains #js["mt0" "mt1" "mt2" "mt3"]
+                                         :attribution "OOGIS RL, Google &copy;"}))
+          base (clj->js {"OpenStreetMap" tile1
+                         "Google Satellite" tile2
+                         "Google Streets" tile3
+                         "Google Hybrid" tile4
+                         "Google Terrain" tile5})
+          ctrl (-> js/L (.control.layers base nil))]
+      (.addTo tile1 m)
+      (.addTo ctrl m)
+      (.on m "mousemove"
+           (fn [e] (mouse-move (.. e -latlng -lat) (.. e -latlng -lng))))
+      (vreset! chart m)
+      (repeater #(check-events) DLT-EVT))
+    (js/alert "No map center from server!")))
+
 (defn init []
-  (let [m (-> js/L
-            (.map "map")
-            (.setView (array 62.2935 5.4987) 10)) ;; 40.8, -74.0) 9)) ;; New York City
-        tile1 (-> js/L (.tileLayer URL-OSM
-                         #js{:maxZoom 16
-                             :attribution "OOGIS RL, OpenStreetMap &copy;"}))
-        tile2 (-> js/L (.tileLayer URL-GSA
-                         #js{:maxZoom 20
-                             :subdomains #js["mt0" "mt1" "mt2" "mt3"]
-                             :attribution "OOGIS RL, Google &copy;"}))
-        tile3 (-> js/L (.tileLayer URL-GST
-                         #js{:maxZoom 20
-                             :subdomains #js["mt0" "mt1" "mt2" "mt3"]
-                             :attribution "OOGIS RL, Google &copy;"}))
-        tile4 (-> js/L (.tileLayer URL-GHB
-                         #js{:maxZoom 20
-                             :subdomains #js["mt0" "mt1" "mt2" "mt3"]
-                             :attribution "OOGIS RL, Google &copy;"}))
-        tile5 (-> js/L (.tileLayer URL-GTR
-                         #js{:maxZoom 20
-                             :subdomains #js["mt0" "mt1" "mt2" "mt3"]
-                             :attribution "OOGIS RL, Google &copy;"}))
-        base (clj->js {"OpenStreetMap" tile1
-                       "Google Satellite" tile2
-                       "Google Streets" tile3
-                       "Google Hybrid" tile4
-                       "Google Terrain" tile5})
-        ctrl (-> js/L (.control.layers base nil))]
-    (.addTo tile1 m)
-    (.addTo ctrl m)
-    (.on m "mousemove"
-      (fn [e] (mouse-move (.. e -latlng -lat) (.. e -latlng -lng))))
-    (vreset! chart m)
-    (repeater #(check-events) DLT-EVT)))
+  (GET URL-MAP {:handler start-map
+                :error-handler error-handler}))
 
 ;; ----------------------------- Start ---------------------------------
 
