@@ -1,20 +1,21 @@
 // Compiled by ClojureScript 1.7.228 {}
 goog.provide('view3d.core');
 goog.require('cljs.core');
-goog.require('cognitect.transit');
-goog.require('ajax.core');
 goog.require('goog.string');
+goog.require('goog.string.format');
 goog.require('cljs.core.async');
 goog.require('cljs.reader');
-goog.require('goog.string.format');
+goog.require('ajax.core');
 cljs.core.enable_console_print_BANG_.call(null);
 view3d.core.PID180 = (Math.PI / (180));
 view3d.core.BOAT_TIO = (1000);
 view3d.core.CRS_NOR = (250);
 view3d.core.CRS_HRD = (100);
 view3d.core.SPD_STP = 0.5;
-view3d.core.CAM_TIO = (5000);
-view3d.core.URL_MAP = "http://localhost:4444/map-center/";
+view3d.core.CAM_TIO = (4000);
+view3d.core.BSE_URL = "http://localhost:4444/";
+view3d.core.MAP_PTH = "map-center/";
+view3d.core.QST_PTH = "questions/";
 view3d.core.boat = cljs.core.volatile_BANG_.call(null,new cljs.core.PersistentArrayMap(null, 5, [new cljs.core.Keyword(null,"coord","coord",-1453656639),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [(0),(0)], null),new cljs.core.Keyword(null,"speed","speed",1257663751),(0),new cljs.core.Keyword(null,"course","course",1455432948),(0),new cljs.core.Keyword(null,"helm","helm",-1750767724),new cljs.core.Keyword(null,"steady","steady",549215053),new cljs.core.Keyword(null,"engine","engine",1459054265),(0)], null));
 view3d.core.boat_tio_hrs = (view3d.core.BOAT_TIO / (3600000));
 view3d.core.camera = cljs.core.volatile_BANG_.call(null,new cljs.core.PersistentArrayMap(null, 4, [new cljs.core.Keyword(null,"view","view",1247994814),"FORWARD",new cljs.core.Keyword(null,"pitch","pitch",1495126700),(0),new cljs.core.Keyword(null,"roll","roll",11266999),(0),new cljs.core.Keyword(null,"altitude","altitude",463588637),(2)], null));
@@ -234,9 +235,6 @@ return x;
 }
 }
 });
-view3d.core.read_transit = (function view3d$core$read_transit(x){
-return cognitect.transit.read.call(null,cognitect.transit.reader.call(null,new cljs.core.Keyword(null,"json","json",1279968570)),x);
-});
 view3d.core.error_handler = (function view3d$core$error_handler(p__12372){
 var map__12375 = p__12372;
 var map__12375__$1 = ((((!((map__12375 == null)))?((((map__12375.cljs$lang$protocol_mask$partition0$ & (64))) || (map__12375.cljs$core$ISeq$))?true:false):false))?cljs.core.apply.call(null,cljs.core.hash_map,map__12375):map__12375);
@@ -246,6 +244,10 @@ return cljs.core.println.call(null,[cljs.core.str("AJAX ERROR: "),cljs.core.str(
 });
 view3d.core.no_handler = (function view3d$core$no_handler(response){
 return null;
+});
+view3d.core.ask_server = (function view3d$core$ask_server(path,params,resp_format,handler){
+var url = [cljs.core.str(view3d.core.BSE_URL),cljs.core.str(path)].join('');
+return ajax.core.GET.call(null,url,new cljs.core.PersistentArrayMap(null, 4, [new cljs.core.Keyword(null,"params","params",710516235),params,new cljs.core.Keyword(null,"handler","handler",-195596612),handler,new cljs.core.Keyword(null,"error-handler","error-handler",-484945776),view3d.core.error_handler,new cljs.core.Keyword(null,"response-format","response-format",1664465322),resp_format], null));
 });
 view3d.core.terprov = (new Cesium.CesiumTerrainProvider({"url": "//assets.agi.com/stk-terrain/world", "requestWaterMask": false, "requestVertexNormals": false}));
 view3d.core.viewer = (new Cesium.Viewer("cesiumContainer"));
@@ -346,7 +348,7 @@ return null;
 }
 }
 });
-view3d.core.turn = (function view3d$core$turn(func,tio){
+view3d.core.turn = (function view3d$core$turn(func,tio,helm){
 var c__9993__auto__ = cljs.core.async.chan.call(null,(1));
 cljs.core.async.impl.dispatch.run.call(null,((function (c__9993__auto__){
 return (function (){
@@ -366,7 +368,7 @@ return new cljs.core.Keyword(null,"recur","recur",-437573268);
 if((state_val_12466 === (2))){
 var inst_12441 = cljs.core.deref.call(null,view3d.core.boat);
 var inst_12442 = new cljs.core.Keyword(null,"helm","helm",-1750767724).cljs$core$IFn$_invoke$arity$1(inst_12441);
-var inst_12443 = cljs.core.not_EQ_.call(null,inst_12442,new cljs.core.Keyword(null,"steady","steady",549215053));
+var inst_12443 = cljs.core._EQ_.call(null,inst_12442,helm);
 var state_12465__$1 = state_12465;
 if(inst_12443){
 var statearr_12468_12483 = state_12465__$1;
@@ -534,30 +536,21 @@ cljs.core._vreset_BANG_.call(null,view3d.core.boat,cljs.core.assoc.call(null,clj
 } else {
 }
 
-if(cljs.core.not_EQ_.call(null,helm,new cljs.core.Keyword(null,"steady","steady",549215053))){
-view3d.core.turn.call(null,((cljs.core._EQ_.call(null,helm,(function (){var or__6156__auto__ = new cljs.core.Keyword(null,"starboard","starboard",1162574114);
-if(cljs.core.truth_(or__6156__auto__)){
-return or__6156__auto__;
-} else {
-return new cljs.core.Keyword(null,"hard-a-starboard","hard-a-starboard",791886143);
-}
-})()))?cljs.core.inc:cljs.core.dec),((cljs.core._EQ_.call(null,helm,(function (){var or__6156__auto__ = new cljs.core.Keyword(null,"starboard","starboard",1162574114);
-if(cljs.core.truth_(or__6156__auto__)){
-return or__6156__auto__;
-} else {
-return new cljs.core.Keyword(null,"port","port",1534937262);
-}
-})()))?view3d.core.CRS_NOR:view3d.core.CRS_HRD));
-} else {
-}
-
 cljs.core._vreset_BANG_.call(null,view3d.core.boat,cljs.core.assoc.call(null,cljs.core._deref.call(null,view3d.core.boat),new cljs.core.Keyword(null,"coord","coord",-1453656639),view3d.core.future_pos.call(null,new cljs.core.Keyword(null,"coord","coord",-1453656639).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,view3d.core.boat)),course,speed,view3d.core.boat_tio_hrs)));
 
 return view3d.core.display_boat_data.call(null);
 });
 view3d.core.helm_control = "<input type='range' min='-100' max='100' step='10' value='0'\n  onchange='javascript:view3d.core.helm(this.value)'>";
 view3d.core.helm = (function view3d$core$helm(val){
-return cljs.core._vreset_BANG_.call(null,view3d.core.boat,cljs.core.assoc.call(null,cljs.core._deref.call(null,view3d.core.boat),new cljs.core.Keyword(null,"helm","helm",-1750767724),(((((-20) <= val)) && ((val <= (20))))?new cljs.core.Keyword(null,"steady","steady",549215053):(((val > (80)))?new cljs.core.Keyword(null,"hard-a-starboard","hard-a-starboard",791886143):(((val > (20)))?new cljs.core.Keyword(null,"starboard","starboard",1162574114):(((val < (-80)))?new cljs.core.Keyword(null,"hard-a-port","hard-a-port",-1868447070):(((val < (-20)))?new cljs.core.Keyword(null,"port","port",1534937262):null)))))));
+var old = new cljs.core.Keyword(null,"helm","helm",-1750767724).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,view3d.core.boat));
+var new$ = (((((-20) <= val)) && ((val <= (20))))?new cljs.core.Keyword(null,"steady","steady",549215053):(((val > (80)))?new cljs.core.Keyword(null,"hard-a-starboard","hard-a-starboard",791886143):(((val > (20)))?new cljs.core.Keyword(null,"starboard","starboard",1162574114):(((val < (-80)))?new cljs.core.Keyword(null,"hard-a-port","hard-a-port",-1868447070):(((val < (-20)))?new cljs.core.Keyword(null,"port","port",1534937262):null)))));
+cljs.core._vreset_BANG_.call(null,view3d.core.boat,cljs.core.assoc.call(null,cljs.core._deref.call(null,view3d.core.boat),new cljs.core.Keyword(null,"helm","helm",-1750767724),new$));
+
+if((cljs.core.not_EQ_.call(null,old,new$)) && (cljs.core.not_EQ_.call(null,new$,new cljs.core.Keyword(null,"steady","steady",549215053)))){
+return view3d.core.turn.call(null,(((cljs.core._EQ_.call(null,new$,new cljs.core.Keyword(null,"starboard","starboard",1162574114))) || (cljs.core._EQ_.call(null,new$,new cljs.core.Keyword(null,"hard-a-starboard","hard-a-starboard",791886143))))?cljs.core.inc:cljs.core.dec),(((cljs.core._EQ_.call(null,new$,new cljs.core.Keyword(null,"starboard","starboard",1162574114))) || (cljs.core._EQ_.call(null,new$,new cljs.core.Keyword(null,"port","port",1534937262))))?view3d.core.CRS_NOR:view3d.core.CRS_HRD),new$);
+} else {
+return null;
+}
 });
 view3d.core.throttle_control = "<input type='test' value='0' style='width:90px'\n  onchange='javascript:view3d.core.throttle(this.value)'>";
 view3d.core.throttle = (function view3d$core$throttle(val){
@@ -592,12 +585,203 @@ return cljs.core._vreset_BANG_.call(null,view3d.core.camera,cljs.core.assoc.call
 view3d.core.roll = (function view3d$core$roll(val){
 return cljs.core._vreset_BANG_.call(null,view3d.core.camera,cljs.core.assoc.call(null,cljs.core._deref.call(null,view3d.core.camera),new cljs.core.Keyword(null,"roll","roll",11266999),cljs.reader.read_string.call(null,val)));
 });
+view3d.core.options = (function view3d$core$options(lst,typ){
+var pred__12501 = cljs.core._EQ_;
+var expr__12502 = typ;
+if(cljs.core.truth_(pred__12501.call(null,new cljs.core.Keyword(null,"itself","itself",1264932322),expr__12502))){
+return cljs.core.apply.call(null,cljs.core.str,(function (){var iter__6928__auto__ = ((function (pred__12501,expr__12502){
+return (function view3d$core$options_$_iter__12504(s__12505){
+return (new cljs.core.LazySeq(null,((function (pred__12501,expr__12502){
+return (function (){
+var s__12505__$1 = s__12505;
+while(true){
+var temp__4657__auto__ = cljs.core.seq.call(null,s__12505__$1);
+if(temp__4657__auto__){
+var s__12505__$2 = temp__4657__auto__;
+if(cljs.core.chunked_seq_QMARK_.call(null,s__12505__$2)){
+var c__6926__auto__ = cljs.core.chunk_first.call(null,s__12505__$2);
+var size__6927__auto__ = cljs.core.count.call(null,c__6926__auto__);
+var b__12507 = cljs.core.chunk_buffer.call(null,size__6927__auto__);
+if((function (){var i__12506 = (0);
+while(true){
+if((i__12506 < size__6927__auto__)){
+var e = cljs.core._nth.call(null,c__6926__auto__,i__12506);
+cljs.core.chunk_append.call(null,b__12507,[cljs.core.str("<option value='"),cljs.core.str(e),cljs.core.str("'>"),cljs.core.str(e),cljs.core.str("</option>")].join(''));
+
+var G__12512 = (i__12506 + (1));
+i__12506 = G__12512;
+continue;
+} else {
+return true;
+}
+break;
+}
+})()){
+return cljs.core.chunk_cons.call(null,cljs.core.chunk.call(null,b__12507),view3d$core$options_$_iter__12504.call(null,cljs.core.chunk_rest.call(null,s__12505__$2)));
+} else {
+return cljs.core.chunk_cons.call(null,cljs.core.chunk.call(null,b__12507),null);
+}
+} else {
+var e = cljs.core.first.call(null,s__12505__$2);
+return cljs.core.cons.call(null,[cljs.core.str("<option value='"),cljs.core.str(e),cljs.core.str("'>"),cljs.core.str(e),cljs.core.str("</option>")].join(''),view3d$core$options_$_iter__12504.call(null,cljs.core.rest.call(null,s__12505__$2)));
+}
+} else {
+return null;
+}
+break;
+}
+});})(pred__12501,expr__12502))
+,null,null));
+});})(pred__12501,expr__12502))
+;
+return iter__6928__auto__.call(null,lst);
+})());
+} else {
+if(cljs.core.truth_(pred__12501.call(null,new cljs.core.Keyword(null,"count","count",2139924085),expr__12502))){
+return cljs.core.apply.call(null,cljs.core.str,(function (){var iter__6928__auto__ = ((function (pred__12501,expr__12502){
+return (function view3d$core$options_$_iter__12508(s__12509){
+return (new cljs.core.LazySeq(null,((function (pred__12501,expr__12502){
+return (function (){
+var s__12509__$1 = s__12509;
+while(true){
+var temp__4657__auto__ = cljs.core.seq.call(null,s__12509__$1);
+if(temp__4657__auto__){
+var s__12509__$2 = temp__4657__auto__;
+if(cljs.core.chunked_seq_QMARK_.call(null,s__12509__$2)){
+var c__6926__auto__ = cljs.core.chunk_first.call(null,s__12509__$2);
+var size__6927__auto__ = cljs.core.count.call(null,c__6926__auto__);
+var b__12511 = cljs.core.chunk_buffer.call(null,size__6927__auto__);
+if((function (){var i__12510 = (0);
+while(true){
+if((i__12510 < size__6927__auto__)){
+var i = cljs.core._nth.call(null,c__6926__auto__,i__12510);
+cljs.core.chunk_append.call(null,b__12511,[cljs.core.str("<option value='"),cljs.core.str(i),cljs.core.str("'>"),cljs.core.str(cljs.core.nth.call(null,lst,i)),cljs.core.str("</option>")].join(''));
+
+var G__12513 = (i__12510 + (1));
+i__12510 = G__12513;
+continue;
+} else {
+return true;
+}
+break;
+}
+})()){
+return cljs.core.chunk_cons.call(null,cljs.core.chunk.call(null,b__12511),view3d$core$options_$_iter__12508.call(null,cljs.core.chunk_rest.call(null,s__12509__$2)));
+} else {
+return cljs.core.chunk_cons.call(null,cljs.core.chunk.call(null,b__12511),null);
+}
+} else {
+var i = cljs.core.first.call(null,s__12509__$2);
+return cljs.core.cons.call(null,[cljs.core.str("<option value='"),cljs.core.str(i),cljs.core.str("'>"),cljs.core.str(cljs.core.nth.call(null,lst,i)),cljs.core.str("</option>")].join(''),view3d$core$options_$_iter__12508.call(null,cljs.core.rest.call(null,s__12509__$2)));
+}
+} else {
+return null;
+}
+break;
+}
+});})(pred__12501,expr__12502))
+,null,null));
+});})(pred__12501,expr__12502))
+;
+return iter__6928__auto__.call(null,cljs.core.range.call(null,cljs.core.count.call(null,lst)));
+})());
+} else {
+throw (new Error([cljs.core.str("No matching clause: "),cljs.core.str(expr__12502)].join('')));
+}
+}
+});
+view3d.core.selector1 = (function view3d$core$selector1(header,lst,typ){
+var sel = [cljs.core.str("<select onchange='javascript:view3d.core.handler1(this.value)'>"),cljs.core.str("<option value='-1'>"),cljs.core.str(header),cljs.core.str("</option>"),cljs.core.str(view3d.core.options.call(null,lst,typ)),cljs.core.str("</select>")].join('');
+view3d.core.set_html_BANG_.call(null,"element1",sel);
+
+view3d.core.set_html_BANG_.call(null,"element2","");
+
+return view3d.core.set_html_BANG_.call(null,"element3","");
+});
+view3d.core.function1 = null;
+view3d.core.handler1 = (function view3d$core$handler1(selected){
+return view3d.core.function1.call(null,selected);
+});
+view3d.core.selector2 = (function view3d$core$selector2(header,lst,typ){
+var sel = [cljs.core.str("<select onchange='javascript:view3d.core.handler2(this.value)'>"),cljs.core.str("<option value='-1'>"),cljs.core.str(header),cljs.core.str("</option>"),cljs.core.str(view3d.core.options.call(null,lst,typ)),cljs.core.str("</select>")].join('');
+view3d.core.set_html_BANG_.call(null,"element2",sel);
+
+return view3d.core.set_html_BANG_.call(null,"element3","");
+});
+view3d.core.function2 = null;
+view3d.core.handler2 = (function view3d$core$handler2(selected){
+return view3d.core.function2.call(null,selected);
+});
+view3d.core.selector3 = (function view3d$core$selector3(header,lst,typ){
+var sel = [cljs.core.str("<select onchange='javascript:view3d.core.handler3(this.value)'>"),cljs.core.str("<option value='-1'>"),cljs.core.str(header),cljs.core.str("</option>"),cljs.core.str(view3d.core.options.call(null,lst,typ)),cljs.core.str("</select>")].join('');
+return view3d.core.set_html_BANG_.call(null,"element3",sel);
+});
+view3d.core.function3 = null;
+view3d.core.handler3 = (function view3d$core$handler3(selected){
+return view3d.core.function3.call(null,selected);
+});
+view3d.core.display_answer = (function view3d$core$display_answer(answer){
+return cljs.core.println.call(null,new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"ANSWER","ANSWER",85284757),answer], null));
+});
+view3d.core.behind_island = (function view3d$core$behind_island(islands){
+cljs.core.println.call(null,new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"BI","BI",2014368751),islands], null));
+
+view3d.core.selector3.call(null,"island",islands,new cljs.core.Keyword(null,"itself","itself",1264932322));
+
+view3d.core.function3 = (function view3d$core$behind_island_$_function3(a){
+return view3d.core.ask_server.call(null,view3d.core.QST_PTH,new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"question","question",-1411720117),"what-behind",new cljs.core.Keyword(null,"island","island",623473715),a], null),new cljs.core.Keyword(null,"transit","transit",359458387),view3d.core.display_answer);
+});
+});
+view3d.core.lst1 = new cljs.core.PersistentVector(null, 5, 5, cljs.core.PersistentVector.EMPTY_NODE, ["ahead","astern","on port side","on starboard side","behind the island "], null);
+view3d.core.what_is = (function view3d$core$what_is(){
+view3d.core.selector2.call(null,"?",view3d.core.lst1,new cljs.core.Keyword(null,"count","count",2139924085));
+
+view3d.core.function2 = (function view3d$core$what_is_$_function2(a){
+var n = cljs.reader.read_string.call(null,a);
+var pred__12523 = cljs.core._EQ_;
+var expr__12524 = n;
+if(cljs.core.truth_(pred__12523.call(null,(4),expr__12524))){
+return view3d.core.ask_server.call(null,view3d.core.QST_PTH,new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"question","question",-1411720117),"nearby-islands"], null),new cljs.core.Keyword(null,"transit","transit",359458387),view3d.core.behind_island);
+} else {
+return cljs.core.println.call(null,new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"WHAT-IS","WHAT-IS",-1782707900),cljs.core.nth.call(null,view3d.core.lst1,n)], null));
+}
+});
+});
+view3d.core.questionnaire = (function view3d$core$questionnaire(){
+view3d.core.selector1.call(null,"?",new cljs.core.PersistentVector(null, 5, 5, cljs.core.PersistentVector.EMPTY_NODE, ["What is","Where is","Tell me about","What is the weather","How far is "], null),new cljs.core.Keyword(null,"count","count",2139924085));
+
+view3d.core.function1 = (function view3d$core$questionnaire_$_function1(a){
+var pred__12535 = cljs.core._EQ_;
+var expr__12536 = cljs.reader.read_string.call(null,a);
+if(cljs.core.truth_(pred__12535.call(null,(0),expr__12536))){
+return view3d.core.what_is.call(null);
+} else {
+if(cljs.core.truth_(pred__12535.call(null,(1),expr__12536))){
+return view3d.core.where_is.call(null);
+} else {
+if(cljs.core.truth_(pred__12535.call(null,(2),expr__12536))){
+return view3d.core.tell_about.call(null);
+} else {
+if(cljs.core.truth_(pred__12535.call(null,(3),expr__12536))){
+return view3d.core.weather.call(null);
+} else {
+if(cljs.core.truth_(pred__12535.call(null,(4),expr__12536))){
+return view3d.core.how_far_is.call(null);
+} else {
+throw (new Error([cljs.core.str("No matching clause: "),cljs.core.str(expr__12536)].join('')));
+}
+}
+}
+}
+}
+});
+});
 view3d.core.start_map = (function view3d$core$start_map(response){
-var temp__4655__auto__ = view3d.core.read_transit.call(null,response);
+var temp__4655__auto__ = response;
 if(cljs.core.truth_(temp__4655__auto__)){
-var vec__12491 = temp__4655__auto__;
-var lat = cljs.core.nth.call(null,vec__12491,(0),null);
-var lon = cljs.core.nth.call(null,vec__12491,(1),null);
+var vec__12539 = temp__4655__auto__;
+var lat = cljs.core.nth.call(null,vec__12539,(0),null);
+var lon = cljs.core.nth.call(null,vec__12539,(1),null);
 cljs.core._vreset_BANG_.call(null,view3d.core.boat,cljs.core.assoc.call(null,cljs.core._deref.call(null,view3d.core.boat),new cljs.core.Keyword(null,"coord","coord",-1453656639),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [lat,lon], null)));
 
 view3d.core.fly_to.call(null,lat,lon,new cljs.core.Keyword(null,"altitude","altitude",463588637).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,view3d.core.camera)),(0),(10));
@@ -612,26 +796,28 @@ view3d.core.set_html_BANG_.call(null,"throttle-fld",view3d.core.throttle_control
 
 view3d.core.camera_control.call(null);
 
-cljs.core.println.call(null,new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"C","C",-173629587),view3d.core.camera], null));
+cljs.core.println.call(null,new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"CAMERA","CAMERA",-109369139),view3d.core.camera], null));
 
-cljs.core.println.call(null,new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"B","B",-1422503380),view3d.core.boat], null));
+cljs.core.println.call(null,new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"BOAT","BOAT",96160898),view3d.core.boat], null));
 
-view3d.core.repeater.call(null,((function (vec__12491,lat,lon,temp__4655__auto__){
+view3d.core.repeater.call(null,((function (vec__12539,lat,lon,temp__4655__auto__){
 return (function (){
 return view3d.core.boat_move.call(null);
-});})(vec__12491,lat,lon,temp__4655__auto__))
+});})(vec__12539,lat,lon,temp__4655__auto__))
 ,view3d.core.BOAT_TIO);
 
-return view3d.core.repeater.call(null,((function (vec__12491,lat,lon,temp__4655__auto__){
+view3d.core.repeater.call(null,((function (vec__12539,lat,lon,temp__4655__auto__){
 return (function (){
 return view3d.core.camera_work.call(null);
-});})(vec__12491,lat,lon,temp__4655__auto__))
+});})(vec__12539,lat,lon,temp__4655__auto__))
 ,view3d.core.CAM_TIO);
+
+return view3d.core.questionnaire.call(null);
 } else {
 return alert("No map center from server!");
 }
 });
 view3d.core.init = (function view3d$core$init(){
-return ajax.core.GET.call(null,view3d.core.URL_MAP,new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"handler","handler",-195596612),view3d.core.start_map,new cljs.core.Keyword(null,"error-handler","error-handler",-484945776),view3d.core.error_handler], null));
+return view3d.core.ask_server.call(null,view3d.core.MAP_PTH,null,new cljs.core.Keyword(null,"transit","transit",359458387),view3d.core.start_map);
 });
 window.onload = view3d.core.init.call(null);

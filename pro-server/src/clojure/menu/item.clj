@@ -13,8 +13,6 @@
   (println "  Instance of WorkingPrograms not found!"))
 (println "2. Starting server...")
 (eval (read-string "(pro.server/start-server)"))
-(println "3. Adding boat...")
 (println (str "    Map center: " (eval (read-string "pro.server/MAP-CENTER"))))
-(eval (read-string "(boat.mov/boat-add pro.server/ONBOARD pro.server/MAP-CENTER 0 0)"))
 (println "EXPERT SYSTEM INITIALIZED"))
 

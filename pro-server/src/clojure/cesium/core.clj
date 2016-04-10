@@ -16,6 +16,7 @@
                          :pitch -10.0
                          :roll 0.0
                          :chan nil})))
+(def OLD-CRS (volatile! 0))
 (def DOC-SND (volatile! true))
 (def CZMW-INTL 20000)
 (defn send-event [typ dat]
@@ -85,7 +86,9 @@
                "RIGHT" (direct (+ crs 90))
                "LEFT" (direct (- crs 90))
                "UP" (direct crs)
-               "DOWN" (direct crs))]
+               "DOWN" (direct crs))
+        dif (- crs @OLD-CRS)]
+    (vreset! OLD-CRS crs)
     (fly-control "fly" lat lon alt head pitch roll per)))
 
 (defn iso8601curt []

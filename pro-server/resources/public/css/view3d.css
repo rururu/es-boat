@@ -112,4 +112,28 @@
   padding:5px;
   z-index:100;
 }
+#element1 {
+  position:fixed;
+  bottom:120px;
+  left:60px;
+  padding:5px;
+  z-index:100;
+  color:yellow
+}
+#element2 {
+  position:fixed;
+  bottom:120px;
+  left:200px;
+  padding:5px;
+  z-index:100;
+  color:yellow
+}
+#element3 {
+  position:fixed;
+  bottom:120px;
+  left:340px;
+  padding:5px;
+  z-index:100;
+  color:yellow
+}
 

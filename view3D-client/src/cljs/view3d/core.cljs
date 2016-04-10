@@ -3,7 +3,6 @@
    [goog.string :as gstring]
    [goog.string.format]
    [cljs.core.async :as async :refer [<! >! chan put! timeout close!]]
-   [cognitect.transit :as t]
    [cljs.reader :as r]
    [ajax.core :refer (GET)])
   (:require-macros [cljs.core.async.macros :refer [go]]))
@@ -15,11 +14,13 @@
 
 (def PID180 (/ Math.PI 180)) ;; 1 degree in radians
 (def BOAT-TIO 1000) ;; boat movement timeout interval (1 sec)
-(def CRS-NOR 1000) ;; turn 1 degrees per second
-(def CRS-HRD 250) ;; turn 4 degrees per second
+(def CRS-NOR 250) ;; turn 4 degrees per second
+(def CRS-HRD 100) ;; turn 10 degrees per second
 (def SPD-STP 0.5) ;; boost 0.5 knots per second
-(def CAM-TIO 5000) ;; camera timeout interval (5 sec)
-(def URL-MAP "http://localhost:4444/map-center/")
+(def CAM-TIO 4000) ;; camera timeout interval (4 sec)
+(def BSE-URL "http://localhost:4444/") ;; server url base
+(def MAP-PTH "map-center/")
+(def QST-PTH "questions/")
 
 (def boat (volatile! {:coord [0 0]
                       :speed 0
@@ -64,13 +65,17 @@
    (< x 0) (+ x 360)
    true x))
 
-(defn read-transit [x]
-  (t/read (t/reader :json) x))
-
 (defn error-handler [{:keys [status status-text]}]
   (println (str "AJAX ERROR: " status " " status-text)))
 
 (defn no-handler [response])
+
+(defn ask-server [path params resp-format handler]
+  (let [url (str BSE-URL path)]
+    (GET url {:params params
+              :handler handler
+              :error-handler error-handler
+              :response-format resp-format})))
 
 ;; -------------------------- Cesium ---------------------------------
 
@@ -151,8 +156,8 @@
    (> engine speed) (+ speed SPD-STP)
    (< engine speed) (- speed SPD-STP)))
 
-(defn turn [func tio]
-  (go (while (not= (:helm @boat) :steady)
+(defn turn [func tio helm]
+  (go (while (= (:helm @boat) helm)
         (vswap! boat assoc :course (norm-crs (func (:course @boat))))
         (set-html! "course" (:course @boat))
         (<! (timeout tio)))))
@@ -164,9 +169,6 @@
         speed (:speed @boat)]
     (if (not= (int engine) speed)
       (vswap! boat assoc :speed (boost speed engine)))
-    (if (not= helm :steady)
-      (turn (if (= helm (or :starboard :hard-a-starboard)) inc dec)
-            (if (= helm (or :starboard :port)) CRS-NOR CRS-HRD)))
     (vswap! boat assoc :coord (future-pos (:coord @boat) course speed boat-tio-hrs))
     (display-boat-data)))
 
@@ -177,13 +179,18 @@
   onchange='javascript:view3d.core.helm(this.value)'>")
 
 (defn helm [val]
-  (vswap! boat assoc :helm
-          (cond
-           (<= -20 val 20) :steady
-           (> val 80)  :hard-a-starboard
-           (> val 20)  :starboard
-           (< val -80) :hard-a-port
-           (< val -20) :port)))
+  (let [old (:helm @boat)
+        new (cond
+             (<= -20 val 20) :steady
+             (> val 80)  :hard-a-starboard
+             (> val 20)  :starboard
+             (< val -80) :hard-a-port
+             (< val -20) :port)]
+    (vswap! boat assoc :helm new)
+    (if (and (not= old new) (not= new :steady))
+      (turn (if (or (= new :starboard)(= new :hard-a-starboard)) inc dec)
+            (if (or (= new :starboard)(= new :port)) CRS-NOR CRS-HRD)
+            new))))
 
 (def throttle-control
   "<input type='test' value='0' style='width:90px'
@@ -224,11 +231,96 @@
 (defn roll [val]
   (vswap! camera assoc :roll (r/read-string val)))
 
+;; --------------------------- Ask Master -----------------------------
+
+(defn options [lst typ]
+  (condp = typ
+    :itself (apply str (for [e lst]
+                         (str "<option value='" e "'>" e "</option>")))
+    :count  (apply str (for [i (range (count lst))]
+                            (str "<option value='" i "'>" (nth lst i) "</option>")))))
+
+(defn selector1 [header lst typ]
+  (let [sel (str "<select onchange='javascript:view3d.core.handler1(this.value)'>"
+                 "<option value='-1'>" header "</option>"
+                 (options lst typ)
+                 "</select>")]
+    (set-html! "element1" sel)
+    (set-html! "element2" "")
+    (set-html! "element3" "")))
+
+(def function1 nil)
+
+(defn handler1 [selected]
+  (function1 selected))
+
+(defn selector2 [header lst typ]
+  (let [sel (str "<select onchange='javascript:view3d.core.handler2(this.value)'>"
+                 "<option value='-1'>" header "</option>"
+                 (options lst typ)
+                 "</select>")]
+    (set-html! "element2" sel)
+    (set-html! "element3" "")))
+
+(def function2 nil)
+
+(defn handler2 [selected]
+  (function2 selected))
+
+(defn selector3 [header lst typ]
+  (let [sel (str "<select onchange='javascript:view3d.core.handler3(this.value)'>"
+                 "<option value='-1'>" header "</option>"
+                 (options lst typ)
+                 "</select>")]
+    (set-html! "element3" sel)))
+
+(def function3 nil)
+
+(defn handler3 [selected]
+  (function3 selected))
+
+;; ------------------------ Questionnaire -----------------------------
+
+(defn display-answer [answer]
+  (println [:ANSWER answer]))
+
+(defn behind-island [islands]
+  (selector3 "island" islands :itself)
+  (def function3
+    (fn [a]
+      (ask-server QST-PTH {:question "what-behind"
+                           :island a} :transit display-answer))))
+
+(def lst1 ["ahead" "astern" "on port side" "on starboard side" "behind the island "])
+
+(defn what-is []
+  (selector2 "?" lst1 :count)
+  (def function2
+    (fn [a]
+      (let [n (r/read-string a)]
+        (condp = n
+          4 (ask-server QST-PTH {:question "nearby-islands"} :transit behind-island)
+          (println [:WHAT-IS (nth lst1 n)]))))))
+
+(defn questionnaire []
+  (selector1 "?" ["What is"
+                  "Where is"
+                  "Tell me about"
+                  "What is the weather"
+                  "How far is "] :count)
+  (def function1
+    (fn [a]
+      (condp = (r/read-string a)
+        0 (what-is)
+        1 (where-is)
+        2 (tell-about)
+        3 (weather)
+        4 (how-far-is)))))
 
 ;; ----------------------------- Init ---------------------------------
 
 (defn start-map [response]
-  (if-let [[lat lon] (read-transit response)]
+  (if-let [[lat lon] response]
     (do (vswap! boat assoc :coord [lat lon])
       (fly-to lat lon (:altitude @camera) 0 10)
       (set-html! "course" (:course @boat))
@@ -239,12 +331,12 @@
       (println [:CAMERA camera])
       (println [:BOAT boat])
       (repeater #(boat-move) BOAT-TIO)
-      (repeater #(camera-work) CAM-TIO))
+      (repeater #(camera-work) CAM-TIO)
+      (questionnaire))
     (js/alert "No map center from server!")))
 
 (defn init []
-  (GET URL-MAP {:handler start-map
-                :error-handler error-handler}))
+  (ask-server MAP-PTH nil :transit start-map))
 
 ;; ----------------------------- Start ---------------------------------
 

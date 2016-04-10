@@ -1,4 +1,4 @@
-; Sat Apr 09 11:11:18 MSK 2016
+; Sun Apr 10 22:03:35 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -246,12 +246,49 @@
 
 ([ProServer_Class130003] of  CloFunction
 
-	(source "(println [:CAMERA params])\n  (vswap! CAM merge params)\n  (condp = (params :camera)\n    \"on\" (start-cesium)\n    \"off\"(stop-sse-server)\n    true)\n  (condp = (params :heading)\n    \"UP\" (vswap! CAM assoc :pitch 90.0)\n    \"DOWN\" (vswap! CAM assoc :pitch -90.0)\n    nil true\n    (vswap! cz/CAM assoc :pitch 0.0))\n  \"\"")
+	(source "(println [:CAMERA params])\n  (vswap! CAM merge params)\n  (condp = (params :camera)\n    \"on\" (start-cesium)\n    \"off\"(stop-sse-server)\n    true)\n  (condp = (params :heading)\n    \"UP\" (vswap! CAM assoc :pitch 90.0)\n    \"DOWN\" (vswap! CAM assoc :pitch -90.0)\n    nil true\n    (vswap! CAM assoc :pitch 0.0))\n  \"\"")
 	(title "camera [params]"))
+
+([ProServer_Class140000] of  CloFuncall
+
+	(source "(some? {})"))
+
+([ProServer_Class140001] of  CloFuncall
+
+	(source "(empty? {})"))
+
+([ProServer_Class140002] of  CloFunction
+
+	(source "(println [:QUESTIONS params])\n(let [ans (condp = (:question params)\n               \"nearby-islands\" [\"Oz\" \"Kron\" \"Burnev\" \"Mukisaari\" \"Selkamarjansaari\"]\n               \"what-behind\" (str \"Behind \" (:island params) \" nothing interesting!\")\n               \"\")]\n  (-> (r/response (write-transit ans))\n        (r/header \"Access-Control-Allow-Origin\" \"*\")))")
+	(title "questions [params]"))
+
+([ProServer_Class150000] of  CloFuncall
+
+	(source "pro.server/APP"))
+
+([ProServer_Class150001] of  CloFuncall
+
+	(source "(in-ns 'pro.server)"))
+
+([ProServer_Class150002] of  CloFuncall
+
+	(source "APP"))
+
+([ProServer_Class150003] of  CloFuncall
+
+	(source "(def APP nil)"))
+
+([ProServer_Class150004] of  CloFuncall
+
+	(source "(start-server)"))
+
+([ProServer_Class150005] of  CloFuncall
+
+	(source "(stop-server)"))
 
 ([ProServer_Class2] of  CloFunction
 
-	(source "(println \"INITIALIZING EXPERT SYSTEM\")\n(println \"1.Loading Clojure Programs...\")\n(if-let [wps (seq (cls-instances \"WorkingPrograms\"))]\n  (loop [i 1 pins (svs (first wps) \"cloPrograms\")]\n    (when (seq pins)\n      (println (str \" 1.\" i \" \" (sv (first pins) \"title\") \" = \" (ClojureTab/loadProgram (first pins)) ))\n      (recur (inc i) (rest pins))))\n  (println \"  Instance of WorkingPrograms not found!\"))\n(println \"2. Starting server...\")\n(eval (read-string \"(pro.server/start-server)\"))\n(println \"3. Adding boat...\")\n(println (str \"    Map center: \" (eval (read-string \"pro.server/MAP-CENTER\"))))\n(eval (read-string \"(boat.mov/boat-add pro.server/ONBOARD pro.server/MAP-CENTER 0 0)\"))\n(println \"EXPERT SYSTEM INITIALIZED\")")
+	(source "(println \"INITIALIZING EXPERT SYSTEM\")\n(println \"1.Loading Clojure Programs...\")\n(if-let [wps (seq (cls-instances \"WorkingPrograms\"))]\n  (loop [i 1 pins (svs (first wps) \"cloPrograms\")]\n    (when (seq pins)\n      (println (str \" 1.\" i \" \" (sv (first pins) \"title\") \" = \" (ClojureTab/loadProgram (first pins)) ))\n      (recur (inc i) (rest pins))))\n  (println \"  Instance of WorkingPrograms not found!\"))\n(println \"2. Starting server...\")\n(eval (read-string \"(pro.server/start-server)\"))\n(println (str \"    Map center: \" (eval (read-string \"pro.server/MAP-CENTER\"))))\n(println \"EXPERT SYSTEM INITIALIZED\")")
 	(title "clojure-work []"))
 
 ([ProServer_Class20000] of  CloFunction
@@ -466,6 +503,7 @@
 		[ProServer_Class80004]
 		[ProServer_Class80017]
 		[ProServer_Class100000]
+		[ProServer_Class140002]
 		[ProServer_Class80007]
 		[ProServer_Class80008]
 		[ProServer_Class80009])
@@ -487,7 +525,7 @@
 
 ([ProServer_Class80007] of  CloFunction
 
-	(source "(defroutes app-routes\n  (GET \"/\" [] (index-page))\n  (GET \"/map-center/\" [] (write-transit MAP-CENTER))\n  (GET \"/events/\" [] (events))\n  (GET \"/command/\" [& params] (command params))\n  (GET \"/czml/\" [] (cz/events))\n  (route/files \"/\" (do (println [:ROOT-FILES ROOT]) {:root ROOT}))\n  (route/resources \"/\")\n  (route/not-found \"Not Found\"))\n\n(def APP\n  (handler/site app-routes))")
+	(source "(defroutes app-routes\n  (GET \"/\" [] (index-page))\n  (GET \"/map-center/\" [] (write-transit MAP-CENTER))\n  (GET \"/questions/\" [& params] (questions params))\n  (GET \"/events/\" [] (events))\n  (GET \"/command/\" [& params] (command params))\n  (GET \"/czml/\" [] (cz/events))\n  (route/files \"/\" (do (println [:ROOT-FILES ROOT]) {:root ROOT}))\n  (route/resources \"/\")\n  (route/not-found \"Not Found\"))\n\n(def APP\n  (handler/site app-routes))")
 	(title "init-server []"))
 
 ([ProServer_Class80008] of  CloFunction

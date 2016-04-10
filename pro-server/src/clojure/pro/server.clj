@@ -49,10 +49,21 @@
     (bm/boat-helm ONBOARD (keyword cmd))))
 "")
 
+(defn questions [params]
+  (println [:QUESTIONS params])
+(println (:question params))
+(let [ans (condp = (:question params)
+               "nearby-islands" ["Oz" "Kron" "Burnev" "Mukisaari" "Selkamarjansaari"]
+               "what-behind" (str "Behind " (:island params) " nothing interesting!")
+               "")]
+  (-> (r/response (write-transit ans))
+        (r/header "Access-Control-Allow-Origin" "*"))))
+
 (defn init-server []
   (defroutes app-routes
   (GET "/" [] (index-page))
   (GET "/map-center/" [] (write-transit MAP-CENTER))
+  (GET "/questions/" [& params] (questions params))
   (GET "/events/" [] (events))
   (GET "/command/" [& params] (command params))
   (GET "/czml/" [] (cz/events))
