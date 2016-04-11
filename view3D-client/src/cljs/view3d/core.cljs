@@ -282,7 +282,7 @@
 ;; ------------------------ Questionnaire -----------------------------
 
 (defn display-answer [answer]
-  (println [:ANSWER answer]))
+  (set-html! "display" answer))
 
 (defn behind-island [islands]
   (selector3 "island" islands :itself)
@@ -303,6 +303,7 @@
           (println [:WHAT-IS (nth lst1 n)]))))))
 
 (defn questionnaire []
+  (set-html! "ask" "Ask a question:")
   (selector1 "?" ["What is"
                   "Where is"
                   "Tell me about"

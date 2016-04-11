@@ -51,7 +51,6 @@
 
 (defn questions [params]
   (println [:QUESTIONS params])
-(println (:question params))
 (let [ans (condp = (:question params)
                "nearby-islands" ["Oz" "Kron" "Burnev" "Mukisaari" "Selkamarjansaari"]
                "what-behind" (str "Behind " (:island params) " nothing interesting!")

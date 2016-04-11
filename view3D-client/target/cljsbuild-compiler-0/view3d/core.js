@@ -721,11 +721,9 @@ view3d.core.handler3 = (function view3d$core$handler3(selected){
 return view3d.core.function3.call(null,selected);
 });
 view3d.core.display_answer = (function view3d$core$display_answer(answer){
-return cljs.core.println.call(null,new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"ANSWER","ANSWER",85284757),answer], null));
+return view3d.core.set_html_BANG_.call(null,"display",answer);
 });
 view3d.core.behind_island = (function view3d$core$behind_island(islands){
-cljs.core.println.call(null,new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"BI","BI",2014368751),islands], null));
-
 view3d.core.selector3.call(null,"island",islands,new cljs.core.Keyword(null,"itself","itself",1264932322));
 
 view3d.core.function3 = (function view3d$core$behind_island_$_function3(a){
@@ -748,6 +746,8 @@ return cljs.core.println.call(null,new cljs.core.PersistentVector(null, 2, 5, cl
 });
 });
 view3d.core.questionnaire = (function view3d$core$questionnaire(){
+view3d.core.set_html_BANG_.call(null,"ask","Ask a question.");
+
 view3d.core.selector1.call(null,"?",new cljs.core.PersistentVector(null, 5, 5, cljs.core.PersistentVector.EMPTY_NODE, ["What is","Where is","Tell me about","What is the weather","How far is "], null),new cljs.core.Keyword(null,"count","count",2139924085));
 
 view3d.core.function1 = (function view3d$core$questionnaire_$_function1(a){
