@@ -80,10 +80,11 @@
   (if (nil? APP)
     (init-server))
   (def SERV (jetty/run-jetty APP {:port port :join? false}))
-  (bm/start-boat-movement
-    #(pump-in-evt {:event :boat-maneuver :id %1 :data %2})
-    #(pump-in-evt {:event :boat-add :id %1 :data %2})
-    #(pump-in-evt {:event :boat-remove :id %1 :data %2}))))
+;;  (bm/start-boat-movement
+;;    #(pump-in-evt {:event :boat-maneuver :id %1 :data %2})
+;;    #(pump-in-evt {:event :boat-add :id %1 :data %2})
+;;    #(pump-in-evt {:event :boat-remove :id %1 :data %2})))
+   ))
 
 (defn stop-server []
   (when-let [serv SERV]

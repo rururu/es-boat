@@ -1,4 +1,4 @@
-; Sun Apr 10 22:03:35 MSK 2016
+; Mon Apr 11 18:58:57 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -249,42 +249,225 @@
 	(source "(println [:CAMERA params])\n  (vswap! CAM merge params)\n  (condp = (params :camera)\n    \"on\" (start-cesium)\n    \"off\"(stop-sse-server)\n    true)\n  (condp = (params :heading)\n    \"UP\" (vswap! CAM assoc :pitch 90.0)\n    \"DOWN\" (vswap! CAM assoc :pitch -90.0)\n    nil true\n    (vswap! CAM assoc :pitch 0.0))\n  \"\"")
 	(title "camera [params]"))
 
-([ProServer_Class140000] of  CloFuncall
-
-	(source "(some? {})"))
-
-([ProServer_Class140001] of  CloFuncall
-
-	(source "(empty? {})"))
-
 ([ProServer_Class140002] of  CloFunction
 
 	(source "(println [:QUESTIONS params])\n(let [ans (condp = (:question params)\n               \"nearby-islands\" [\"Oz\" \"Kron\" \"Burnev\" \"Mukisaari\" \"Selkamarjansaari\"]\n               \"what-behind\" (str \"Behind \" (:island params) \" nothing interesting!\")\n               \"\")]\n  (-> (r/response (write-transit ans))\n        (r/header \"Access-Control-Allow-Origin\" \"*\")))")
 	(title "questions [params]"))
 
-([ProServer_Class150000] of  CloFuncall
+([ProServer_Class160009] of  Rule
 
-	(source "pro.server/APP"))
+	(lhs "?isl (Island time ?tim1)\n(History time ?tim2\n	(.before ?tim1 ?tim2))")
+	(rhs "(retract ?isl)")
+	(salience 1)
+	(title "isl:ForgetIsland"))
 
-([ProServer_Class150001] of  CloFuncall
+([ProServer_Class160010] of  Run
 
-	(source "(in-ns 'pro.server)"))
+	(butt-ass-inss "Assert Instances/ru.rules/ass-inss")
+	(butt-fire "Fire/ru.rules/fire-all-rules")
+	(butt-reset "Reset/ru.rules/do-reset")
+	(butt-retr-inss "Retract Instances/ru.rules/retr-inss")
+	(butt-run "Run/ru.rules/run-engine")
+	(title "Pro Serv Run"))
 
-([ProServer_Class150002] of  CloFuncall
+([ProServer_Class160030] of  Rule
 
-	(source "APP"))
+	(lhs "?h1 (History time ?tim1)\n?h2 (History time ?tim2\n	(.before ?tim1 ?tim2))")
+	(rhs "(retract ?h1)")
+	(salience 2)
+	(title "isl:MoveHistory"))
 
-([ProServer_Class150003] of  CloFuncall
+([ProServer_Class160041] of  CloProgram
 
-	(source "(def APP nil)"))
+	(cloFunctions
+		[ProServer_Class160044]
+		[ProServer_Class160045]
+		[ProServer_Class160043]
+		[ProServer_Class160046]
+		[ProServer_Class160062]
+		[ProServer_Class160068]
+		[ProServer_Class160104]
+		[ProServer_Class160107])
+	(cloNamespace [ProServer_Class160042])
+	(cloVars
+		[ProServer_Class160098]
+		[ProServer_Class160105]
+		[ProServer_Class160106])
+	(title "OSM Data"))
 
-([ProServer_Class150004] of  CloFuncall
+([ProServer_Class160042] of  CloNamespace
 
-	(source "(start-server)"))
+	(source "(:require\n   [clojure.xml :as x]\n   [async.proc :as ap]\n   [rete.core :as rete])")
+	(title "osm.data"))
 
-([ProServer_Class150005] of  CloFuncall
+([ProServer_Class160043] of  CloFunction
 
-	(source "(stop-server)"))
+	(source "(try\n  (let [curl (osm-api-url bbx)\n         xml (x/parse curl)\n         cnt (:content xml)\n         nods (filter #(= (:tag %) :node) cnt)\n         nnn (filter #(some? (:content %)) nods)]\n      (map tag-tags-namcor nnn))\n  (catch Exception e\n    (println e)\n    nil))")
+	(title "osm-data [bbx]"))
+
+([ProServer_Class160044] of  CloFunction
+
+	(source "(let [[w s e n] bbx] \n  (str \"http://api.openstreetmap.org/api/0.6/map?bbox=\" w \",\" s \",\" e \",\" n))")
+	(title "osm-api-url [bbx]"))
+
+([ProServer_Class160045] of  CloFunction
+
+	(source "(let [cnt (:content tag)\n       tt (filter #(= (:tag %) :tag) cnt)\n       m {\"id\" (:id (:attrs tag))\n             \"lat\" (read-string (:lat (:attrs tag)))\n             \"lon\" (read-string (:lon (:attrs tag)))}\n       ml (cons m (map #(assoc {} (:k (:attrs %)) (:v (:attrs %))) tt))]\n  (apply merge ml))")
+	(title "tag-tags-namcor [tag]"))
+
+([ProServer_Class160046] of  CloFunction
+
+	(source "(filter #(= (get % k) v) data)")
+	(title "filter-kv [k v data]"))
+
+([ProServer_Class160062] of  CloFunction
+
+	(source "(filter #(some? (get % k)) data)")
+	(title "filter-k? [k data]"))
+
+([ProServer_Class160068] of  CloFunction
+
+	(source "(sort (set (mapcat keys data)))")
+	(title "tags [data]"))
+
+([ProServer_Class160073] of  CloFuncall
+
+	(source "(count mant)"))
+
+([ProServer_Class160074] of  CloFuncall
+
+	(source "(map println mant)"))
+
+([ProServer_Class160075] of  CloFuncall
+
+	(source "(first mant)"))
+
+([ProServer_Class160076] of  CloFuncall
+
+	(source "(osm.data/filter-kv \"place\" \"island\" man)"))
+
+([ProServer_Class160077] of  CloFuncall
+
+	(source "(count (osm.data/filter-kv \"place\" \"island\" man))"))
+
+([ProServer_Class160078] of  CloFuncall
+
+	(source "(def mani (osm.data/filter-kv \"place\" \"island\" man))"))
+
+([ProServer_Class160079] of  CloFuncall
+
+	(source "(count (osm.data/filter-k? \"name\" mani))"))
+
+([ProServer_Class160080] of  CloFuncall
+
+	(source "(count (osm.data/filter-k? \"name\" man))"))
+
+([ProServer_Class160081] of  CloFuncall
+
+	(source "(def mann (osm.data/filter-k? \"name\" man))"))
+
+([ProServer_Class160082] of  CloFuncall
+
+	(source "(count (osm.data/filter-k? \"highway\" mann))"))
+
+([ProServer_Class160083] of  CloFuncall
+
+	(source "(osm.data/filter-k? \"highway\" mann)"))
+
+([ProServer_Class160084] of  CloFuncall
+
+	(source "(sort mant)"))
+
+([ProServer_Class160085] of  CloFuncall
+
+	(source "(osm.data/tags man)"))
+
+([ProServer_Class160086] of  CloFuncall
+
+	(source "(osm.data/filter-k? \"closest_town\" mann)"))
+
+([ProServer_Class160087] of  CloFuncall
+
+	(source "(osm.data/filter-k? \"wikipedia\" mann)"))
+
+([ProServer_Class160088] of  CloFuncall
+
+	(source "(map println (osm.data/filter-k? \"wikipedia\" mann))"))
+
+([ProServer_Class160089] of  CloFuncall
+
+	(source "(def oz (osm.data/osm-data [34.5 62.7 34.9 62.9]))"))
+
+([ProServer_Class160090] of  CloFuncall
+
+	(source "(count oz)"))
+
+([ProServer_Class160091] of  CloFuncall
+
+	(source "(def oz (osm.data/osm-data [33.7 62.4 36.0 63.0]))"))
+
+([ProServer_Class160092] of  CloFuncall
+
+	(source "(def oz (osm.data/osm-data [34.2 62.6 35.3 63.0]))"))
+
+([ProServer_Class160093] of  CloFuncall
+
+	(source "(map println oz)"))
+
+([ProServer_Class160094] of  CloFuncall
+
+	(source "(def vv (osm.data/osm-data [34.8 62.7 35.9 63.0]))"))
+
+([ProServer_Class160095] of  CloFuncall
+
+	(source "(map println vv)"))
+
+([ProServer_Class160097] of  CloFuncall
+
+	(source "(type man)"))
+
+([ProServer_Class160098] of  CloVar
+
+	(source "30000")
+	(title "OSM-TIO"))
+
+([ProServer_Class160099] of  RuleSet
+
+	(rules
+		[ProServer_Class160030]
+		[ProServer_Class160009]
+		[ProServer_Class160103])
+	(templates
+		[History]
+		[OSM])
+	(title "History"))
+
+([ProServer_Class160103] of  Rule
+
+	(lhs "?osm (OSM time ?tim1)\n(History time ?tim2\n	(.before ?tim1 ?tim2))")
+	(rhs "(retract ?osm)")
+	(salience 1)
+	(title "isl:ForgetOSMData"))
+
+([ProServer_Class160104] of  CloFunction
+
+	(source "(letfn [(receive []\n             (let [[lat lon rad] centrad\n                     d (/ rad 60)\n                     bbx [(- lon d) (- lat d) (+ lon d) (+ lat d)]\n                     osm (osm-data bbx)]\n                (if (not (empty? osm))\n                  (rete/assert-frame ['OSM 'data osm time (java.util.Data.)]))))]\n  (ap/start-proc osm-status #(receive) OSM-TIO nil \"OSM data receiving started..\"))")
+	(title "start-osm-data-receive []"))
+
+([ProServer_Class160105] of  CloVar
+
+	(source "(volatile! [0 0 0])")
+	(title "centrad"))
+
+([ProServer_Class160106] of  CloVar
+
+	(source "(volatile! \"START\")")
+	(title "osm-status"))
+
+([ProServer_Class160107] of  CloFunction
+
+	(source "(ap/stop-proc osm-status)\n(println \"OSM data receiving stopped.\")")
+	(title "stop-osm-data-receive []"))
 
 ([ProServer_Class2] of  CloFunction
 
@@ -317,10 +500,6 @@
 		[ProServer_Class120000]
 		[ProServer_Class80003])
 	(title "ProServer Working Programs"))
-
-([ProServer_Class30000] of  CloFuncall
-
-	(source "(pro.server/start-server)"))
 
 ([ProServer_Class30001] of  CloProgram
 
@@ -472,14 +651,6 @@
 	(source "(ap/stop-proc mov-status)")
 	(title "stop-boat-movement []"))
 
-([ProServer_Class70000] of  CloFuncall
-
-	(source "(boat.mov/boat-add pro.server/ONBOARD pro.server/MAP-CENTER 0 0)"))
-
-([ProServer_Class70001] of  CloFuncall
-
-	(source "(pro.server/stop-server)"))
-
 ([ProServer_Class70008] of  CloVar
 
 	(source "nil")
@@ -530,7 +701,7 @@
 
 ([ProServer_Class80008] of  CloFunction
 
-	(source "([]\n    (start-server PORT))\n([port]\n  (if (nil? APP)\n    (init-server))\n  (def SERV (jetty/run-jetty APP {:port port :join? false}))\n  (bm/start-boat-movement\n    #(pump-in-evt {:event :boat-maneuver :id %1 :data %2})\n    #(pump-in-evt {:event :boat-add :id %1 :data %2})\n    #(pump-in-evt {:event :boat-remove :id %1 :data %2})))")
+	(source "([]\n    (start-server PORT))\n([port]\n  (if (nil? APP)\n    (init-server))\n  (def SERV (jetty/run-jetty APP {:port port :join? false}))\n;;  (bm/start-boat-movement\n;;    #(pump-in-evt {:event :boat-maneuver :id %1 :data %2})\n;;    #(pump-in-evt {:event :boat-add :id %1 :data %2})\n;;    #(pump-in-evt {:event :boat-remove :id %1 :data %2})))\n   )")
 	(title "start-server"))
 
 ([ProServer_Class80009] of  CloFunction
@@ -582,7 +753,3 @@
 
 	(source "(str (System/getProperty \"user.dir\") \"/resources/public/\")")
 	(title "ROOT"))
-
-([ProServer_Class90012] of  CloFuncall
-
-	(source "(boat.mov/boat-rem pro.server/ONBOARD)"))

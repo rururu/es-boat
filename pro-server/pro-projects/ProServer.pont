@@ -1,4 +1,4 @@
-; Sun Apr 10 22:03:35 MSK 2016
+; Mon Apr 11 18:58:57 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -6,4 +6,60 @@
 
 (defclass %3ACLIPS_TOP_LEVEL_SLOT_CLASS "Fake class to save top-level slot information"
 	(is-a USER)
+	(role abstract)
+	(single-slot coord
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot time
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot data
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass Islands+Onto
+	(is-a USER)
 	(role abstract))
+
+(defclass Island
+	(is-a Islands+Onto)
+	(role concrete)
+	(single-slot time
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot title
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot coord
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass History
+	(is-a Islands+Onto)
+	(role concrete)
+	(single-slot time
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass OSM+Onto
+	(is-a USER)
+	(role abstract))
+
+(defclass OSM
+	(is-a OSM+Onto)
+	(role concrete)
+	(single-slot time
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot data
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
