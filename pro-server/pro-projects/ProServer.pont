@@ -1,4 +1,4 @@
-; Mon Apr 11 18:58:57 MSK 2016
+; Tue Apr 12 12:57:57 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -18,6 +18,9 @@
 	(single-slot data
 		(type STRING)
 ;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(multislot list
+		(type STRING)
 		(create-accessor read-write)))
 
 (defclass Islands+Onto
@@ -46,6 +49,13 @@
 	(single-slot time
 		(type STRING)
 ;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass NearbyIslands
+	(is-a Islands+Onto)
+	(role concrete)
+	(multislot list
+		(type STRING)
 		(create-accessor read-write)))
 
 (defclass OSM+Onto

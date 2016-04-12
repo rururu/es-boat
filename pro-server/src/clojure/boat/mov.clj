@@ -68,7 +68,8 @@
                     (helm man-func))))))]
   (def add-func af)
   (def rem-func rf)
-  (ap/start-proc mov-status #(mov) BOAT-TIO nil "Boats movement started..")))
+  (ap/start-proc mov-status #(mov) BOAT-TIO nil)
+  (println  "Boats movement started..")))
 
 (defn stop-boat-movement []
   (ap/stop-proc mov-status))

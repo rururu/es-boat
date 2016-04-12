@@ -2,9 +2,9 @@
 (:require
    [clojure.xml :as x]
    [async.proc :as ap]
-   [ru.rules :as ru]))
+   [rete.core :as rete]))
 
-(def OSM-TIO 30000)
+(def OSM-TIO 240000)
 (def centrad (volatile! [0 0 0]))
 (def osm-status (volatile! "START"))
 (defn osm-api-url [bbx]
@@ -41,17 +41,22 @@
 (defn tags [data]
   (sort (set (mapcat keys data))))
 
-(defn start-osm-data-receive []
-  (letfn [(receive []
-             (let [[lat lon rad] centrad
-                     d (/ rad 60)
-                     bbx [(- lon d) (- lat d) (+ lon d) (+ lat d)]
-                     osm (osm-data bbx)]
-                (if (not (empty? osm))
-                  (ru/assert-frame ['OSM 'data osm time (java.util.Data.)]))))]
-  (ap/start-proc osm-status #(receive) OSM-TIO nil "OSM data receiving started..")))
+(defn receive-data []
+  (let [[lat lon rad] @centrad
+       d (/ rad 60)
+       bbx [(- lon d) (- lat d) (+ lon d) (+ lat d)]
+       osm (osm-data bbx)
+       tim (java.util.Date.)]
+  (println [:OSM-DATA (count osm) tim])
+  (when (not (empty? osm))
+    (rete/assert-frame ['OSM 'data osm 'time tim])
+    (rete/fire))))
 
-(defn stop-osm-data-receive []
+(defn start-data-receive []
+  (ap/start-proc osm-status #(receive-data) OSM-TIO nil)
+(println "OSM data receiving started.."))
+
+(defn stop-data-receive []
   (ap/stop-proc osm-status)
 (println "OSM data receiving stopped."))
 
