@@ -16,3 +16,6 @@
 (println (str "    Map center: " (eval (read-string "pro.server/MAP-CENTER"))))
 (println "EXPERT SYSTEM INITIALIZED"))
 
+(defn current-time []
+  (System/currentTimeMillis))
+

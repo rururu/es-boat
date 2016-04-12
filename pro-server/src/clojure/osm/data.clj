@@ -1,10 +1,11 @@
 (ns osm.data
 (:require
    [clojure.xml :as x]
+   [menu.item :as mi]
    [async.proc :as ap]
    [rete.core :as rete]))
 
-(def OSM-TIO 240000)
+(def OBSOL 240000)
 (def centrad (volatile! [0 0 0]))
 (def osm-status (volatile! "START"))
 (defn osm-api-url [bbx]
@@ -41,22 +42,12 @@
 (defn tags [data]
   (sort (set (mapcat keys data))))
 
-(defn receive-data []
+(defn get-osm-data []
   (let [[lat lon rad] @centrad
        d (/ rad 60)
-       bbx [(- lon d) (- lat d) (+ lon d) (+ lat d)]
-       osm (osm-data bbx)
-       tim (java.util.Date.)]
-  (println [:OSM-DATA (count osm) tim])
-  (when (not (empty? osm))
-    (rete/assert-frame ['OSM 'data osm 'time tim])
-    (rete/fire))))
+       bbx [(- lon d) (- lat d) (+ lon d) (+ lat d)]]
+  (osm-data bbx)))
 
-(defn start-data-receive []
-  (ap/start-proc osm-status #(receive-data) OSM-TIO nil)
-(println "OSM data receiving started.."))
-
-(defn stop-data-receive []
-  (ap/stop-proc osm-status)
-(println "OSM data receiving stopped."))
+(defn obsol []
+  OBSOL)
 

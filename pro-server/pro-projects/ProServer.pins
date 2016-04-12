@@ -1,11 +1,13 @@
-; Tue Apr 12 12:57:57 MSK 2016
+; Tue Apr 12 19:27:26 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
 
 ([ProServer_Class0] of  CloProgram
 
-	(cloFunctions [ProServer_Class2])
+	(cloFunctions
+		[ProServer_Class2]
+		[ProServer_Class100011])
 	(cloNamespace [ProServer_Class1])
 	(title "Clojure Work"))
 
@@ -54,6 +56,10 @@
 	(source "\"b1\"")
 	(title "ONBOARD"))
 
+([ProServer_Class100008] of  CloNamespace
+
+	(title "as"))
+
 ([ProServer_Class10001] of  CloNamespace
 
 	(source "(:require\n  [geo.calc :as geo]\n  [async.proc :as ap])")
@@ -61,7 +67,7 @@
 
 ([ProServer_Class100011] of  CloFunction
 
-	(source "(.getTimeInMillis (Calendar/getInstance))")
+	(source "(System/currentTimeMillis)")
 	(title "current-time []"))
 
 ([ProServer_Class10002] of  CloDocumentation
@@ -256,10 +262,10 @@
 
 ([ProServer_Class160009] of  Rule
 
-	(lhs "?i1 (Island time ?tim1)\n?i2 (Island time ?tim2\n	(.before ?tim1 ?tim2))")
+	(lhs "?i1 (Island time ?tim1)\n?i2 (Island time ?tim2\n	(< ?tim1 ?tim2))")
 	(rhs "(retract ?i1)")
 	(salience 1)
-	(title "isl:UpdateIsland"))
+	(title "as:UpdateIsland"))
 
 ([ProServer_Class160010] of  Run
 
@@ -268,15 +274,18 @@
 	(butt-reset "Reset/ru.rules/do-reset")
 	(butt-retr-inss "Retract Instances/ru.rules/retr-inss")
 	(butt-run "Run/ru.rules/run-engine")
+	(facts
+		[ProServer_Class50001]
+		[ProServer_Class60002])
 	(rule-sets [ProServer_Class160099])
-	(title "Pro Serv Run"))
+	(title "AS Run"))
 
 ([ProServer_Class160030] of  Rule
 
 	(lhs "?h1 (History time ?tim1)\n?h2 (History time ?tim2\n	(.before ?tim1 ?tim2))")
 	(rhs "(retract ?h1)")
 	(salience 2)
-	(title "isl:MoveHistory"))
+	(title "MoveHistory"))
 
 ([ProServer_Class160041] of  CloProgram
 
@@ -287,9 +296,7 @@
 		[ProServer_Class160046]
 		[ProServer_Class160062]
 		[ProServer_Class160068]
-		[ProServer_Class90013]
-		[ProServer_Class160104]
-		[ProServer_Class160107])
+		[ProServer_Class90013])
 	(cloNamespace [ProServer_Class160042])
 	(cloVars
 		[ProServer_Class160098]
@@ -299,7 +306,7 @@
 
 ([ProServer_Class160042] of  CloNamespace
 
-	(source "(:require\n   [clojure.xml :as x]\n   [async.proc :as ap]\n   [rete.core :as rete])")
+	(source "(:require\n   [clojure.xml :as x]\n   [menu.item :as mi]\n   [async.proc :as ap]\n   [rete.core :as rete])")
 	(title "osm.data"))
 
 ([ProServer_Class160043] of  CloFunction
@@ -335,31 +342,20 @@
 ([ProServer_Class160098] of  CloVar
 
 	(source "240000")
-	(title "OSM-TIO"))
+	(title "OBSOL"))
 
 ([ProServer_Class160099] of  RuleSet
 
 	(rules
 		[ProServer_Class160009]
-		[ProServer_Class160103]
+		[ProServer_Class90006]
 		[ProServer_Class90012])
 	(templates
 		[OSM]
 		[Island]
-		[NearbyIslands])
-	(title "Boat"))
-
-([ProServer_Class160103] of  Rule
-
-	(lhs "?o1 (OSM time ?tim1)\n?o2 (OSM time ?tim2\n	(.before ?tim1 ?tim2))")
-	(rhs "(retract ?o1)")
-	(salience 1)
-	(title "isl:UpdateOSMData"))
-
-([ProServer_Class160104] of  CloFunction
-
-	(source "(ap/start-proc osm-status #(receive-data) OSM-TIO nil)\n(println \"OSM data receiving started..\")")
-	(title "start-data-receive []"))
+		[NearbyIslands]
+		[Question])
+	(title "AdvisorSkipper"))
 
 ([ProServer_Class160105] of  CloVar
 
@@ -370,11 +366,6 @@
 
 	(source "(volatile! \"START\")")
 	(title "osm-status"))
-
-([ProServer_Class160107] of  CloFunction
-
-	(source "(ap/stop-proc osm-status)\n(println \"OSM data receiving stopped.\")")
-	(title "stop-data-receive []"))
 
 ([ProServer_Class2] of  CloFunction
 
@@ -401,6 +392,7 @@
 	(cloPrograms
 		[Clojure_Class10000]
 		[RuleEngine_Class30000]
+		[ProServer_Class0]
 		[ProServer_Class30001]
 		[ProServer_Class40001]
 		[ProServer_Class10000]
@@ -529,6 +521,10 @@
 	(source "(letfn [(mov []\n            (doseq [[id bdt] (seq @BOATS)]\n              (let [man-func (partial mf id)]\n                (vswap! BOATS assoc id \n                  (-> bdt\n                    (move)\n                    (engine man-func)\n                    (helm man-func))))))]\n  (def add-func af)\n  (def rem-func rf)\n  (ap/start-proc mov-status #(mov) BOAT-TIO nil)\n  (println  \"Boats movement started..\"))")
 	(title "start-boat-movement [mf af rf]"))
 
+([ProServer_Class50001] of  OSM
+
+	(time "0"))
+
 ([ProServer_Class50002] of  CloVar
 
 	(source "(volatile! \"START\")")
@@ -553,6 +549,9 @@
 
 	(source "(let [knots (max (min knots SPD-MAX) SPD-MIN)]\n  (vswap! BOATS assoc-in [id :engine] knots))")
 	(title "boat-engine [id knots]"))
+
+([ProServer_Class60002] of  NearbyIslands
+)
 
 ([ProServer_Class60003] of  CloFunction
 
@@ -694,6 +693,19 @@
 	(source "(str (System/getProperty \"user.dir\") \"/resources/public/\")")
 	(title "ROOT"))
 
+([ProServer_Class90006] of  Rule
+
+	(lhs "?os (OSM data ?data time ?tim)\n(Question predicate ?p\n	(or (empty? ?data)\n	     (> (- (menu.item/current-time) ?tim)\n	          osm.data/OBSOL)))")
+	(rhs "(let [osm (osm.data/get-osm-data)]\n  (println [:OSM-DATA (count osm) osm.data/centrad])\n  (modify ?os data osm time (menu.item/current-time)))")
+	(salience 0)
+	(title "as:CheckOSMData"))
+
+([ProServer_Class90007] of  CloProgram
+
+	(cloFunctions [ProServer_Class100011])
+	(cloNamespace [ProServer_Class100008])
+	(title "Advisor Skipper"))
+
 ([ProServer_Class90008] of  CloFuncall
 
 	(source "(def OSM-TIO 20000)"))
@@ -707,9 +719,9 @@
 	(lhs "(OSM data ?osm time ?tim)\n?ni (NearbyIslands)")
 	(rhs "(let [ii (osm.data/filter-kv \"place\" \"island\" ?osm)\n       nn (for [i ii] (or (get i \"name\") \"unk\"))]\n  (modify ?ni list nn)\n  (doseq [i ii]\n    (asser Island title (get i \"name\")\n	coord [(get i \"lat\") (get i \"lon\")]\n	time ?tim)))")
 	(salience 0)
-	(title "isl:UpdateNearbyIslands"))
+	(title "as:UpdateNearbyIslands"))
 
 ([ProServer_Class90013] of  CloFunction
 
-	(source "(let [[lat lon rad] @centrad\n       d (/ rad 60)\n       bbx [(- lon d) (- lat d) (+ lon d) (+ lat d)]\n       osm (osm-data bbx)\n       tim (java.util.Date.)]\n  (println [:OSM-DATA (count osm) tim])\n  (when (not (empty? osm))\n    (rete/assert-frame ['OSM 'data osm 'time tim])\n    (rete/fire)))")
-	(title "receive-data []"))
+	(source "(let [[lat lon rad] @centrad\n       d (/ rad 60)\n       bbx [(- lon d) (- lat d) (+ lon d) (+ lat d)]]\n  (osm-data bbx))")
+	(title "get-osm-data []"))

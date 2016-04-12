@@ -1,4 +1,4 @@
-; Tue Apr 12 12:57:57 MSK 2016
+; Tue Apr 12 19:27:26 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -15,20 +15,32 @@
 		(type STRING)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
+	(single-slot predicate
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot object
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
 	(single-slot data
 		(type STRING)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(multislot list
 		(type STRING)
+		(create-accessor read-write))
+	(single-slot subject
+		(type STRING)
+;+		(cardinality 0 1)
 		(create-accessor read-write)))
 
-(defclass Islands+Onto
+(defclass Islands
 	(is-a USER)
 	(role abstract))
 
 (defclass Island
-	(is-a Islands+Onto)
+	(is-a Islands)
 	(role concrete)
 	(single-slot time
 		(type STRING)
@@ -43,27 +55,19 @@
 ;+		(cardinality 0 1)
 		(create-accessor read-write)))
 
-(defclass History
-	(is-a Islands+Onto)
-	(role concrete)
-	(single-slot time
-		(type STRING)
-;+		(cardinality 0 1)
-		(create-accessor read-write)))
-
 (defclass NearbyIslands
-	(is-a Islands+Onto)
+	(is-a Islands)
 	(role concrete)
 	(multislot list
 		(type STRING)
 		(create-accessor read-write)))
 
-(defclass OSM+Onto
+(defclass OSM+Data
 	(is-a USER)
 	(role abstract))
 
 (defclass OSM
-	(is-a OSM+Onto)
+	(is-a OSM+Data)
 	(role concrete)
 	(single-slot time
 		(type STRING)
@@ -73,3 +77,35 @@
 		(type STRING)
 ;+		(cardinality 0 1)
 		(create-accessor read-write)))
+
+(defclass Advisor+Skipper
+	(is-a USER)
+	(role abstract))
+
+(defclass History
+	(is-a Advisor+Skipper)
+	(role concrete)
+	(single-slot time
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass Question
+	(is-a Advisor+Skipper)
+	(role concrete)
+	(single-slot predicate
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot object
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot subject
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass Answer
+	(is-a Question)
+	(role concrete))
