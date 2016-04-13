@@ -1,4 +1,4 @@
-; Tue Apr 12 19:27:26 MSK 2016
+; Wed Apr 13 19:43:05 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -20,8 +20,10 @@
 ([BROWSER_SLOT_NAMES] of  Property_List
 
 	(properties
-		[ProServer_ProjectKB_Class454]
-		[ProServer_ProjectKB_Class455]))
+		[ProServer_ProjectKB_Class10517]
+		[ProServer_ProjectKB_Class10518]
+		[ProServer_ProjectKB_Class10519]
+		[ProServer_ProjectKB_Class10520]))
 
 ([CLSES_TAB] of  Widget
 
@@ -65,28 +67,115 @@
 	(is_hidden FALSE)
 	(widget_class_name "edu.stanford.smi.protege.widget.InstancesTab"))
 
-([KB_481222_Class430] of  Map
+([KB_293772_Class306] of  Widget
+
+	(is_hidden FALSE)
+	(name "RuleSet")
+	(property_list [KB_293772_Class307])
+	(widget_class_name "edu.stanford.smi.protege.widget.FormWidget"))
+
+([KB_293772_Class307] of  Property_List
+
+	(properties
+		[KB_293772_Class308]
+		[KB_293772_Class309]
+		[KB_293772_Class311]
+		[KB_293772_Class315]))
+
+([KB_293772_Class308] of  Property_List
+
+	(name "layout properties"))
+
+([KB_293772_Class309] of  Widget
+
+	(height 60)
+	(is_hidden FALSE)
+	(name "title")
+	(property_list [KB_293772_Class310])
+	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
+	(width 200)
+	(x 0)
+	(y 0))
+
+([KB_293772_Class310] of  Property_List
+)
+
+([KB_293772_Class311] of  Widget
+
+	(height 380)
+	(is_hidden FALSE)
+	(name "rules")
+	(property_list [KB_293772_Class312])
+	(widget_class_name "edu.stanford.smi.protege.widget.InstanceListWidget")
+	(width 270)
+	(x 0)
+	(y 60))
+
+([KB_293772_Class312] of  Property_List
+
+	(properties
+		[KB_293772_Class313]
+		[KB_293772_Class314]))
+
+([KB_293772_Class313] of  Boolean
+
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-View References to Value"))
+
+([KB_293772_Class314] of  Boolean
+
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Delete Instance"))
+
+([KB_293772_Class315] of  Widget
+
+	(height 270)
+	(is_hidden FALSE)
+	(name "templates")
+	(property_list [KB_293772_Class316])
+	(widget_class_name "edu.stanford.smi.protege.widget.InstanceListWidget")
+	(width 200)
+	(x 270)
+	(y 60))
+
+([KB_293772_Class316] of  Property_List
+
+	(properties
+		[KB_293772_Class317]
+		[KB_293772_Class318]))
+
+([KB_293772_Class317] of  Boolean
+
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-View References to Value"))
+
+([KB_293772_Class318] of  Boolean
+
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Delete Instance"))
+
+([KB_293772_Class430] of  Map
 
 	(entries
-		[KB_481222_Class431]
-		[KB_481222_Class432]
-		[KB_481222_Class433]))
+		[KB_293772_Class431]
+		[KB_293772_Class432]
+		[KB_293772_Class433]))
 
-([KB_481222_Class431] of  Map_Entry
+([KB_293772_Class431] of  Map_Entry
 
 	(key "suppress_instance_counting")
 	(key_class "java.lang.String")
 	(value "false")
 	(value_class "java.lang.String"))
 
-([KB_481222_Class432] of  Map_Entry
+([KB_293772_Class432] of  Map_Entry
 
 	(key "add_name_on_instance_form")
 	(key_class "java.lang.String")
 	(value "false")
 	(value_class "java.lang.String"))
 
-([KB_481222_Class433] of  Map_Entry
+([KB_293772_Class433] of  Map_Entry
 
 	(key "change_tracking_active")
 	(key_class "java.lang.String")
@@ -279,6 +368,7 @@
 		[STANDARD_CLASS_FORM_WIDGET]
 		[STANDARD_SLOT_FORM_WIDGET]
 		[INSTANCE_ANNOTATION_FORM_WIDGET]
+		[KB_293772_Class306]
 		[STANDARD_FACET_FORM_WIDGET]
 		[PAL_FORM_WIDGET])
 	(default_cls_metaclass ":STANDARD-CLASS")
@@ -303,6 +393,96 @@
 		[ProServer_ProjectKB_Class345]
 		[ProServer_ProjectKB_Class347]
 		[ProServer_ProjectKB_Class349]))
+
+([ProServer_ProjectKB_Class10459] of  Widget
+
+	(height 120)
+	(is_hidden FALSE)
+	(name "volume")
+	(property_list [ProServer_ProjectKB_Class10460])
+	(widget_class_name "edu.stanford.smi.protege.widget.IntegerListWidget")
+	(width 200)
+	(x 0)
+	(y 60))
+
+([ProServer_ProjectKB_Class10460] of  Property_List
+)
+
+([ProServer_ProjectKB_Class10497] of  Widget
+
+	(height 60)
+	(is_hidden FALSE)
+	(name "course")
+	(property_list [ProServer_ProjectKB_Class10498])
+	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
+	(width 200)
+	(x 0)
+	(y 240))
+
+([ProServer_ProjectKB_Class10498] of  Property_List
+)
+
+([ProServer_ProjectKB_Class10501] of  Widget
+
+	(height 60)
+	(is_hidden FALSE)
+	(name "lon")
+	(property_list [ProServer_ProjectKB_Class10502])
+	(widget_class_name "edu.stanford.smi.protege.widget.FloatFieldWidget")
+	(width 100)
+	(x 100)
+	(y 300))
+
+([ProServer_ProjectKB_Class10502] of  Property_List
+)
+
+([ProServer_ProjectKB_Class10503] of  Widget
+
+	(height 60)
+	(is_hidden FALSE)
+	(name "lat")
+	(property_list [ProServer_ProjectKB_Class10504])
+	(widget_class_name "edu.stanford.smi.protege.widget.FloatFieldWidget")
+	(width 100)
+	(x 0)
+	(y 300))
+
+([ProServer_ProjectKB_Class10504] of  Property_List
+)
+
+([ProServer_ProjectKB_Class10507] of  Widget
+
+	(height 60)
+	(is_hidden FALSE)
+	(name "coord")
+	(property_list [ProServer_ProjectKB_Class10508])
+	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
+	(width 200)
+	(x 0)
+	(y 420))
+
+([ProServer_ProjectKB_Class10508] of  Property_List
+)
+
+([ProServer_ProjectKB_Class10517] of  String
+
+	(name "Rule")
+	(string_value "title{+}salience"))
+
+([ProServer_ProjectKB_Class10518] of  String
+
+	(name "NearbyIslands")
+	(string_value "{NearbyIslands}list"))
+
+([ProServer_ProjectKB_Class10519] of  String
+
+	(name "Question")
+	(string_value "predicate{+}subject{+}object"))
+
+([ProServer_ProjectKB_Class10520] of  String
+
+	(name "OSMData")
+	(string_value "{OSMData}"))
 
 ([ProServer_ProjectKB_Class345] of  Widget
 
@@ -343,16 +523,6 @@
 
 ([ProServer_ProjectKB_Class352] of  Property_List
 )
-
-([ProServer_ProjectKB_Class454] of  String
-
-	(name "NearbyIslands")
-	(string_value "{NearbyIslands}list"))
-
-([ProServer_ProjectKB_Class455] of  String
-
-	(name "OSM")
-	(string_value "{OSM}"))
 
 ([QUERIES_TAB] of  Widget
 

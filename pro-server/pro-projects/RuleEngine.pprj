@@ -1,4 +1,4 @@
-; Sun Apr 03 18:38:04 MSK 2016
+; Wed Apr 13 12:09:42 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -162,28 +162,28 @@
 	(name "instances_file_name")
 	(string_value "RuleEngine.pins"))
 
-([KB_733667_Class205] of  Map
+([KB_653600_Class205] of  Map
 
 	(entries
-		[KB_733667_Class206]
-		[KB_733667_Class207]
-		[KB_733667_Class208]))
+		[KB_653600_Class206]
+		[KB_653600_Class207]
+		[KB_653600_Class208]))
 
-([KB_733667_Class206] of  Map_Entry
+([KB_653600_Class206] of  Map_Entry
 
 	(key "suppress_instance_counting")
 	(key_class "java.lang.String")
 	(value "false")
 	(value_class "java.lang.String"))
 
-([KB_733667_Class207] of  Map_Entry
+([KB_653600_Class207] of  Map_Entry
 
 	(key "add_name_on_instance_form")
 	(key_class "java.lang.String")
 	(value "false")
 	(value_class "java.lang.String"))
 
-([KB_733667_Class208] of  Map_Entry
+([KB_653600_Class208] of  Map_Entry
 
 	(key "change_tracking_active")
 	(key_class "java.lang.String")

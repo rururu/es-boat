@@ -1,4 +1,4 @@
-; Tue Apr 12 19:27:26 MSK 2016
+; Wed Apr 13 19:43:05 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -7,24 +7,35 @@
 (defclass %3ACLIPS_TOP_LEVEL_SLOT_CLASS "Fake class to save top-level slot information"
 	(is-a USER)
 	(role abstract)
-	(single-slot coord
-		(type STRING)
+	(single-slot course
+		(type INTEGER)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
+	(multislot coord
+		(type FLOAT)
+		(create-accessor read-write))
 	(single-slot time
-		(type STRING)
+		(type INTEGER)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot predicate
 		(type STRING)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
+	(single-slot bearing
+		(type INTEGER)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
 	(single-slot object
 		(type STRING)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
-	(single-slot data
-		(type STRING)
+	(single-slot volume
+		(type INTEGER)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot speed
+		(type FLOAT)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(multislot list
@@ -42,39 +53,46 @@
 (defclass Island
 	(is-a Islands)
 	(role concrete)
+	(single-slot bearing
+		(type INTEGER)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
 	(single-slot time
-		(type STRING)
+		(type INTEGER)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot title
 		(type STRING)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
-	(single-slot coord
-		(type STRING)
-;+		(cardinality 0 1)
+	(multislot coord
+		(type FLOAT)
 		(create-accessor read-write)))
 
 (defclass NearbyIslands
 	(is-a Islands)
 	(role concrete)
+	(single-slot time
+		(type INTEGER)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
 	(multislot list
 		(type STRING)
 		(create-accessor read-write)))
 
-(defclass OSM+Data
+(defclass OSM+Onto
 	(is-a USER)
 	(role abstract))
 
-(defclass OSM
-	(is-a OSM+Data)
+(defclass OSMData
+	(is-a OSM+Onto)
 	(role concrete)
 	(single-slot time
-		(type STRING)
+		(type INTEGER)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
-	(single-slot data
-		(type STRING)
+	(single-slot volume
+		(type INTEGER)
 ;+		(cardinality 0 1)
 		(create-accessor read-write)))
 
@@ -86,15 +104,38 @@
 	(is-a Advisor+Skipper)
 	(role concrete)
 	(single-slot time
-		(type STRING)
+		(type INTEGER)
 ;+		(cardinality 0 1)
 		(create-accessor read-write)))
 
-(defclass Question
+(defclass Boat
 	(is-a Advisor+Skipper)
 	(role concrete)
+	(single-slot course
+		(type INTEGER)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot speed
+		(type FLOAT)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(multislot coord
+		(type FLOAT)
+		(create-accessor read-write)))
+
+(defclass Question
+	(is-a Boat)
+	(role concrete)
+	(single-slot time
+		(type INTEGER)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
 	(single-slot predicate
 		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot course
+		(type INTEGER)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot object

@@ -1,0 +1,6 @@
+(0 e 0 ((Island :? :? :?tim1 :?tit) nil nil) "as:UpdateIsland")
+(1 x 0 ((Island :? :? :?tim2 :?tit) (:?tim2 :?tim1) #object[clojure.core$eval18345$fn__18346 0xea4015f "clojure.core$eval18345$fn__18346@ea4015f"]) "as:UpdateIsland" 11 (:?fids) #object[clojure.core$eval18349$fn__18350 0x697d52b4 "clojure.core$eval18349$fn__18350@697d52b4"])
+(2 e 1 ((OSMData :? :?tim1 :?vol) nil nil) "as:CheckOSMData")
+(3 x 2 ((Question :? :? :?p :? :?tim2) (:?tim2 :?vol :?tim1) #object[clojure.core$eval18353$fn__18354 0x2b1881a0 "clojure.core$eval18353$fn__18354@2b1881a0"]) "as:CheckOSMData" 11 (:?fids) #object[clojure.core$eval18359$fn__18360 0x7e9827ce "clojure.core$eval18359$fn__18360@7e9827ce"])
+(4 e 3 ((NearbyIslands :? :? :?tim1) nil nil) "as:UpdateNearbyIslands")
+(5 x 1 ((OSMData :? :?tim2 :?vol) (:?tim2 :?vol :?tim1) #object[clojure.core$eval18363$fn__18364 0x33898ac5 "clojure.core$eval18363$fn__18364@33898ac5"]) "as:UpdateNearbyIslands" 10 (:?tim2 :?fids) #object[clojure.core$eval18368$fn__18369 0x46ab759d "clojure.core$eval18368$fn__18369@46ab759d"])

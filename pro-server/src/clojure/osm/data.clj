@@ -5,9 +5,9 @@
    [async.proc :as ap]
    [rete.core :as rete]))
 
-(def OBSOL 240000)
-(def centrad (volatile! [0 0 0]))
-(def osm-status (volatile! "START"))
+(def OBSOL 20000)
+(def CENT-RAD (volatile! [44.124 -68.736 5]))
+(def DATA (volatile! []))
 (defn osm-api-url [bbx]
   (let [[w s e n] bbx] 
   (str "http://api.openstreetmap.org/api/0.6/map?bbox=" w "," s "," e "," n)))
@@ -43,11 +43,11 @@
   (sort (set (mapcat keys data))))
 
 (defn get-osm-data []
-  (let [[lat lon rad] @centrad
+  (let [[lat lon rad] @CENT-RAD
        d (/ rad 60)
        bbx [(- lon d) (- lat d) (+ lon d) (+ lat d)]]
-  (osm-data bbx)))
+  (vreset! DATA (osm-data bbx))))
 
-(defn obsol []
-  OBSOL)
+(defn obsol-time []
+  osm.data/OBSOL)
 

@@ -25,11 +25,9 @@
 
 (defn mk-frame [ins]
   (letfn [(sval [slt ins]
-	(or
- 	  (if (.getAllowsMultipleValues slt)
-	    (.getOwnSlotValues ins slt)
-	    (.getOwnSlotValue ins slt))
-	  '?))]
+	(if (.getAllowsMultipleValues slt)
+	  (.getOwnSlotValues ins slt)
+                        (or (.getOwnSlotValue ins slt) '?)))]
   (let [typ (.getDirectType ins)
         slots (.getTemplateSlots typ)
         svs (mapcat #(list (symbol (.getName %)) (sval % ins)) slots)

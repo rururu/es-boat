@@ -1,4 +1,4 @@
-; Sun Apr 03 18:38:04 MSK 2016
+; Wed Apr 13 12:09:42 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -137,5 +137,5 @@
 
 ([RuleEngine_Class90000] of  CloFunction
 
-	(source "(letfn [(sval [slt ins]\n	(or\n 	  (if (.getAllowsMultipleValues slt)\n	    (.getOwnSlotValues ins slt)\n	    (.getOwnSlotValue ins slt))\n	  '?))]\n  (let [typ (.getDirectType ins)\n        slots (.getTemplateSlots typ)\n        svs (mapcat #(list (symbol (.getName %)) (sval % ins)) slots)\n        svs (cons 'INSTANCE (cons (.getName ins) svs))]\n    (cons (symbol (.getName typ)) svs)))")
+	(source "(letfn [(sval [slt ins]\n	(if (.getAllowsMultipleValues slt)\n	  (.getOwnSlotValues ins slt)\n                        (or (.getOwnSlotValue ins slt) '?)))]\n  (let [typ (.getDirectType ins)\n        slots (.getTemplateSlots typ)\n        svs (mapcat #(list (symbol (.getName %)) (sval % ins)) slots)\n        svs (cons 'INSTANCE (cons (.getName ins) svs))]\n    (cons (symbol (.getName typ)) svs)))")
 	(title "mk-frame [ins]"))

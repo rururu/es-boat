@@ -1,4 +1,4 @@
-; Tue Apr 12 19:27:26 MSK 2016
+; Wed Apr 13 19:43:05 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -260,12 +260,92 @@
 	(source "(println [:QUESTIONS params])\n(let [ans (condp = (:question params)\n               \"nearby-islands\" [\"Oz\" \"Kron\" \"Burnev\" \"Mukisaari\" \"Selkamarjansaari\"]\n               \"what-behind\" (str \"Behind \" (:island params) \" nothing interesting!\")\n               \"\")]\n  (-> (r/response (write-transit ans))\n        (r/header \"Access-Control-Allow-Origin\" \"*\")))")
 	(title "questions [params]"))
 
+([ProServer_Class150000] of  CloFuncall
+
+	(source "(vreset! osm.data/centrad [60.0 30.0 5])"))
+
+([ProServer_Class150001] of  CloFuncall
+
+	(source "osm.data/centrad"))
+
+([ProServer_Class150002] of  CloFuncall
+
+	(source "(rete.core/assert-frame ['Question 'predicate \"what-is\" 'time (menu.item/current-time)])"))
+
+([ProServer_Class150003] of  CloVar
+
+	(source "(volatile! [])")
+	(title "DATA"))
+
+([ProServer_Class150004] of  CloFuncall
+
+	(source "(count osm.data/DATA)"))
+
+([ProServer_Class150005] of  CloFuncall
+
+	(source "(count @osm.data/DATA)"))
+
+([ProServer_Class150006] of  CloFuncall
+
+	(source "(tags @osm.data/DATA)"))
+
+([ProServer_Class150007] of  CloFuncall
+
+	(source "(osm.data/tags @osm.data/DATA)"))
+
+([ProServer_Class150008] of  CloFuncall
+
+	(source "(map println osm.data/tags @osm.data/DATA)"))
+
+([ProServer_Class150009] of  CloFuncall
+
+	(source "(map println (osm.data/tags @osm.data/DATA))"))
+
+([ProServer_Class150010] of  CloFuncall
+
+	(source "(osm.data/filter-kv \"place\" \"island\" @osm.data/DATA)"))
+
+([ProServer_Class150011] of  CloFuncall
+
+	(source "(rete.core/assert-frame ['Question 'predicate \"what-is2\" 'time (menu.item/current-time)])"))
+
+([ProServer_Class150012] of  CloFuncall
+
+	(source "(rete.core/assert-frame ['Question 'predicate \"what-is3\" 'time (menu.item/current-time)])"))
+
+([ProServer_Class150013] of  CloFuncall
+
+	(source "osm.data/OBSOL"))
+
+([ProServer_Class150014] of  CloFuncall
+
+	(source "(rete.core/assert-frame ['Question 'predicate \"what-is4\" 'time (menu.item/current-time)])"))
+
+([ProServer_Class150015] of  CloFunction
+
+	(source "osm.data/OBSOL")
+	(title "obsol-time []"))
+
+([ProServer_Class150021] of  Rule
+
+	(lhs "?isl (Island coord ?ico\n	polar ?pol)\n(Question coord ?bco\n	((empty? pol)\n	 (not (empty? ?bco))))")
+	(rhs "(modify ?isl polar [(geo.calc/bear-deg ?bco ?ico)\n	      (geo.calc/distance-nm ?bco ?ico)])")
+	(salience 0)
+	(title "as:IslandPolarCoord"))
+
+([ProServer_Class150023] of  Rule
+
+	(lhs "?isl (Island)\n(Question coord ?bco\n	(not (empty? ?bco)))")
+	(rhs "(modify ?isl polar [])")
+	(salience 1)
+	(title "as:ForgetIslandPolarCoord"))
+
 ([ProServer_Class160009] of  Rule
 
-	(lhs "?i1 (Island time ?tim1)\n?i2 (Island time ?tim2\n	(< ?tim1 ?tim2))")
-	(rhs "(retract ?i1)")
-	(salience 1)
-	(title "as:UpdateIsland"))
+	(lhs "?isl (Island title ?tit \n	time ?tim1)\n(OSMData time ?tim2\n	(> ?tim1 ?tim2))")
+	(rhs "(retract ?isl)")
+	(salience 3)
+	(title "as:RetractObsoleteIsland"))
 
 ([ProServer_Class160010] of  Run
 
@@ -278,7 +358,8 @@
 		[ProServer_Class50001]
 		[ProServer_Class60002])
 	(rule-sets [ProServer_Class160099])
-	(title "AS Run"))
+	(title "AS Run")
+	(trace TRUE))
 
 ([ProServer_Class160030] of  Rule
 
@@ -296,12 +377,13 @@
 		[ProServer_Class160046]
 		[ProServer_Class160062]
 		[ProServer_Class160068]
-		[ProServer_Class90013])
+		[ProServer_Class90013]
+		[ProServer_Class150015])
 	(cloNamespace [ProServer_Class160042])
 	(cloVars
 		[ProServer_Class160098]
 		[ProServer_Class160105]
-		[ProServer_Class160106])
+		[ProServer_Class150003])
 	(title "OSM Data"))
 
 ([ProServer_Class160042] of  CloNamespace
@@ -341,7 +423,7 @@
 
 ([ProServer_Class160098] of  CloVar
 
-	(source "240000")
+	(source "20000")
 	(title "OBSOL"))
 
 ([ProServer_Class160099] of  RuleSet
@@ -349,9 +431,11 @@
 	(rules
 		[ProServer_Class160009]
 		[ProServer_Class90006]
-		[ProServer_Class90012])
+		[ProServer_Class90012]
+		[ProServer_Class150023]
+		[ProServer_Class150021])
 	(templates
-		[OSM]
+		[OSMData]
 		[Island]
 		[NearbyIslands]
 		[Question])
@@ -359,17 +443,12 @@
 
 ([ProServer_Class160105] of  CloVar
 
-	(source "(volatile! [0 0 0])")
-	(title "centrad"))
-
-([ProServer_Class160106] of  CloVar
-
-	(source "(volatile! \"START\")")
-	(title "osm-status"))
+	(source "(volatile! [44.124 -68.736 5])")
+	(title "CENT-RAD"))
 
 ([ProServer_Class2] of  CloFunction
 
-	(source "(println \"INITIALIZING EXPERT SYSTEM\")\n(println \"1.Loading Clojure Programs...\")\n(if-let [wps (seq (cls-instances \"WorkingPrograms\"))]\n  (loop [i 1 pins (svs (first wps) \"cloPrograms\")]\n    (when (seq pins)\n      (println (str \" 1.\" i \" \" (sv (first pins) \"title\") \" = \" (ClojureTab/loadProgram (first pins)) ))\n      (recur (inc i) (rest pins))))\n  (println \"  Instance of WorkingPrograms not found!\"))\n(println \"2. Starting server...\")\n(eval (read-string \"(pro.server/start-server)\"))\n(println (str \"    Map center: \" (eval (read-string \"pro.server/MAP-CENTER\"))))\n(println \"EXPERT SYSTEM INITIALIZED\")")
+	(source "(println \"INITIALIZING EXPERT SYSTEM\")\n(println \"1.Loading Clojure Programs...\")\n(if-let [wps (seq (cls-instances \"WorkingPrograms\"))]\n  (loop [i 1 pins (svs (first wps) \"cloPrograms\")]\n    (when (seq pins)\n      (println (str \" 1.\" i \" \" (sv (first pins) \"title\") \" = \" (ClojureTab/loadProgram (first pins)) ))\n      (recur (inc i) (rest pins))))\n  (println \"  Instance of WorkingPrograms not found!\"))\n;;(println \"2. Starting server...\")\n;;(eval (read-string \"(pro.server/start-server)\"))\n;;(println (str \"    Map center: \" (eval (read-string \"pro.server/MAP-CENTER\"))))\n(println \"EXPERT SYSTEM INITIALIZED\")")
 	(title "clojure-work []"))
 
 ([ProServer_Class20000] of  CloFunction
@@ -400,6 +479,10 @@
 		[ProServer_Class120000]
 		[ProServer_Class80003])
 	(title "ProServer Working Programs"))
+
+([ProServer_Class30000] of  CloFuncall
+
+	(source "(ru.rules/pp :all)"))
 
 ([ProServer_Class30001] of  CloProgram
 
@@ -521,9 +604,10 @@
 	(source "(letfn [(mov []\n            (doseq [[id bdt] (seq @BOATS)]\n              (let [man-func (partial mf id)]\n                (vswap! BOATS assoc id \n                  (-> bdt\n                    (move)\n                    (engine man-func)\n                    (helm man-func))))))]\n  (def add-func af)\n  (def rem-func rf)\n  (ap/start-proc mov-status #(mov) BOAT-TIO nil)\n  (println  \"Boats movement started..\"))")
 	(title "start-boat-movement [mf af rf]"))
 
-([ProServer_Class50001] of  OSM
+([ProServer_Class50001] of  OSMData
 
-	(time "0"))
+	(time 0)
+	(volume 0))
 
 ([ProServer_Class50002] of  CloVar
 
@@ -551,7 +635,8 @@
 	(title "boat-engine [id knots]"))
 
 ([ProServer_Class60002] of  NearbyIslands
-)
+
+	(time 0))
 
 ([ProServer_Class60003] of  CloFunction
 
@@ -695,33 +780,24 @@
 
 ([ProServer_Class90006] of  Rule
 
-	(lhs "?os (OSM data ?data time ?tim)\n(Question predicate ?p\n	(or (empty? ?data)\n	     (> (- (menu.item/current-time) ?tim)\n	          osm.data/OBSOL)))")
-	(rhs "(let [osm (osm.data/get-osm-data)]\n  (println [:OSM-DATA (count osm) osm.data/centrad])\n  (modify ?os data osm time (menu.item/current-time)))")
-	(salience 0)
+	(lhs "?osd (OSMData volume ?vol time ?tim1)\n(Question time ?tim2\n	((> ?tim2 ?tim1)\n	 [(= ?vol 0)\n	  (> (- ?tim2 ?tim1)\n	       (osm.data/obsol-time))]))")
+	(rhs "(let [osm (osm.data/get-osm-data)\n       cnt (count osm)]\n  (println [:OSM-DATA cnt osm.data/CENT-RAD])\n  (modify ?osd volume cnt time (menu.item/current-time)))")
+	(salience 3)
 	(title "as:CheckOSMData"))
 
 ([ProServer_Class90007] of  CloProgram
 
-	(cloFunctions [ProServer_Class100011])
 	(cloNamespace [ProServer_Class100008])
 	(title "Advisor Skipper"))
 
-([ProServer_Class90008] of  CloFuncall
-
-	(source "(def OSM-TIO 20000)"))
-
-([ProServer_Class90009] of  CloFuncall
-
-	(source "(rete.core/fire)"))
-
 ([ProServer_Class90012] of  Rule
 
-	(lhs "(OSM data ?osm time ?tim)\n?ni (NearbyIslands)")
-	(rhs "(let [ii (osm.data/filter-kv \"place\" \"island\" ?osm)\n       nn (for [i ii] (or (get i \"name\") \"unk\"))]\n  (modify ?ni list nn)\n  (doseq [i ii]\n    (asser Island title (get i \"name\")\n	coord [(get i \"lat\") (get i \"lon\")]\n	time ?tim)))")
-	(salience 0)
+	(lhs "?ni (NearbyIslands time ?tim1)\n(OSMData volume ?vol \n	time ?tim2\n	((> ?vol 0)\n	 (> ?tim2 ?tim1)))")
+	(rhs "(let [ii (osm.data/filter-kv \"place\" \"island\" @osm.data/DATA)\n       nn (map #(or (get % \"name\") \"unk\") ii)]\n  (modify ?ni list (vec nn)\n	time ?tim2)\n  (doseq [i ii]\n    (asser Island title (get i \"name\")\n	coord [(get i \"lat\") (get i \"lon\")]\n	polar []\n	time ?tim2)))")
+	(salience 2)
 	(title "as:UpdateNearbyIslands"))
 
 ([ProServer_Class90013] of  CloFunction
 
-	(source "(let [[lat lon rad] @centrad\n       d (/ rad 60)\n       bbx [(- lon d) (- lat d) (+ lon d) (+ lat d)]]\n  (osm-data bbx))")
+	(source "(let [[lat lon rad] @CENT-RAD\n       d (/ rad 60)\n       bbx [(- lon d) (- lat d) (+ lon d) (+ lat d)]]\n  (vreset! DATA (osm-data bbx)))")
 	(title "get-osm-data []"))
