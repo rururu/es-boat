@@ -223,3 +223,19 @@
 2016.04.13 12:19:46.534 MSK WARNING: Look and feel not found: com.apple.laf.AquaLookAndFeel -- SystemUtilities.setLookAndFeel()
 2016.04.13 12:19:46.765 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
 2016.04.13 12:19:47.669 MSK INFO: Load time for file:/home/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.04.14 14:03:39.500 MSK INFO: *** SYSTEM START ***
+2016.04.14 14:03:39.522 MSK WARNING: Look and feel not found: com.apple.laf.AquaLookAndFeel -- SystemUtilities.setLookAndFeel()
+2016.04.14 14:03:39.947 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.04.14 14:03:41.379 MSK INFO: Load time for file:/home/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.04.14 14:24:56.055 MSK INFO: *** SYSTEM START ***
+2016.04.14 14:24:56.061 MSK WARNING: Look and feel not found: com.apple.laf.AquaLookAndFeel -- SystemUtilities.setLookAndFeel()
+2016.04.14 14:24:56.359 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.04.14 14:24:57.317 MSK INFO: Load time for file:/home/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.04.14 15:26:12.161 MSK INFO: *** SYSTEM START ***
+2016.04.14 15:26:12.166 MSK WARNING: Look and feel not found: com.apple.laf.AquaLookAndFeel -- SystemUtilities.setLookAndFeel()
+2016.04.14 15:26:12.394 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.04.14 15:26:13.342 MSK INFO: Load time for file:/home/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.04.14 16:01:59.162 MSK INFO: *** SYSTEM START ***
+2016.04.14 16:01:59.169 MSK WARNING: Look and feel not found: com.apple.laf.AquaLookAndFeel -- SystemUtilities.setLookAndFeel()
+2016.04.14 16:01:59.474 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.04.14 16:02:00.390 MSK INFO: Load time for file:/home/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()

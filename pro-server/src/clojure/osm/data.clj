@@ -6,7 +6,7 @@
    [rete.core :as rete]))
 
 (def OBSOL 20000)
-(def CENT-RAD (volatile! [44.124 -68.736 5]))
+(def CENT-RAD (volatile! [44.124 -68.736 3]))
 (def DATA (volatile! []))
 (defn osm-api-url [bbx]
   (let [[w s e n] bbx] 

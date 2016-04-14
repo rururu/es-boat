@@ -1,4 +1,4 @@
-; Wed Apr 13 19:43:05 MSK 2016
+; Thu Apr 14 16:47:46 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -11,6 +11,9 @@
 		(type INTEGER)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
+	(multislot polar
+		(type FLOAT)
+		(create-accessor read-write))
 	(multislot coord
 		(type FLOAT)
 		(create-accessor read-write))
@@ -18,12 +21,12 @@
 		(type INTEGER)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
-	(single-slot predicate
-		(type STRING)
+	(single-slot id
+		(type INTEGER)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
-	(single-slot bearing
-		(type INTEGER)
+	(single-slot predicate
+		(type STRING)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot object
@@ -53,10 +56,6 @@
 (defclass Island
 	(is-a Islands)
 	(role concrete)
-	(single-slot bearing
-		(type INTEGER)
-;+		(cardinality 0 1)
-		(create-accessor read-write))
 	(single-slot time
 		(type INTEGER)
 ;+		(cardinality 0 1)
@@ -64,6 +63,9 @@
 	(single-slot title
 		(type STRING)
 ;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(multislot polar
+		(type FLOAT)
 		(create-accessor read-write))
 	(multislot coord
 		(type FLOAT)
@@ -73,6 +75,21 @@
 	(is-a Islands)
 	(role concrete)
 	(single-slot time
+		(type INTEGER)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(multislot list
+		(type STRING)
+		(create-accessor read-write)))
+
+(defclass Sector
+	(is-a Islands)
+	(role concrete)
+	(single-slot time
+		(type INTEGER)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot id
 		(type INTEGER)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
@@ -132,10 +149,6 @@
 		(create-accessor read-write))
 	(single-slot predicate
 		(type STRING)
-;+		(cardinality 0 1)
-		(create-accessor read-write))
-	(single-slot course
-		(type INTEGER)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot object

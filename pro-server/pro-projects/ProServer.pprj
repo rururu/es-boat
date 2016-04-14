@@ -1,4 +1,4 @@
-; Wed Apr 13 19:43:05 MSK 2016
+; Thu Apr 14 16:47:46 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -20,10 +20,11 @@
 ([BROWSER_SLOT_NAMES] of  Property_List
 
 	(properties
-		[ProServer_ProjectKB_Class10517]
-		[ProServer_ProjectKB_Class10518]
-		[ProServer_ProjectKB_Class10519]
-		[ProServer_ProjectKB_Class10520]))
+		[ProServer_ProjectKB_Class485]
+		[ProServer_ProjectKB_Class486]
+		[ProServer_ProjectKB_Class487]
+		[ProServer_ProjectKB_Class488]
+		[ProServer_ProjectKB_Class489]))
 
 ([CLSES_TAB] of  Widget
 
@@ -154,34 +155,6 @@
 	(boolean_value FALSE)
 	(name "ButtonDisplayed-Delete Instance"))
 
-([KB_293772_Class430] of  Map
-
-	(entries
-		[KB_293772_Class431]
-		[KB_293772_Class432]
-		[KB_293772_Class433]))
-
-([KB_293772_Class431] of  Map_Entry
-
-	(key "suppress_instance_counting")
-	(key_class "java.lang.String")
-	(value "false")
-	(value_class "java.lang.String"))
-
-([KB_293772_Class432] of  Map_Entry
-
-	(key "add_name_on_instance_form")
-	(key_class "java.lang.String")
-	(value "false")
-	(value_class "java.lang.String"))
-
-([KB_293772_Class433] of  Map_Entry
-
-	(key "change_tracking_active")
-	(key_class "java.lang.String")
-	(value "false")
-	(value_class "java.lang.String"))
-
 ([KB_519390_Class0] of  String
 
 	(name "factory_class_name")
@@ -282,6 +255,34 @@
 	(name "instances_file_name")
 	(string_value "ProServer.pins"))
 
+([KB_540505_Class430] of  Map
+
+	(entries
+		[KB_540505_Class431]
+		[KB_540505_Class432]
+		[KB_540505_Class433]))
+
+([KB_540505_Class431] of  Map_Entry
+
+	(key "suppress_instance_counting")
+	(key_class "java.lang.String")
+	(value "false")
+	(value_class "java.lang.String"))
+
+([KB_540505_Class432] of  Map_Entry
+
+	(key "add_name_on_instance_form")
+	(key_class "java.lang.String")
+	(value "false")
+	(value_class "java.lang.String"))
+
+([KB_540505_Class433] of  Map_Entry
+
+	(key "change_tracking_active")
+	(key_class "java.lang.String")
+	(value "false")
+	(value_class "java.lang.String"))
+
 ([LAYOUT_PROPERTIES] of  Property_List
 
 	(name "layout properties")
@@ -367,6 +368,7 @@
 	(customized_instance_widgets
 		[STANDARD_CLASS_FORM_WIDGET]
 		[STANDARD_SLOT_FORM_WIDGET]
+		[ProServer_ProjectKB_Class442]
 		[INSTANCE_ANNOTATION_FORM_WIDGET]
 		[KB_293772_Class306]
 		[STANDARD_FACET_FORM_WIDGET]
@@ -393,96 +395,6 @@
 		[ProServer_ProjectKB_Class345]
 		[ProServer_ProjectKB_Class347]
 		[ProServer_ProjectKB_Class349]))
-
-([ProServer_ProjectKB_Class10459] of  Widget
-
-	(height 120)
-	(is_hidden FALSE)
-	(name "volume")
-	(property_list [ProServer_ProjectKB_Class10460])
-	(widget_class_name "edu.stanford.smi.protege.widget.IntegerListWidget")
-	(width 200)
-	(x 0)
-	(y 60))
-
-([ProServer_ProjectKB_Class10460] of  Property_List
-)
-
-([ProServer_ProjectKB_Class10497] of  Widget
-
-	(height 60)
-	(is_hidden FALSE)
-	(name "course")
-	(property_list [ProServer_ProjectKB_Class10498])
-	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
-	(width 200)
-	(x 0)
-	(y 240))
-
-([ProServer_ProjectKB_Class10498] of  Property_List
-)
-
-([ProServer_ProjectKB_Class10501] of  Widget
-
-	(height 60)
-	(is_hidden FALSE)
-	(name "lon")
-	(property_list [ProServer_ProjectKB_Class10502])
-	(widget_class_name "edu.stanford.smi.protege.widget.FloatFieldWidget")
-	(width 100)
-	(x 100)
-	(y 300))
-
-([ProServer_ProjectKB_Class10502] of  Property_List
-)
-
-([ProServer_ProjectKB_Class10503] of  Widget
-
-	(height 60)
-	(is_hidden FALSE)
-	(name "lat")
-	(property_list [ProServer_ProjectKB_Class10504])
-	(widget_class_name "edu.stanford.smi.protege.widget.FloatFieldWidget")
-	(width 100)
-	(x 0)
-	(y 300))
-
-([ProServer_ProjectKB_Class10504] of  Property_List
-)
-
-([ProServer_ProjectKB_Class10507] of  Widget
-
-	(height 60)
-	(is_hidden FALSE)
-	(name "coord")
-	(property_list [ProServer_ProjectKB_Class10508])
-	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
-	(width 200)
-	(x 0)
-	(y 420))
-
-([ProServer_ProjectKB_Class10508] of  Property_List
-)
-
-([ProServer_ProjectKB_Class10517] of  String
-
-	(name "Rule")
-	(string_value "title{+}salience"))
-
-([ProServer_ProjectKB_Class10518] of  String
-
-	(name "NearbyIslands")
-	(string_value "{NearbyIslands}list"))
-
-([ProServer_ProjectKB_Class10519] of  String
-
-	(name "Question")
-	(string_value "predicate{+}subject{+}object"))
-
-([ProServer_ProjectKB_Class10520] of  String
-
-	(name "OSMData")
-	(string_value "{OSMData}"))
 
 ([ProServer_ProjectKB_Class345] of  Widget
 
@@ -523,6 +435,106 @@
 
 ([ProServer_ProjectKB_Class352] of  Property_List
 )
+
+([ProServer_ProjectKB_Class442] of  Widget
+
+	(is_hidden FALSE)
+	(name "Sector")
+	(property_list [ProServer_ProjectKB_Class443])
+	(widget_class_name "edu.stanford.smi.protege.widget.FormWidget"))
+
+([ProServer_ProjectKB_Class443] of  Property_List
+
+	(properties
+		[ProServer_ProjectKB_Class444]
+		[ProServer_ProjectKB_Class447]
+		[ProServer_ProjectKB_Class454]
+		[ProServer_ProjectKB_Class463]))
+
+([ProServer_ProjectKB_Class444] of  Property_List
+
+	(name "layout properties"))
+
+([ProServer_ProjectKB_Class445] of  Widget
+
+	(height 120)
+	(is_hidden FALSE)
+	(name "islands")
+	(property_list [ProServer_ProjectKB_Class446])
+	(widget_class_name "edu.stanford.smi.protege.widget.StringListWidget")
+	(width 200)
+	(x 0)
+	(y 60))
+
+([ProServer_ProjectKB_Class446] of  Property_List
+)
+
+([ProServer_ProjectKB_Class447] of  Widget
+
+	(height 60)
+	(is_hidden FALSE)
+	(name "id")
+	(property_list [ProServer_ProjectKB_Class448])
+	(widget_class_name "edu.stanford.smi.protege.widget.IntegerFieldWidget")
+	(width 100)
+	(x 0)
+	(y 0))
+
+([ProServer_ProjectKB_Class448] of  Property_List
+)
+
+([ProServer_ProjectKB_Class454] of  Widget
+
+	(height 60)
+	(is_hidden FALSE)
+	(name "time")
+	(property_list [ProServer_ProjectKB_Class455])
+	(widget_class_name "edu.stanford.smi.protege.widget.IntegerFieldWidget")
+	(width 100)
+	(x 0)
+	(y 180))
+
+([ProServer_ProjectKB_Class455] of  Property_List
+)
+
+([ProServer_ProjectKB_Class463] of  Widget
+
+	(height 120)
+	(is_hidden FALSE)
+	(name "list")
+	(property_list [ProServer_ProjectKB_Class464])
+	(widget_class_name "edu.stanford.smi.protege.widget.StringListWidget")
+	(width 200)
+	(x 0)
+	(y 60))
+
+([ProServer_ProjectKB_Class464] of  Property_List
+)
+
+([ProServer_ProjectKB_Class485] of  String
+
+	(name "Rule")
+	(string_value "title{+}salience"))
+
+([ProServer_ProjectKB_Class486] of  String
+
+	(name "NearbyIslands")
+	(string_value "{NearbyIslands}list"))
+
+([ProServer_ProjectKB_Class487] of  String
+
+	(name "Question")
+	(string_value "predicate{+}subject{+}object"))
+
+([ProServer_ProjectKB_Class488] of  String
+
+	(name "Sector")
+	(string_value "{Sector}id"))
+
+([ProServer_ProjectKB_Class489] of  String
+
+	(name "OSMData")
+	(string_value "{OSMData}"))
 
 ([QUERIES_TAB] of  Widget
 

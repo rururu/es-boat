@@ -47,7 +47,7 @@
         fi2 (Math/toRadians la2)
         ld2 (Math/toRadians lo2)
         rad (spherical-azimuth fi1 ld1 fi2 ld2)
-        deg (Math/toDegrees rad)]
+        deg (int (Math/toDegrees rad))]
     (cond
        (< deg 0) (+ deg 360.0)
        (> deg 360.0) (- deg 360.0)
