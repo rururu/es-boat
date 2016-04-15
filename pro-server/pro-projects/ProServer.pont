@@ -1,4 +1,4 @@
-; Thu Apr 14 16:47:46 MSK 2016
+; Fri Apr 15 17:13:16 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -21,16 +21,16 @@
 		(type INTEGER)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
-	(single-slot id
-		(type INTEGER)
-;+		(cardinality 0 1)
-		(create-accessor read-write))
 	(single-slot predicate
 		(type STRING)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot object
 		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot sector
+		(type INTEGER)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot volume
@@ -69,27 +69,16 @@
 		(create-accessor read-write))
 	(multislot coord
 		(type FLOAT)
+		(create-accessor read-write))
+	(single-slot sector
+		(type INTEGER)
+;+		(cardinality 0 1)
 		(create-accessor read-write)))
 
 (defclass NearbyIslands
 	(is-a Islands)
 	(role concrete)
 	(single-slot time
-		(type INTEGER)
-;+		(cardinality 0 1)
-		(create-accessor read-write))
-	(multislot list
-		(type STRING)
-		(create-accessor read-write)))
-
-(defclass Sector
-	(is-a Islands)
-	(role concrete)
-	(single-slot time
-		(type INTEGER)
-;+		(cardinality 0 1)
-		(create-accessor read-write))
-	(single-slot id
 		(type INTEGER)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))

@@ -49,8 +49,8 @@
         rad (spherical-azimuth fi1 ld1 fi2 ld2)
         deg (int (Math/toDegrees rad))]
     (cond
-       (< deg 0) (+ deg 360.0)
-       (> deg 360.0) (- deg 360.0)
+       (< deg 0) (+ deg 360)
+       (> deg 360) (- deg 360)
        true deg)))
 
 (defn seg-intersect [x1 y1 x2 y2 x3 y3 x4 y4]
@@ -76,4 +76,9 @@
 (defn abaft [crs crd1 crd2]
   (let [ca (course-angle crs crd1 crd2)]
     (or (> ca 90) (< ca -90))))
+
+(defn sector [bea crs]
+  (let [cr (- bea crs)
+       cr (if (< cr 0) (+ cr 360) cr)]
+  (inc (int (/ cr 30)))))
 
