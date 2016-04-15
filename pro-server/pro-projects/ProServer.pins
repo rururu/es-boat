@@ -1,4 +1,4 @@
-; Fri Apr 15 17:13:16 MSK 2016
+; Fri Apr 15 20:38:59 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -73,34 +73,6 @@
 ([ProServer_Class100012] of  CloFuncall
 
 	(source "(ru.rules/sp :all)"))
-
-([ProServer_Class100013] of  CloFuncall
-
-	(source "(rete.core/assert-frame ['Question 'coord [44.164 -68.736] 'time (menu.item/current-time)])"))
-
-([ProServer_Class100014] of  CloFuncall
-
-	(source "(rete.core/assert-frame ['Question 'coord [44.174 -68.736] 'time (menu.item/current-time)])"))
-
-([ProServer_Class100015] of  CloFuncall
-
-	(source "(rete.core/assert-frame ['Question 'coord [44.184 -68.736] 'time (menu.item/current-time)])"))
-
-([ProServer_Class100016] of  CloFuncall
-
-	(source "(rete.core/assert-frame ['Question 'coord [44.194 -68.736] 'time (menu.item/current-time)])"))
-
-([ProServer_Class100017] of  CloFuncall
-
-	(source "(ru.rules/sp 'Island)"))
-
-([ProServer_Class100018] of  CloFuncall
-
-	(source "(ru.rules/pp 'Sector)"))
-
-([ProServer_Class100019] of  CloFuncall
-
-	(source "(rete.core/assert-frame ['Question 'coord [44.2 -68.736] 'time (menu.item/current-time)])"))
 
 ([ProServer_Class10002] of  CloDocumentation
 
@@ -304,8 +276,8 @@
 
 ([ProServer_Class150021] of  Rule
 
-	(lhs "?isl (Island coord ?ico\n	time ?tim1)\n(Question coord ?bco\n	time ?tim2\n	((> ?tim2 ?tim1)\n	 (not (empty? ?bco))))")
-	(rhs "(modify ?isl polar [(geo.calc/bear-deg ?bco ?ico)\n	      (geo.calc/distance-nm ?bco ?ico)]\n	time ?tim2)")
+	(lhs "?isl (Island coord ?ico\n	time ?tim1)\n(Question coord ?bco\n	course ?crs\n	time ?tim2\n	(> ?tim2 ?tim1))")
+	(rhs "(let [bea (geo.calc/bear-deg ?bco ?ico)\n       dis (geo.calc/distance-nm ?bco ?ico)\n       sec (geo.calc/sector bea ?crs)\n       sid (geo.calc/side sec)]\n  (modify ?isl polar [bea dis]\n	sector sec\n	side sid\n	time ?tim2))")
 	(salience 0)
 	(title "as:UpdatePolarCoord"))
 
@@ -328,7 +300,7 @@
 		[ProServer_Class60002])
 	(rule-sets [ProServer_Class160099])
 	(title "AS Run")
-	(trace TRUE))
+	(trace FALSE))
 
 ([ProServer_Class160030] of  Rule
 
@@ -399,11 +371,9 @@
 
 	(rules
 		[ProServer_Class160009]
-		[ProServer_Class170036]
 		[ProServer_Class90006]
 		[ProServer_Class90012]
-		[ProServer_Class150021]
-		[ProServer_Class170037])
+		[ProServer_Class150021])
 	(templates
 		[OSMData]
 		[Island]
@@ -415,20 +385,6 @@
 
 	(source "(volatile! [44.124 -68.736 3])")
 	(title "CENT-RAD"))
-
-([ProServer_Class170036] of  Rule
-
-	(lhs "?sec (Sector time ?tim1)\n(OSMData time ?tim2\n	(> ?tim2 ?tim1))")
-	(rhs "(modify ?sec list []\n	time ?tim2)")
-	(salience 1)
-	(title "as:ClearObsoleteSector"))
-
-([ProServer_Class170037] of  Rule
-
-	(lhs "?sec (Sector id ?id list ?lst)\n(Island title ?tit\n	polar ?pol\n	((let [[bea dis] ?pol]\n	   (= ?id (int (/ bea 12))))\n	 (not (some #{?tit} ?lst))))")
-	(rhs "(println [:IS ?tit ?pol ?id])\n(modify ?sec list (cons ?tit ?lst))")
-	(salience 0)
-	(title "as:UpdateSector"))
 
 ([ProServer_Class2] of  CloFunction
 
@@ -464,8 +420,9 @@
 		[ProServer_Class80003])
 	(title "ProServer Working Programs"))
 
-([ProServer_Class30000] of  Boat
-)
+([ProServer_Class30000] of  CloFuncall
+
+	(source "(rete.core/assert-frame ['Question 'coord [44.124 -68.736] 'course 270 'time (menu.item/current-time)])"))
 
 ([ProServer_Class30001] of  CloProgram
 
@@ -480,7 +437,8 @@
 		[ProServer_Class30010]
 		[ProServer_Class30011]
 		[ProServer_Class30012]
-		[ProServer_Class70001])
+		[ProServer_Class70001]
+		[ProServer_Class90005])
 	(cloNamespace [ProServer_Class30002])
 	(title "Geo Calculus"))
 
@@ -627,38 +585,10 @@
 	(source "(ap/stop-proc mov-status)")
 	(title "stop-boat-movement []"))
 
-([ProServer_Class70000] of  CloFuncall
-
-	(source "(rete.core/assert-frame ['Question 'coord [44.124 -68.736] 'time (menu.item/current-time)])"))
-
 ([ProServer_Class70001] of  CloFunction
 
 	(source "(let [cr (- bea crs)\n       cr (if (< cr 0) (+ cr 360) cr)]\n  (inc (int (/ cr 30))))")
 	(title "sector [bea crs]"))
-
-([ProServer_Class70002] of  CloFuncall
-
-	(source "(geo.calc/sector 20 30)"))
-
-([ProServer_Class70003] of  CloFuncall
-
-	(source "(geo.calc/sector 31 30)"))
-
-([ProServer_Class70004] of  CloFuncall
-
-	(source "(geo.calc/sector 359 30)"))
-
-([ProServer_Class70005] of  CloFuncall
-
-	(source "(geo.calc/sector 359 354)"))
-
-([ProServer_Class70006] of  CloFuncall
-
-	(source "(ru.rules/f 23)"))
-
-([ProServer_Class70007] of  CloFuncall
-
-	(source "(ru.rules/f 22)"))
 
 ([ProServer_Class70008] of  CloVar
 
@@ -673,6 +603,10 @@
 
 	(source "(slurp (str ROOT \"index.html\"))")
 	(title "index-page []"))
+
+([ProServer_Class80001] of  CloFuncall
+
+	(source "(ru.rules/pp 'Island)"))
 
 ([ProServer_Class80003] of  CloProgram
 
@@ -702,10 +636,6 @@
 
 	(source "(let [baos (ByteArrayOutputStream.)\n        w    (t/writer baos :json)\n        _    (t/write w x)\n        ret  (.toString baos)]\n    (.reset baos)\n    ret)")
 	(title "write-transit [x]"))
-
-([ProServer_Class80006] of  CloFuncall
-
-	(source "(geo.calc/sector 170 354)"))
 
 ([ProServer_Class80007] of  CloFunction
 
@@ -767,6 +697,11 @@
 	(source "(str (System/getProperty \"user.dir\") \"/resources/public/\")")
 	(title "ROOT"))
 
+([ProServer_Class90005] of  CloFunction
+
+	(source "(condp = sector\n  1   \"AHEAD\"\n  2   \"STAR-BOW\"\n  3   \"STAR-BEAM\"\n  4   \"STAR-BEAM\"\n  5   \"STAR-ABAFT\"\n  6   \"ASTERN\"\n  7   \"ASTERN\"\n  8   \"PORT-ABAFT\"\n  9   \"PORT-BEAM\"\n  10 \"PORT-BEAM\"\n  11 \"PORT-BOW\"\n  12 \"AHEAD\")")
+	(title "side [sector]"))
+
 ([ProServer_Class90006] of  Rule
 
 	(lhs "?osd (OSMData volume ?vol time ?tim1)\n(Question time ?tim2\n	((> ?tim2 ?tim1)\n	 [(= ?vol 0)\n	  (> (- ?tim2 ?tim1)\n	       (osm.data/obsol-time))]))")
@@ -779,26 +714,10 @@
 	(cloNamespace [ProServer_Class100008])
 	(title "Advisor Skipper"))
 
-([ProServer_Class90008] of  CloFuncall
-
-	(source "(ru.rules/f 19)"))
-
-([ProServer_Class90009] of  CloFuncall
-
-	(source "(ru.rules/f 17)"))
-
-([ProServer_Class90010] of  CloFuncall
-
-	(source "(rete.core/assert-frame ['Question 'coord [44.134 -68.736] 'time (menu.item/current-time)])"))
-
-([ProServer_Class90011] of  CloFuncall
-
-	(source "(rete.core/assert-frame ['Question 'coord [44.154 -68.736] 'time (menu.item/current-time)])"))
-
 ([ProServer_Class90012] of  Rule
 
-	(lhs "?ni (NearbyIslands time ?tim1)\n(Question coord ?bco)\n(OSMData volume ?vol \n	time ?tim2\n	((> ?vol 0)\n	 (> ?tim2 ?tim1)))")
-	(rhs "(let [ii (osm.data/filter-kv \"place\" \"island\" @osm.data/DATA)\n       nn (map #(or (get % \"name\") \"unk\") ii)]\n  (modify ?ni list (vec nn)\n	time ?tim2)\n  (doseq [i ii]\n    (let [ico [(get i \"lat\") (get i \"lon\")]\n           bea (geo.calc/bear-deg ?bco ico)\n           dis (geo.calc/distance-nm ?bco ico)]\n      (asser Island title (get i \"name\")\n	coord ico\n	polar (if (not (empty? ?bco))\n	           [bea\n	            dis]\n	            [])\n	time ?tim2))))")
+	(lhs "?ni (NearbyIslands time ?tim1)\n(Question coord ?bco\n	course ?crs)\n(OSMData volume ?vol \n	time ?tim2\n	((> ?vol 0)\n	 (> ?tim2 ?tim1)))")
+	(rhs "(let [ii (osm.data/filter-kv \"place\" \"island\" @osm.data/DATA)\n       nn (map #(or (get % \"name\") \"unk\") ii)]\n  (modify ?ni list (vec nn)\n	time ?tim2)\n  (doseq [i ii]\n    (let [ico [(get i \"lat\") (get i \"lon\")]\n           bea (geo.calc/bear-deg ?bco ico)\n           dis (geo.calc/distance-nm ?bco ico)\n           sec (geo.calc/sector bea ?crs)\n           sid (geo.calc/side sec)]\n      (asser Island title (get i \"name\")\n	coord ico\n	polar [bea dis]\n	sector sec\n	side sid\n	time ?tim2))))")
 	(salience 0)
 	(title "as:UpdateNearbyIslands"))
 

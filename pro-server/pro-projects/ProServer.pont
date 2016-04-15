@@ -1,4 +1,4 @@
-; Fri Apr 15 17:13:16 MSK 2016
+; Fri Apr 15 20:38:59 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -9,6 +9,10 @@
 	(role abstract)
 	(single-slot course
 		(type INTEGER)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot side
+		(type STRING)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(multislot polar
@@ -58,6 +62,10 @@
 	(role concrete)
 	(single-slot time
 		(type INTEGER)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot side
+		(type STRING)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot title

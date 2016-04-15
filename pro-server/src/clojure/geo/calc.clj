@@ -82,3 +82,18 @@
        cr (if (< cr 0) (+ cr 360) cr)]
   (inc (int (/ cr 30)))))
 
+(defn side [sector]
+  (condp = sector
+  1   "AHEAD"
+  2   "STAR-BOW"
+  3   "STAR-BEAM"
+  4   "STAR-BEAM"
+  5   "STAR-ABAFT"
+  6   "ASTERN"
+  7   "ASTERN"
+  8   "PORT-ABAFT"
+  9   "PORT-BEAM"
+  10 "PORT-BEAM"
+  11 "PORT-BOW"
+  12 "AHEAD"))
+
