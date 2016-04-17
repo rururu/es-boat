@@ -115,7 +115,7 @@
 #ask {
   position:fixed;
   bottom:140px;
-  left:60px;
+  left:30px;
   padding:5px;
   z-index:100;
   color:yellow
@@ -123,7 +123,7 @@
 #element1 {
   position:fixed;
   bottom:120px;
-  left:60px;
+  left:30px;
   padding:5px;
   z-index:100;
   color:yellow
@@ -131,7 +131,7 @@
 #element2 {
   position:fixed;
   bottom:120px;
-  left:210px;
+  left:200px;
   padding:5px;
   z-index:100;
   color:yellow
@@ -139,7 +139,7 @@
 #element3 {
   position:fixed;
   bottom:120px;
-  left:360px;
+  left:370px;
   padding:5px;
   z-index:100;
   color:yellow
@@ -147,7 +147,7 @@
 #display {
   position:fixed;
   top:100px;
-  left:100px;
+  left:60px;
   padding:5px;
   z-index:100;
   color:yellow

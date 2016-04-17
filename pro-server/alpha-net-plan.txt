@@ -1,8 +1,10 @@
 Island:
- :?: {:? {:? {:? {:? {:? 0}}}}}
+ :?: {:? {:? {:? {:? {:? {:? 0}}, "AHEAD" {:? {:? 6}}, "ASTERN" {:? {:? 8}}, "PORT-ABAFT" {:? {:? 10}}, "PORT-BEAM" {:? {:? 12}}, "PORT-BOW" {:? {:? 14}}, "STAR-ABAFT" {:? {:? 16}}, "STAR-BEAM" {:? {:? 18}}, "STAR-BOW" {:? {:? 20}}}}}}
 OSMData:
- :?: {:? {:? 1}}
+ :?: {:? {:? {:? {:? 1}}}}
 Question:
- :?: {:? {:? {:? {:? {:? {:? {:? 2}}}}}}}
+ :?: {:? {:? {:? {:? {:? {:? {:? {:? {:? 2}}}}, "what-is" {:? {"ahead" {:? {:? 5}}, "astern" {:? {:? 7}}, "abaft the port beam" {:? {:? 9}}, "on the port beam" {:? {:? 11}}, "on the port bow" {:? {:? 13}}, "abaft the starboard beam" {:? {:? 15}}, "on the starboard beam" {:? {:? 17}}, "on the starboard bow" {:? {:? 19}}, :? {:? {:? 21}}}}}}}}}
 NearbyIslands:
  :?: {:? {:? 3}}
+Answer:
+ :?: {:? {:? 4}}

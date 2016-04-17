@@ -5,8 +5,6 @@
    [async.proc :as ap]
    [rete.core :as rete]))
 
-(def OBSOL 20000)
-(def CENT-RAD (volatile! [44.124 -68.736 3]))
 (def DATA (volatile! []))
 (defn osm-api-url [bbx]
   (let [[w s e n] bbx] 
@@ -42,12 +40,12 @@
 (defn tags [data]
   (sort (set (mapcat keys data))))
 
-(defn get-osm-data []
-  (let [[lat lon rad] @CENT-RAD
-       d (/ rad 60)
+(defn get-osm-data [[lat lon] rad]
+  (let [d (/ rad 60)
        bbx [(- lon d) (- lat d) (+ lon d) (+ lat d)]]
   (vreset! DATA (osm-data bbx))))
 
-(defn obsol-time []
-  osm.data/OBSOL)
+(defn obsolete [[lat1 lon1] [lat2 lon2]]
+  (or (> (Math/abs (- lat1 lat2)) 0.02)
+     (> (Math/abs (- lon1 lon2)) 0.02)))
 

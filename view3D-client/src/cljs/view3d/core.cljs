@@ -20,7 +20,9 @@
 (def CAM-TIO 4000) ;; camera timeout interval (4 sec)
 (def BSE-URL "http://localhost:4444/") ;; server url base
 (def MAP-PTH "map-center/")
-(def QST-PTH "questions/")
+(def QST-PTH "question/")
+(def ANS-PTH "answer/")
+(def CMD-PTH "command/")
 
 (def boat (volatile! {:coord [0 0]
                       :speed 0
@@ -71,6 +73,7 @@
 (defn no-handler [response])
 
 (defn ask-server [path params resp-format handler]
+  (println [:ASK-SERV params])
   (let [url (str BSE-URL path)]
     (GET url {:params params
               :handler handler
@@ -146,7 +149,7 @@
               (str (format "%.4f " (- 0 lat)) "S"))
         lon (if (>= lon 0)
               (str (format "%.4f " lon) "E")
-              (str (format "%.4f " (- 0 )) "W"))]
+              (str (format "%.4f " (- 0 lon)) "W"))]
     (set-html! "latitude" lat)
     (set-html! "longitude" lon)
     (set-html! "speed" (format "%.1f knots" (:speed @boat)))))
@@ -252,6 +255,7 @@
 (def function1 nil)
 
 (defn handler1 [selected]
+  (set-html! "display" "")
   (function1 selected))
 
 (defn selector2 [header lst typ]
@@ -265,6 +269,7 @@
 (def function2 nil)
 
 (defn handler2 [selected]
+  (set-html! "display" "")
   (function2 selected))
 
 (defn selector3 [header lst typ]
@@ -277,6 +282,7 @@
 (def function3 nil)
 
 (defn handler3 [selected]
+  (set-html! "display" "")
   (function3 selected))
 
 ;; ------------------------ Questionnaire -----------------------------
@@ -284,22 +290,38 @@
 (defn display-answer [answer]
   (set-html! "display" answer))
 
+(defn retrieve-answer []
+  (ask-server ANS-PTH nil :transit display-answer))
+
 (defn behind-island [islands]
   (selector3 "island" islands :itself)
   (def function3
     (fn [a]
-      (ask-server QST-PTH {:question "what-behind"
-                           :island a} :transit display-answer))))
+      (ask-server QST-PTH {:predicate "what-behind"
+                           :object "island"
+                           :object-value a} :transit retrieve-answer))))
 
-(def lst1 ["ahead" "astern" "on port side" "on starboard side" "behind the island "])
+(def lst1 ["ahead"
+           "on the starboard bow"
+           "on the port bow"
+           "on the starboard beam"
+           "on the port beam"
+           "abaft the starboard beam"
+           "abaft the port beam"
+           "astern"
+           "behind the island"])
 
 (defn what-is []
   (selector2 "?" lst1 :count)
   (def function2
     (fn [a]
       (let [n (r/read-string a)]
-        (condp = n
-          4 (ask-server QST-PTH {:question "nearby-islands"} :transit behind-island)
+        (condp >= n
+          7 (ask-server QST-PTH (merge @boat {:predicate "what-is"
+                                              :subject (nth lst1 n)})
+                        :transit retrieve-answer)
+          8 (ask-server QST-PTH (merge @boat {:predicate "nearby-islands"})
+                        :transit behind-island)
           (println [:WHAT-IS (nth lst1 n)]))))))
 
 (defn questionnaire []

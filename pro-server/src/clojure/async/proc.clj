@@ -19,10 +19,8 @@
 (defn running? [status-vol]
   (= @status-vol "RUNNING"))
 
-(defn repeater [proc-func time-out  start-mess]
-  (if start-mess
-  (println start-mess))
-(go (while true
+(defn repeater [proc-func time-out]
+  (go (while true
            (proc-func)
            (<! (timeout time-out)))))
 

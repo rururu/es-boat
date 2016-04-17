@@ -1,4 +1,4 @@
-; Wed Apr 13 12:09:42 MSK 2016
+; Sun Apr 17 15:02:10 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -68,6 +68,11 @@
 	(source "(doseq [ins inss]\n  (doseq [fact (rete/facts-with-slot-value 'INSTANCE = (.getName ins))]\n    (rete/retract-fact (first fact) true)))")
 	(title "retract-instances [inss]"))
 
+([RuleEngine_Class170000] of  CloFunction
+
+	(source "(let [all (rete/fact-list)\n      sel (if (= typ :all) all (filter #(= (second %) typ) all))]\n  (doseq [fact sel]\n    (p/ctpl \"\")\n    (p/ctpl fact)))")
+	(title "lp [typ]"))
+
 ([RuleEngine_Class180001] of  CloVar
 
 	(source "(atom {})")
@@ -92,6 +97,7 @@
 		[RuleEngine_Class140000]
 		[RuleEngine_Class60000]
 		[RuleEngine_Class10000]
+		[RuleEngine_Class170000]
 		[RuleEngine_Class80000]
 		[RuleEngine_Class20000]
 		[RuleEngine_Class100000]

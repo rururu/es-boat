@@ -1,4 +1,4 @@
-; Fri Apr 15 20:38:59 MSK 2016
+; Sun Apr 17 21:23:11 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -20,10 +20,11 @@
 ([BROWSER_SLOT_NAMES] of  Property_List
 
 	(properties
-		[ProServer_ProjectKB_Class467]
-		[ProServer_ProjectKB_Class468]
-		[ProServer_ProjectKB_Class469]
-		[ProServer_ProjectKB_Class470]))
+		[ProServer_ProjectKB_Class480]
+		[ProServer_ProjectKB_Class481]
+		[ProServer_ProjectKB_Class482]
+		[ProServer_ProjectKB_Class483]
+		[ProServer_ProjectKB_Class484]))
 
 ([CLSES_TAB] of  Widget
 
@@ -254,28 +255,28 @@
 	(name "instances_file_name")
 	(string_value "ProServer.pins"))
 
-([KB_840149_Class430] of  Map
+([KB_655732_Class430] of  Map
 
 	(entries
-		[KB_840149_Class431]
-		[KB_840149_Class432]
-		[KB_840149_Class433]))
+		[KB_655732_Class431]
+		[KB_655732_Class432]
+		[KB_655732_Class433]))
 
-([KB_840149_Class431] of  Map_Entry
+([KB_655732_Class431] of  Map_Entry
 
 	(key "suppress_instance_counting")
 	(key_class "java.lang.String")
 	(value "false")
 	(value_class "java.lang.String"))
 
-([KB_840149_Class432] of  Map_Entry
+([KB_655732_Class432] of  Map_Entry
 
 	(key "add_name_on_instance_form")
 	(key_class "java.lang.String")
 	(value "false")
 	(value_class "java.lang.String"))
 
-([KB_840149_Class433] of  Map_Entry
+([KB_655732_Class433] of  Map_Entry
 
 	(key "change_tracking_active")
 	(key_class "java.lang.String")
@@ -434,25 +435,30 @@
 ([ProServer_ProjectKB_Class352] of  Property_List
 )
 
-([ProServer_ProjectKB_Class467] of  String
+([ProServer_ProjectKB_Class480] of  String
 
 	(name "Rule")
 	(string_value "title{+}salience"))
 
-([ProServer_ProjectKB_Class468] of  String
+([ProServer_ProjectKB_Class481] of  String
+
+	(name "Answer")
+	(string_value "{Answer+}accum{+}time"))
+
+([ProServer_ProjectKB_Class482] of  String
 
 	(name "NearbyIslands")
-	(string_value "{NearbyIslands}list"))
+	(string_value "{NearbyIslands}list{+}time"))
 
-([ProServer_ProjectKB_Class469] of  String
+([ProServer_ProjectKB_Class483] of  String
 
 	(name "Question")
 	(string_value "predicate{+}subject{+}object"))
 
-([ProServer_ProjectKB_Class470] of  String
+([ProServer_ProjectKB_Class484] of  String
 
 	(name "OSMData")
-	(string_value "{OSMData}"))
+	(string_value "{OSMData+}volume{+}coord{+rad+}radius{+}time"))
 
 ([QUERIES_TAB] of  Widget
 

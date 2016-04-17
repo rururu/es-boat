@@ -6,17 +6,19 @@
               [compojure.handler :as handler]
               [compojure.route :as route]
               [cognitect.transit :as t]
-              [clojure.core.async :as async :refer [chan alts!! put! <! go timeout]]
+              [clojure.core.async :as async :refer [chan alts!! put! <! <!! go timeout]]
               [boat.mov :as bm]
-              [cesium.core :as cz]))
+              [cesium.core :as cz]
+              [rete.core :as rete]))
 
 (def ROOT (str (System/getProperty "user.dir") "/resources/public/"))
 (def EVT-CHN (chan))
+(def ANS-CHN (chan))
 (def PORT 4444)
 (def APP nil)
 (def SERV nil)
 (def ONBOARD "b1")
-(def MAP-CENTER [62.2935 5.4987])
+(def MAP-CENTER [44.124 -68.736])
 (defn index-page []
   (slurp (str ROOT "index.html")))
 
@@ -28,6 +30,9 @@
 
 (defn pump-in-evt [val]
   (put! EVT-CHN val))
+
+(defn pump-in-ans [val]
+  (put! ANS-CHN val))
 
 (defn write-transit [x]
   (let [baos (ByteArrayOutputStream.)
@@ -49,20 +54,34 @@
     (bm/boat-helm ONBOARD (keyword cmd))))
 "")
 
-(defn questions [params]
-  (println [:QUESTIONS params])
-(let [ans (condp = (:question params)
-               "nearby-islands" ["Oz" "Kron" "Burnev" "Mukisaari" "Selkamarjansaari"]
-               "what-behind" (str "Behind " (:island params) " nothing interesting!")
-               "")]
-  (-> (r/response (write-transit ans))
-        (r/header "Access-Control-Allow-Origin" "*"))))
+(defn answer []
+  (-> (r/response (write-transit (deref (future (<!! ANS-CHN)))))
+      (r/header "Access-Control-Allow-Origin" "*")))
+
+(defn question [pp]
+  (println [:QUESTION pp])
+(let [crd (:coord pp)
+       crd [(read-string (get crd "0"))
+              (read-string (get crd "1"))]]
+  (rete/assert-frame 
+       ['Question 'coord crd
+	'course (read-string (:course pp))
+	'speed (read-string (:speed pp))
+	'predicate (:predicate pp)
+	'subject (:subject pp)
+	'subject-value (:subject-value pp)
+	'object (:object pp)
+	'object-value (:object-value pp)
+	'time (as/current-time)])
+  (rete/fire)
+  {:status 204}))
 
 (defn init-server []
   (defroutes app-routes
   (GET "/" [] (index-page))
   (GET "/map-center/" [] (write-transit MAP-CENTER))
-  (GET "/questions/" [& params] (questions params))
+  (GET "/question/" [& params] (question params))
+  (GET "/answer/" [] (answer))
   (GET "/events/" [] (events))
   (GET "/command/" [& params] (command params))
   (GET "/czml/" [] (cz/events))

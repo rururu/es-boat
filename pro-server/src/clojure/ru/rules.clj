@@ -111,6 +111,13 @@
       (p/ctpl (str k " " typ " " (or (mp 'title) (mp 'label)) " status: " (mp 'status) " fact: " n))
       (def k (inc k)) ) )))
 
+(defn lp [typ]
+  (let [all (rete/fact-list)
+      sel (if (= typ :all) all (filter #(= (second %) typ) all))]
+  (doseq [fact sel]
+    (p/ctpl "")
+    (p/ctpl fact))))
+
 (defn cv [val]
   (let [all (rete/fact-list)
       sel (filter #(some #{val} %) all)]
