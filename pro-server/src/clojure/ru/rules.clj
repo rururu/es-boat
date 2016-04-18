@@ -39,24 +39,27 @@
 
 (defn run-engine
   ([hm inst]
-  (println [:RUN-ENGINE (p/sv inst "title")])
   (let [mp (into {} hm)
-        rss (mp "rule-sets")
-        fcs (mp "fact-classes")
-        ffs (mp "facts")
-        trc (mp "trace")
-        ffc (facts-from-classes fcs)
-        facts (concat ffc ffs)
-        tms (mapcat #(p/svs % "templates") rss)
-        rls (mapcat #(p/svs % "rules") rss)
-        mts (mk-templates tms)
-        mrs (map #(mk-rule % trc) rls)
-        mtr (map rete/trans-rule mrs)]
-    (println (str "Trace: " trc))
-    (println (str "Templates: " (count mts)))
-    (println (str "Rules: " (count mtr)))
-    (println (str "Facts: " (count facts)))
-    (run-engine trc mts mtr facts)))
+         tit (mp "title")
+         rss (mp "rule-sets")
+         fcs (mp "fact-classes")
+         ffs (mp "facts")
+         trc (mp "trace")]
+    (run-engine tit rss fcs ffs trc)))
+([tit rss fcs ffs trc]
+  (println [:RUN-ENGINE tit])
+    (let [ffc (facts-from-classes fcs)
+           facts (concat ffc ffs)
+           tms (mapcat #(p/svs % "templates") rss)
+           rls (mapcat #(p/svs % "rules") rss)
+           mts (mk-templates tms)
+           mrs (map #(mk-rule % trc) rls)
+           mtr (map rete/trans-rule mrs)]
+       (println (str "Trace: " trc))
+       (println (str "Templates: " (count mts)))
+       (println (str "Rules: " (count mtr)))
+       (println (str "Facts: " (count facts)))
+       (run-engine trc mts mtr facts)))
 ([trac templs rules facts]
   (time
     (do 

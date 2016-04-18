@@ -35847,8 +35847,11 @@ view3d.core.retrieve_answer = function() {
 view3d.core.behind_island = function(a) {
   view3d.core.selector3.call(null, "island", a, new cljs.core.Keyword(null, "itself", "itself", 1264932322));
   view3d.core.function3 = function(a) {
-    return view3d.core.ask_server.call(null, view3d.core.QST_PTH, new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null, "predicate", "predicate", -1742501860), "what-behind", new cljs.core.Keyword(null, "object", "object", 1474613949), "island", new cljs.core.Keyword(null, "object-value", "object-value", 178983501), a], null), new cljs.core.Keyword(null, "transit", "transit", 359458387), view3d.core.retrieve_answer);
+    return view3d.core.ask_server.call(null, view3d.core.QST_PTH, new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null, "predicate", "predicate", -1742501860), "what-is", new cljs.core.Keyword(null, "subject", "subject", -1411880451), "behind the island", new cljs.core.Keyword(null, "object", "object", 1474613949), a], null), new cljs.core.Keyword(null, "transit", "transit", 359458387), view3d.core.retrieve_answer);
   };
+};
+view3d.core.nearby_islands = function() {
+  return view3d.core.ask_server.call(null, view3d.core.ANS_PTH, null, new cljs.core.Keyword(null, "transit", "transit", 359458387), view3d.core.behind_island);
 };
 view3d.core.lst1 = new cljs.core.PersistentVector(null, 9, 5, cljs.core.PersistentVector.EMPTY_NODE, "ahead;on the starboard bow;on the port bow;on the starboard beam;on the port beam;abaft the starboard beam;abaft the port beam;astern;behind the island".split(";"), null);
 view3d.core.what_is = function() {
@@ -35857,7 +35860,7 @@ view3d.core.what_is = function() {
     a = cljs.reader.read_string.call(null, a);
     var b = cljs.core._GT__EQ_;
     return cljs.core.truth_(b.call(null, 7, a)) ? view3d.core.ask_server.call(null, view3d.core.QST_PTH, cljs.core.merge.call(null, cljs.core.deref.call(null, view3d.core.boat), new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "predicate", "predicate", -1742501860), "what-is", new cljs.core.Keyword(null, "subject", "subject", -1411880451), cljs.core.nth.call(null, view3d.core.lst1, a)], null)), new cljs.core.Keyword(null, "transit", "transit", 359458387), view3d.core.retrieve_answer) : 
-    cljs.core.truth_(b.call(null, 8, a)) ? view3d.core.ask_server.call(null, view3d.core.QST_PTH, cljs.core.merge.call(null, cljs.core.deref.call(null, view3d.core.boat), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "predicate", "predicate", -1742501860), "nearby-islands"], null)), new cljs.core.Keyword(null, "transit", "transit", 359458387), view3d.core.behind_island) : cljs.core.println.call(null, new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, 
+    cljs.core.truth_(b.call(null, 8, a)) ? view3d.core.ask_server.call(null, view3d.core.QST_PTH, cljs.core.merge.call(null, cljs.core.deref.call(null, view3d.core.boat), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "predicate", "predicate", -1742501860), "nearby-islands"], null)), new cljs.core.Keyword(null, "transit", "transit", 359458387), view3d.core.nearby_islands) : cljs.core.println.call(null, new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, 
     [new cljs.core.Keyword(null, "WHAT-IS", "WHAT-IS", -1782707900), cljs.core.nth.call(null, view3d.core.lst1, a)], null));
   };
 };
@@ -35891,6 +35894,7 @@ view3d.core.start_map = function(a) {
     cljs.core._vreset_BANG_.call(null, view3d.core.boat, cljs.core.assoc.call(null, cljs.core._deref.call(null, view3d.core.boat), new cljs.core.Keyword(null, "coord", "coord", -1453656639), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [b, c], null)));
     view3d.core.fly_to.call(null, b, c, (new cljs.core.Keyword(null, "altitude", "altitude", 463588637)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, view3d.core.camera)), 0, 10);
     view3d.core.set_html_BANG_.call(null, "course", (new cljs.core.Keyword(null, "course", "course", 1455432948)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, view3d.core.boat)));
+    view3d.core.set_html_BANG_.call(null, "helm-tit", "helm");
     view3d.core.set_html_BANG_.call(null, "helm", view3d.core.helm_control);
     view3d.core.set_html_BANG_.call(null, "throttle", "throttle");
     view3d.core.set_html_BANG_.call(null, "throttle-fld", view3d.core.throttle_control);

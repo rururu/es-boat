@@ -60,19 +60,21 @@
 
 (defn question [pp]
   (println [:QUESTION pp])
-(let [crd (:coord pp)
-       crd [(read-string (get crd "0"))
-              (read-string (get crd "1"))]]
-  (rete/assert-frame 
-       ['Question 'coord crd
-	'course (read-string (:course pp))
-	'speed (read-string (:speed pp))
+(let [frm ['Question
 	'predicate (:predicate pp)
 	'subject (:subject pp)
 	'subject-value (:subject-value pp)
 	'object (:object pp)
 	'object-value (:object-value pp)
-	'time (as/current-time)])
+	'time (as/current-time)]
+       frm (if-let [crd (:coord pp)]
+                (concat frm
+	['coord [(read-string (get crd "0"))
+	            (read-string (get crd "1"))]
+	 'course (read-string (:course pp))
+	 'speed (read-string (:speed pp))])
+                frm)]
+  (rete/assert-frame frm)
   (rete/fire)
   {:status 204}))
 

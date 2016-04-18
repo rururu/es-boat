@@ -6,6 +6,14 @@
   z-index:100;
   color:yellow
 }
+#helm-tit {
+  position:fixed;
+  bottom:80px;
+  right:340px;
+  padding:5px;
+  z-index:100;
+  color:yellow
+}
 #helm {
   position:fixed;
   bottom:80px;
@@ -131,7 +139,7 @@
 #element2 {
   position:fixed;
   bottom:120px;
-  left:200px;
+  left:170px;
   padding:5px;
   z-index:100;
   color:yellow
@@ -139,7 +147,7 @@
 #element3 {
   position:fixed;
   bottom:120px;
-  left:370px;
+  left:340px;
   padding:5px;
   z-index:100;
   color:yellow

@@ -1,4 +1,4 @@
-; Sun Apr 17 21:23:11 MSK 2016
+; Mon Apr 18 23:20:25 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -58,17 +58,17 @@
 
 ([ProServer_Class100004] of  Rule
 
-	(lhs "?a (Answer accum ?acc)\n(Question predicate \"what-is\"\n	subject \"astern\")\n(Island title ?tit side \"ASTERN\")")
-	(rhs "(vswap! ?acc conj ?tit)")
+	(lhs "?a (Answer accum ?acc)\n(Question predicate \"what-is\"\n	subject \"astern\")\n(Island title ?tit side \"ASTERN\"\n	polar ?pol)")
+	(rhs "(vswap! ?acc conj [?tit (second ?pol)])")
 	(salience 0)
 	(title "as:WhatIsAstern"))
 
 ([ProServer_Class100005] of  Rule
 
-	(lhs "?q (Question predicate \"what-is\"\n	subject ?sub)\n(Answer accum ?acc)")
-	(rhs "(let [acc @?acc\n       cnt (count acc)\n       ans (condp > cnt \n               1 \"Clear.\"\n               2 (str \"Island \" (first acc) \" is \" ?sub)\n               (str \"Islands \" (apply str (interpose \", \" acc)) \" are \" ?sub))]\n  (pro.server/pump-in-ans ans)\n  (retract ?q))")
+	(lhs "(Answer accum ?acc)\n?q (Question predicate \"what-is\"\n	subject ?sub\n	(not= ?sub \"behind the island\"))")
+	(rhs "(pro.server/pump-in-ans (as/ans-islands @?acc ?sub))\n(retract ?q)")
 	(salience -1)
-	(title "as:DoAnswer"))
+	(title "as:AnswerIslandsOnSide"))
 
 ([ProServer_Class100006] of  CloFuncall
 
@@ -279,7 +279,7 @@
 
 ([ProServer_Class140002] of  CloFunction
 
-	(source "(println [:QUESTION pp])\n(let [crd (:coord pp)\n       crd [(read-string (get crd \"0\"))\n              (read-string (get crd \"1\"))]]\n  (rete/assert-frame \n       ['Question 'coord crd\n	'course (read-string (:course pp))\n	'speed (read-string (:speed pp))\n	'predicate (:predicate pp)\n	'subject (:subject pp)\n	'subject-value (:subject-value pp)\n	'object (:object pp)\n	'object-value (:object-value pp)\n	'time (as/current-time)])\n  (rete/fire)\n  {:status 204})")
+	(source "(println [:QUESTION pp])\n(let [frm ['Question\n	'predicate (:predicate pp)\n	'subject (:subject pp)\n	'subject-value (:subject-value pp)\n	'object (:object pp)\n	'object-value (:object-value pp)\n	'time (as/current-time)]\n       frm (if-let [crd (:coord pp)]\n                (concat frm\n	['coord [(read-string (get crd \"0\"))\n	            (read-string (get crd \"1\"))]\n	 'course (read-string (:course pp))\n	 'speed (read-string (:speed pp))])\n                frm)]\n  (rete/assert-frame frm)\n  (rete/fire)\n  {:status 204})")
 	(title "question [pp]"))
 
 ([ProServer_Class150000] of  CloFuncall
@@ -302,57 +302,57 @@
 
 ([ProServer_Class150021] of  Rule
 
-	(lhs "?isl (Island coord ?ico\n	time ?tim1)\n(Question coord ?bco\n	course ?crs\n	time ?tim2\n	(> ?tim2 ?tim1))")
-	(rhs "(let [bea (geo.calc/bear-deg ?bco ?ico)\n       dis (geo.calc/distance-nm ?bco ?ico)\n       sec (geo.calc/sector bea ?crs)\n       sid (geo.calc/side sec)]\n  (modify ?isl polar [bea dis]\n	sector sec\n	side sid\n	time ?tim2))")
+	(lhs "?i (Island coord ?ico\n	time ?tim1)\n(Question coord ?bco\n	course ?crs\n	time ?tim2\n	((vector? ?bco)\n	 (> ?tim2 ?tim1)))")
+	(rhs "(let [bea (geo.calc/bear-deg ?bco ?ico)\n       dis (geo.calc/distance-nm ?bco ?ico)\n       sec (geo.calc/sector bea ?crs)\n       sid (geo.calc/side sec)]\n  (modify ?i polar [bea dis]\n	sector sec\n	side sid\n	time ?tim2))")
 	(salience 1)
 	(title "as:UpdatePolarCoord"))
 
 ([ProServer_Class160000] of  Rule
 
-	(lhs "?a (Answer accum ?acc)\n(Question predicate \"what-is\"\n	subject \"ahead\")\n(Island title ?tit side \"AHEAD\")")
-	(rhs "(vswap! ?acc conj ?tit)")
+	(lhs "?a (Answer accum ?acc)\n(Question predicate \"what-is\"\n	subject \"ahead\")\n(Island title ?tit side \"AHEAD\"\n	polar ?pol)")
+	(rhs "(vswap! ?acc conj [?tit (second ?pol)])")
 	(salience 0)
 	(title "as:WhatIsAhead"))
 
 ([ProServer_Class160001] of  Rule
 
-	(lhs "?a (Answer accum ?acc)\n(Question predicate \"what-is\"\n	subject \"on the starboard bow\")\n(Island title ?tit side \"STAR-BOW\")")
-	(rhs "(vswap! ?acc conj ?tit)")
+	(lhs "?a (Answer accum ?acc)\n(Question predicate \"what-is\"\n	subject \"on the starboard bow\")\n(Island title ?tit side \"STAR-BOW\"\n	polar ?pol)")
+	(rhs "(vswap! ?acc conj [?tit (second ?pol)])")
 	(salience 0)
 	(title "as:WhatIsStarBow"))
 
 ([ProServer_Class160002] of  Rule
 
-	(lhs "?a (Answer accum ?acc)\n(Question predicate \"what-is\"\n	subject \"on the port bow\")\n(Island title ?tit side \"PORT-BOW\")")
-	(rhs "(vswap! ?acc conj ?tit)")
+	(lhs "?a (Answer accum ?acc)\n(Question predicate \"what-is\"\n	subject \"on the port bow\")\n(Island title ?tit side \"PORT-BOW\"\n	polar ?pol)")
+	(rhs "(vswap! ?acc conj [?tit (second ?pol)])")
 	(salience 0)
 	(title "as:WhatIsPortBow"))
 
 ([ProServer_Class160003] of  Rule
 
-	(lhs "?a (Answer accum ?acc)\n(Question predicate \"what-is\"\n	subject \"on the starboard beam\")\n(Island title ?tit side \"STAR-BEAM\")")
-	(rhs "(vswap! ?acc conj ?tit)")
+	(lhs "?a (Answer accum ?acc)\n(Question predicate \"what-is\"\n	subject \"on the starboard beam\")\n(Island title ?tit side \"STAR-BEAM\"\n	polar ?pol)")
+	(rhs "(vswap! ?acc conj [?tit (second ?pol)])")
 	(salience 0)
 	(title "as:WhatIsStarBeam"))
 
 ([ProServer_Class160004] of  Rule
 
-	(lhs "?a (Answer accum ?acc)\n(Question predicate \"what-is\"\n	subject \"on the port beam\")\n(Island title ?tit side \"PORT-BEAM\")")
-	(rhs "(vswap! ?acc conj ?tit)")
+	(lhs "?a (Answer accum ?acc)\n(Question predicate \"what-is\"\n	subject \"on the port beam\")\n(Island title ?tit side \"PORT-BEAM\"\n	polar ?pol)")
+	(rhs "(vswap! ?acc conj [?tit (second ?pol)])")
 	(salience 0)
 	(title "as:WhatIsPortBeam"))
 
 ([ProServer_Class160005] of  Rule
 
-	(lhs "?a (Answer accum ?acc)\n(Question predicate \"what-is\"\n	subject \"abaft the starboard beam\")\n(Island title ?tit side \"STAR-ABAFT\")")
-	(rhs "(vswap! ?acc conj ?tit)")
+	(lhs "?a (Answer accum ?acc)\n(Question predicate \"what-is\"\n	subject \"abaft the starboard beam\")\n(Island title ?tit side \"STAR-ABAFT\"\n	polar ?pol)")
+	(rhs "(vswap! ?acc conj [?tit (second ?pol)])")
 	(salience 0)
 	(title "as:WhatIsStarAbaft"))
 
 ([ProServer_Class160009] of  Rule
 
-	(lhs "?isl (Island time ?tim1)\n(OSMData time ?tim2\n	(> ?tim2 ?tim1))")
-	(rhs "(retract ?isl)")
+	(lhs "?i (Island time ?tim1)\n(OSMData time ?tim2\n	(> ?tim2 ?tim1))")
+	(rhs "(retract ?i)")
 	(salience 2)
 	(title "as:RetractObsoleteIsland"))
 
@@ -369,7 +369,7 @@
 		[ProServer_Class80002])
 	(rule-sets [ProServer_Class160099])
 	(title "AS Run")
-	(trace FALSE))
+	(trace TRUE))
 
 ([ProServer_Class160030] of  Rule
 
@@ -436,6 +436,7 @@
 		[ProServer_Class90012]
 		[ProServer_Class150021]
 		[ProServer_Class80001]
+		[ProServer_Class200021]
 		[ProServer_Class160000]
 		[ProServer_Class100004]
 		[ProServer_Class30000]
@@ -444,7 +445,9 @@
 		[ProServer_Class160005]
 		[ProServer_Class160003]
 		[ProServer_Class160001]
-		[ProServer_Class100005])
+		[ProServer_Class100005]
+		[ProServer_Class180000]
+		[ProServer_Class200019])
 	(templates
 		[OSMData]
 		[Island]
@@ -452,6 +455,11 @@
 		[Question]
 		[Answer])
 	(title "AdvisorSkipper"))
+
+([ProServer_Class170000] of  CloFunction
+
+	(source "(str tit (format \" (%.1f nm)\" dis))")
+	(title "tit-dis [[tit dis]]"))
 
 ([ProServer_Class170003] of  CloFuncall
 
@@ -465,25 +473,23 @@
 
 	(source "(ru.rules/f 3)"))
 
-([ProServer_Class170006] of  CloFuncall
+([ProServer_Class180000] of  Rule
 
-	(source "(ru.rules/f 0)"))
+	(lhs "(Answer accum ?acc)\n?q (Question predicate \"what-is\"\n	subject \"behind the island\"\n	object ?tit1)\n(Island sector ?sec\n	title ?tit1\n	polar ?pol1)\n(Island sector ?sec\n	title ?tit2\n	polar ?pol2\n	(< (second ?pol1)\n	    (second ?pol2)))")
+	(rhs "(let [sub (str \"behind the island \" ?tit)]\n  (pro.server/pump-in-ans (as/ans-islands @?acc sub))\n  (retract ?q))")
+	(salience -1)
+	(title "as:AnswerIslandsBehind"))
 
-([ProServer_Class170008] of  CloFuncall
+([ProServer_Class190000] of  CloFuncall
 
-	(source "(ru.rules/f 5)"))
+	(source "(ru.rules/lp 'Island)"))
 
-([ProServer_Class170009] of  CloFuncall
+([ProServer_Class190001] of  Rule
 
-	(source "(ru.rules/pp 'Island"))
-
-([ProServer_Class170010] of  CloFuncall
-
-	(source "(ru.rules/pp 'Island)"))
-
-([ProServer_Class170011] of  CloFuncall
-
-	(source "(ru.rules/sp :all)"))
+	(lhs "?b (Behind time ?tim1)\n(OSMData time ?tim2\n	(> ?tim2 ?tim1))")
+	(rhs "(retract ?b)")
+	(salience 2)
+	(title "as:RetractObsoleteBehind"))
 
 ([ProServer_Class2] of  CloFunction
 
@@ -495,15 +501,122 @@
 	(source "(get-in @BOATS [id :speed])")
 	(title "speed [id]"))
 
+([ProServer_Class200001] of  CloFuncall
+
+	(source "(rete.core/facts-with-slot-value 'Island 'sector = 1)"))
+
+([ProServer_Class200002] of  CloFuncall
+
+	(source "(count (rete.core/facts-with-slot-value 'Island 'sector = 1))"))
+
+([ProServer_Class200003] of  CloFuncall
+
+	(source "(count (rete.core/facts-with-slot-value 'Island 'sector = 2))"))
+
+([ProServer_Class200004] of  CloFuncall
+
+	(source "(count (rete.core/facts-with-slot-value 'Island 'sector = 3))"))
+
+([ProServer_Class200005] of  CloFuncall
+
+	(source "(count (rete.core/facts-with-slot-value 'Island 'sector = 4))"))
+
+([ProServer_Class200006] of  CloFuncall
+
+	(source "(count (rete.core/facts-with-slot-value 'Island 'sector = 5))"))
+
+([ProServer_Class200007] of  CloFuncall
+
+	(source "(count (rete.core/facts-with-slot-value 'Island 'sector = 6))"))
+
+([ProServer_Class200008] of  CloFuncall
+
+	(source "(map println (rete.core/facts-with-slot-value 'Island 'sector = 6))"))
+
+([ProServer_Class200009] of  CloFuncall
+
+	(source "(rete.core/facts-with-slot-value 'Behind 'title = \"\")"))
+
 ([ProServer_Class20001] of  CloFunction
 
 	(source "(get-in @BOATS [id :course])")
 	(title "course [id]"))
 
+([ProServer_Class200010] of  CloFuncall
+
+	(source "(map println (rete.core/facts-with-slot-value 'Behind 'title = \"The Bandies\"))"))
+
+([ProServer_Class200011] of  CloFuncall
+
+	(source "(map println (rete.core/facts-with-slot-value 'Behind 'title = \"Big Brewster\"))"))
+
+([ProServer_Class200012] of  CloFuncall
+
+	(source "(map println (rete.core/facts-with-slot-value 'Behind 'title = \"Western Ear Island\"))"))
+
+([ProServer_Class200013] of  CloFuncall
+
+	(source "(count (rete.core/facts 'Behind))"))
+
+([ProServer_Class200014] of  CloFuncall
+
+	(source "(count (rete.core/fact-list 'Behind))"))
+
+([ProServer_Class200015] of  CloFuncall
+
+	(source "(rete.core/facts-with-slot-value 'Behind 'title = \"The Bandies\")"))
+
+([ProServer_Class200016] of  CloFuncall
+
+	(source "(rete.core/facts-with-slot-value 'Behind 'title = \"Big Brewster\")"))
+
+([ProServer_Class200017] of  CloFuncall
+
+	(source "(count (rete.core/fact-list 'Island))"))
+
+([ProServer_Class200018] of  CloFunction
+
+	(source "(let [acc (sort-by second accum)\n       cnt (count acc)]\n  (condp > cnt\n    1 \"Clear.\"\n    2 (str \"Island \" (tit-dis (first acc)) \" is \" subject)\n    6 (str \"Islands: \" (apply str (interpose \", \" (map tit-dis acc))) \" are \" subject)\n    (str \"Islands: \" (apply str (interpose \", \" (map tit-dis (take 5 acc)))) \" and more \" (- cnt 5) \" islands are \" subject)))")
+	(title "ans-islands [accum subject]"))
+
+([ProServer_Class200019] of  Rule
+
+	(lhs "(Answer accum ?acc)\n?q (Question predicate \"nearby-islands\")")
+	(rhs "(pro.server/pump-in-ans @?acc)\n(retract ?q)")
+	(salience -1)
+	(title "as:AnswerNearbyIslands"))
+
 ([ProServer_Class20002] of  CloFunction
 
 	(source "(get-in @BOATS [id :coord])")
 	(title "coord [id]"))
+
+([ProServer_Class200021] of  Rule
+
+	(lhs "?a (Answer accum ?acc)\n(Question predicate \"nearby-islands\")\n(Island title ?tit)")
+	(rhs "(vswap! ?acc conj ?tit)")
+	(salience 0)
+	(title "as:NearbyIslands"))
+
+([ProServer_Class200022] of  CloFuncall
+
+	(source "(ru.rules/f 241)"))
+
+([ProServer_Class200023] of  CloFuncall
+
+	(source "(ru.rules/f 245)"))
+
+([ProServer_Class200024] of  CloFuncall
+
+	(source "(ru.rules/dr)"))
+
+([ProServer_Class200025] of  CloFuncall
+
+	(source "(ru.rules/sp :all)"))
+
+([ProServer_Class200026] of  CloFuncall
+
+	(source "(ru.rules/f 487)"))
 
 ([ProServer_Class3] of  WorkingPrograms
 
@@ -522,8 +635,8 @@
 
 ([ProServer_Class30000] of  Rule
 
-	(lhs "?a (Answer accum ?acc)\n(Question predicate \"what-is\"\n	subject \"abaft the port beam\")\n(Island title ?tit side \"PORT-ABAFT\")")
-	(rhs "(vswap! ?acc conj ?tit)")
+	(lhs "?a (Answer accum ?acc)\n(Question predicate \"what-is\"\n	subject \"abaft the port beam\")\n(Island title ?tit side \"PORT-ABAFT\"\n	polar ?pol)")
+	(rhs "(vswap! ?acc conj [?tit (second ?pol)])")
 	(salience 0)
 	(title "as:WhatIsPortAbaft"))
 
@@ -690,10 +803,6 @@
 	(source "(ap/stop-proc mov-status)")
 	(title "stop-boat-movement []"))
 
-([ProServer_Class70000] of  CloFuncall
-
-	(source "(ru.rules/lp :all)"))
-
 ([ProServer_Class70001] of  CloFunction
 
 	(source "(let [cr (- bea crs)\n       cr (if (< cr 0) (+ cr 360) cr)]\n  (inc (int (/ cr 30))))")
@@ -838,23 +947,26 @@
 
 ([ProServer_Class90006] of  Rule
 
-	(lhs "?osd (OSMData coord ?crd1\n	radius ?rad\n	volume ?vol \n	time ?tim1)\n(Question coord ?crd2\n	time ?tim2\n	((> ?tim2 ?tim1)\n	 [(= ?vol 0)\n	  (osm.data/obsolete ?crd1 ?crd2)]))")
-	(rhs "(let [osm (osm.data/get-osm-data ?crd2 ?rad)\n       cnt (count osm)]\n  (println [:OSM-DATA cnt ?crd2 ?rad])\n  (modify ?osd coord ?crd2\n	volume cnt \n	time (as/current-time)))")
+	(lhs "?od (OSMData coord ?crd1\n	radius ?rad\n	volume ?vol \n	time ?tim1)\n(Question coord ?crd2\n	time ?tim2\n	((> ?tim2 ?tim1)\n	 [(= ?vol 0)\n	  ((vector? ?crd1)\n                           (vector? ?crd2) \n 	   (osm.data/obsolete ?crd1 ?crd2))]))")
+	(rhs "(let [osm (osm.data/get-osm-data ?crd2 ?rad)\n       cnt (count osm)]\n  (println [:OSM-DATA cnt ?crd2 ?rad])\n  (modify ?od coord ?crd2\n	volume cnt \n	time (as/current-time)))")
 	(salience 2)
 	(title "as:CheckOSMData"))
 
 ([ProServer_Class90007] of  CloProgram
 
-	(cloFunctions [ProServer_Class100011])
+	(cloFunctions
+		[ProServer_Class100011]
+		[ProServer_Class170000]
+		[ProServer_Class200018])
 	(cloNamespace [ProServer_Class100008])
 	(title "Advisor Skipper"))
 
 ([ProServer_Class90012] of  Rule
 
-	(lhs "?ni (NearbyIslands time ?tim1)\n(Question coord ?bco\n	course ?crs)\n(OSMData volume ?vol \n	time ?tim2\n	((> ?vol 0)\n	 (> ?tim2 ?tim1)))")
+	(lhs "?ni (NearbyIslands time ?tim1)\n(Question coord ?bco\n	course ?crs)\n(OSMData volume ?vol \n	time ?tim2\n	((> ?vol 0)\n	 (vector? ?bco)\n	 (> ?tim2 ?tim1)))")
 	(rhs "(let [ii (osm.data/filter-kv \"place\" \"island\" @osm.data/DATA)\n       nn (map #(or (get % \"name\") \"unk\") ii)]\n  (modify ?ni list (vec nn)\n	time ?tim2)\n  (doseq [i ii]\n    (let [ico [(get i \"lat\") (get i \"lon\")]\n           bea (geo.calc/bear-deg ?bco ico)\n           dis (geo.calc/distance-nm ?bco ico)\n           sec (geo.calc/sector bea ?crs)\n           sid (geo.calc/side sec)]\n      (asser Island title (get i \"name\")\n	coord ico\n	polar [bea dis]\n	sector sec\n	side sid\n	time ?tim2))))")
 	(salience 1)
-	(title "as:UpdateNearbyIslands"))
+	(title "as:AssertNearbyIslands"))
 
 ([ProServer_Class90013] of  CloFunction
 

@@ -297,9 +297,12 @@
   (selector3 "island" islands :itself)
   (def function3
     (fn [a]
-      (ask-server QST-PTH {:predicate "what-behind"
-                           :object "island"
-                           :object-value a} :transit retrieve-answer))))
+      (ask-server QST-PTH {:predicate "what-is"
+                           :subject "behind the island"
+                           :object a} :transit retrieve-answer))))
+
+(defn nearby-islands []
+  (ask-server ANS-PTH nil :transit behind-island))
 
 (def lst1 ["ahead"
            "on the starboard bow"
@@ -321,7 +324,7 @@
                                               :subject (nth lst1 n)})
                         :transit retrieve-answer)
           8 (ask-server QST-PTH (merge @boat {:predicate "nearby-islands"})
-                        :transit behind-island)
+                        :transit nearby-islands)
           (println [:WHAT-IS (nth lst1 n)]))))))
 
 (defn questionnaire []
@@ -347,6 +350,7 @@
     (do (vswap! boat assoc :coord [lat lon])
       (fly-to lat lon (:altitude @camera) 0 10)
       (set-html! "course" (:course @boat))
+      (set-html! "helm-tit" "helm")
       (set-html! "helm" helm-control)
       (set-html! "throttle" "throttle")
       (set-html! "throttle-fld" throttle-control)
