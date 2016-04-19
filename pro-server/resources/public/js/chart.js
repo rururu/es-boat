@@ -55777,7 +55777,7 @@ chart.core.DLT_EVT = 1E3;
 chart.core.DLT_MOV = 200;
 chart.core.DLT_POP = 1E4;
 chart.core.URL_EVT = "http://localhost:4444/events/";
-chart.core.URL_MAP = "http://localhost:4444/map-center/";
+chart.core.URL_CHR = "http://localhost:4444/chart/";
 chart.core.URL_OSM = "http://{s}.tile.osm.org/{z}/{x}/{y}.png";
 chart.core.URL_GST = "http://{s}.google.com/vt/lyrs\x3dm\x26x\x3d{x}\x26y\x3d{y}\x26z\x3d{z}";
 chart.core.URL_GHB = "http://{s}.google.com/vt/lyrs\x3ds,h\x26x\x3d{x}\x26y\x3d{y}\x26z\x3d{z}";
@@ -56268,7 +56268,7 @@ chart.core.check_events = function chart$core$check_events() {
 chart.core.no_handler = function chart$core$no_handler(response) {
   return null;
 };
-chart.core.start_map = function chart$core$start_map(response) {
+chart.core.start_chart = function chart$core$start_chart(response) {
   var temp__4655__auto__ = chart.core.read_transit.call(null, response);
   if (cljs.core.truth_(temp__4655__auto__)) {
     var vec__12543 = temp__4655__auto__;
@@ -56296,10 +56296,10 @@ chart.core.start_map = function chart$core$start_map(response) {
       };
     }(m, tile1, tile2, tile3, tile4, tile5, base, ctrl, vec__12543, lat, lon, temp__4655__auto__), chart.core.DLT_EVT);
   } else {
-    return alert("No map center from server!");
+    return alert("No chart center from server!");
   }
 };
 chart.core.init = function chart$core$init() {
-  return ajax.core.GET.call(null, chart.core.URL_MAP, new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "handler", "handler", -195596612), chart.core.start_map, new cljs.core.Keyword(null, "error-handler", "error-handler", -484945776), chart.core.error_handler], null));
+  return ajax.core.GET.call(null, chart.core.URL_CHR, new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "handler", "handler", -195596612), chart.core.start_chart, new cljs.core.Keyword(null, "error-handler", "error-handler", -484945776), chart.core.error_handler], null));
 };
 window.onload = chart.core.init.call(null);

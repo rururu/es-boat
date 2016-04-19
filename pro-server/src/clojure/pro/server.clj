@@ -17,7 +17,7 @@
 (def PORT 4444)
 (def APP nil)
 (def SERV nil)
-(def ONBOARD "b1")
+(def BOAT (volatile! {}))
 (def MAP-CENTER [44.124 -68.736])
 (defn index-page []
   (slurp (str ROOT "index.html")))
@@ -47,12 +47,9 @@
        (r/header "Access-Control-Allow-Origin" "*")))
 
 (defn command [params]
-  (println [:PARAMS params])
-(if-let [trt (:throttle params)]
-  (bm/boat-engine ONBOARD (read-string trt))
-  (if-let [cmd (:helm params)]
-    (bm/boat-helm ONBOARD (keyword cmd))))
-"")
+  (println [:COMMAND params])
+(vswap! BOAT merge params)
+{:status 204})
 
 (defn answer []
   (-> (r/response (write-transit (deref (future (<!! ANS-CHN)))))
@@ -78,10 +75,16 @@
   (rete/fire)
   {:status 204}))
 
+(defn chart-connect []
+  (println "Chart client connected..")
+(vswap! BOAT assoc :CHART true)
+MAP-CENTER)
+
 (defn init-server []
   (defroutes app-routes
   (GET "/" [] (index-page))
   (GET "/map-center/" [] (write-transit MAP-CENTER))
+  (GET "/chart/" [] (write-transit (chart-connect)))
   (GET "/question/" [& params] (question params))
   (GET "/answer/" [] (answer))
   (GET "/events/" [] (events))

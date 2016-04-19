@@ -1,4 +1,4 @@
-; Mon Apr 18 23:20:25 MSK 2016
+; Tue Apr 19 13:54:44 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -48,13 +48,13 @@
 
 ([ProServer_Class100000] of  CloFunction
 
-	(source "(println [:PARAMS params])\n(if-let [trt (:throttle params)]\n  (bm/boat-engine ONBOARD (read-string trt))\n  (if-let [cmd (:helm params)]\n    (bm/boat-helm ONBOARD (keyword cmd))))\n\"\"")
+	(source "(println [:COMMAND params])\n(vswap! BOAT merge params)\n(if (:chart true)\n  (pump-in-evt \n    {:event :boat-maneuver\n     :id (:id @BOAT) \n     :data @BOAT)}))\n{:status 204}")
 	(title "command [params]"))
 
 ([ProServer_Class100001] of  CloVar
 
-	(source "\"b1\"")
-	(title "ONBOARD"))
+	(source "(volatile! {:id \"b1\"})")
+	(title "BOAT"))
 
 ([ProServer_Class100004] of  Rule
 
@@ -146,6 +146,33 @@
 
 	(source "[44.124 -68.736]")
 	(title "MAP-CENTER"))
+
+([ProServer_Class110001] of  CloFuncall
+
+	(source "(rete.core/facts-with-slot-value 'Island 'title = \"Andrew Island\")"))
+
+([ProServer_Class110002] of  Rule
+
+	(lhs "?a (Answer accum ?acc)\n(Question predicate \"what-is\"\n	subject \"before the island\"\n	object ?tit1)\n(Island sector ?sec\n	title ?tit1\n	polar ?pol1)\n(Island sector ?sec\n	title ?tit2\n	polar ?pol2\n	(> (second ?pol1)\n	    (second ?pol2)))")
+	(rhs "(vswap! ?acc conj [?tit2 (second ?pol2)])")
+	(salience 0)
+	(title "as:IslandsBefore"))
+
+([ProServer_Class110003] of  Rule
+
+	(lhs "(Answer accum ?acc)\n?q (Question predicate \"what-is\"\n	subject \"before the island\"\n	object ?tit)")
+	(rhs "(let [sub (str \"before the island \" ?tit)]\n  (pro.server/pump-in-ans (as/ans-islands @?acc sub))\n  (retract ?q))")
+	(salience -1)
+	(title "as:AnswerIslandsBefore"))
+
+([ProServer_Class110004] of  CloFunction
+
+	(source "(println \"Chart client connected..\")\n(vswap! BOAT assoc :chart true)\n(pump-in-evt \n  {:event :boat-add \n   :id (:id @BOAT) \n   :data @BOAT)})\nMAP-CENTER")
+	(title "chart-connect []"))
+
+([ProServer_Class110005] of  CloFuncall
+
+	(source "pro.server/BOAT"))
 
 ([ProServer_Class120000] of  CloProgram
 
@@ -369,7 +396,7 @@
 		[ProServer_Class80002])
 	(rule-sets [ProServer_Class160099])
 	(title "AS Run")
-	(trace TRUE))
+	(trace FALSE))
 
 ([ProServer_Class160030] of  Rule
 
@@ -436,7 +463,6 @@
 		[ProServer_Class90012]
 		[ProServer_Class150021]
 		[ProServer_Class80001]
-		[ProServer_Class200021]
 		[ProServer_Class160000]
 		[ProServer_Class100004]
 		[ProServer_Class30000]
@@ -445,9 +471,13 @@
 		[ProServer_Class160005]
 		[ProServer_Class160003]
 		[ProServer_Class160001]
+		[ProServer_Class200021]
+		[ProServer_Class70000]
+		[ProServer_Class110002]
 		[ProServer_Class100005]
+		[ProServer_Class200019]
 		[ProServer_Class180000]
-		[ProServer_Class200019])
+		[ProServer_Class110003])
 	(templates
 		[OSMData]
 		[Island]
@@ -475,7 +505,7 @@
 
 ([ProServer_Class180000] of  Rule
 
-	(lhs "(Answer accum ?acc)\n?q (Question predicate \"what-is\"\n	subject \"behind the island\"\n	object ?tit1)\n(Island sector ?sec\n	title ?tit1\n	polar ?pol1)\n(Island sector ?sec\n	title ?tit2\n	polar ?pol2\n	(< (second ?pol1)\n	    (second ?pol2)))")
+	(lhs "(Answer accum ?acc)\n?q (Question predicate \"what-is\"\n	subject \"behind the island\"\n	object ?tit)")
 	(rhs "(let [sub (str \"behind the island \" ?tit)]\n  (pro.server/pump-in-ans (as/ans-islands @?acc sub))\n  (retract ?q))")
 	(salience -1)
 	(title "as:AnswerIslandsBehind"))
@@ -582,7 +612,7 @@
 ([ProServer_Class200019] of  Rule
 
 	(lhs "(Answer accum ?acc)\n?q (Question predicate \"nearby-islands\")")
-	(rhs "(pro.server/pump-in-ans @?acc)\n(retract ?q)")
+	(rhs "(pro.server/pump-in-ans (sort @?acc))\n(retract ?q)")
 	(salience -1)
 	(title "as:AnswerNearbyIslands"))
 
@@ -609,14 +639,6 @@
 ([ProServer_Class200024] of  CloFuncall
 
 	(source "(ru.rules/dr)"))
-
-([ProServer_Class200025] of  CloFuncall
-
-	(source "(ru.rules/sp :all)"))
-
-([ProServer_Class200026] of  CloFuncall
-
-	(source "(ru.rules/f 487)"))
 
 ([ProServer_Class3] of  WorkingPrograms
 
@@ -803,6 +825,13 @@
 	(source "(ap/stop-proc mov-status)")
 	(title "stop-boat-movement []"))
 
+([ProServer_Class70000] of  Rule
+
+	(lhs "?a (Answer accum ?acc)\n(Question predicate \"what-is\"\n	subject \"behind the island\"\n	object ?tit1)\n(Island sector ?sec\n	title ?tit1\n	polar ?pol1)\n(Island sector ?sec\n	title ?tit2\n	polar ?pol2\n	(< (second ?pol1)\n	    (second ?pol2)))")
+	(rhs "(vswap! ?acc conj [?tit2 (second ?pol2)])")
+	(salience 0)
+	(title "as:IslandsBehind"))
+
 ([ProServer_Class70001] of  CloFunction
 
 	(source "(let [cr (- bea crs)\n       cr (if (< cr 0) (+ cr 360) cr)]\n  (inc (int (/ cr 30))))")
@@ -845,6 +874,7 @@
 		[ProServer_Class100000]
 		[ProServer_Class90001]
 		[ProServer_Class140002]
+		[ProServer_Class110004]
 		[ProServer_Class80007]
 		[ProServer_Class80008]
 		[ProServer_Class80009])
@@ -867,7 +897,7 @@
 
 ([ProServer_Class80007] of  CloFunction
 
-	(source "(defroutes app-routes\n  (GET \"/\" [] (index-page))\n  (GET \"/map-center/\" [] (write-transit MAP-CENTER))\n  (GET \"/question/\" [& params] (question params))\n  (GET \"/answer/\" [] (answer))\n  (GET \"/events/\" [] (events))\n  (GET \"/command/\" [& params] (command params))\n  (GET \"/czml/\" [] (cz/events))\n  (route/files \"/\" (do (println [:ROOT-FILES ROOT]) {:root ROOT}))\n  (route/resources \"/\")\n  (route/not-found \"Not Found\"))\n\n(def APP\n  (handler/site app-routes))")
+	(source "(defroutes app-routes\n  (GET \"/\" [] (index-page))\n  (GET \"/map-center/\" [] (write-transit MAP-CENTER))\n  (GET \"/chart/\" [] (write-transit (chart-connect)))\n  (GET \"/question/\" [& params] (question params))\n  (GET \"/answer/\" [] (answer))\n  (GET \"/events/\" [] (events))\n  (GET \"/command/\" [& params] (command params))\n  (GET \"/czml/\" [] (cz/events))\n  (route/files \"/\" (do (println [:ROOT-FILES ROOT]) {:root ROOT}))\n  (route/resources \"/\")\n  (route/not-found \"Not Found\"))\n\n(def APP\n  (handler/site app-routes))")
 	(title "init-server []"))
 
 ([ProServer_Class80008] of  CloFunction

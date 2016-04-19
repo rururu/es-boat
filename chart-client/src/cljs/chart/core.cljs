@@ -18,7 +18,7 @@
 (def DLT-MOV 200) ;; move flight every 200 msec (5 times per sec)
 (def DLT-POP 10000) ;; update popup every 10000 msec (10 sec)
 (def URL-EVT "http://localhost:4444/events/")
-(def URL-MAP "http://localhost:4444/map-center/")
+(def URL-CHR "http://localhost:4444/chart/")
 (def URL-OSM "http://{s}.tile.osm.org/{z}/{x}/{y}.png")
 (def URL-GST "http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}")
 (def URL-GHB "http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}")
@@ -175,7 +175,7 @@
 
 ;; ------------------------ Initialization ----------------------------
 
-(defn start-map [response]
+(defn start-chart [response]
   (if-let [[lat lon] (read-transit response)]
     (let [m (-> js/L
                 (.map "map")
@@ -211,10 +211,10 @@
            (fn [e] (mouse-move (.. e -latlng -lat) (.. e -latlng -lng))))
       (vreset! chart m)
       (repeater #(check-events) DLT-EVT))
-    (js/alert "No map center from server!")))
+    (js/alert "No chart center from server!")))
 
 (defn init []
-  (GET URL-MAP {:handler start-map
+  (GET URL-CHR {:handler start-chart
                 :error-handler error-handler}))
 
 ;; ----------------------------- Start ---------------------------------

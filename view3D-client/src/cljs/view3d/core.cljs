@@ -122,6 +122,11 @@
 
 ;; ------------------------ Boat movement ----------------------------
 
+(defn boat-to-server []
+  (GET CMD-PTH {:params @boat
+                :handler no-handler
+                :error-handler error-handler}))
+
 (defn spherical-between [phi1 lambda0 c az]
   (let [cosphi1 (js/Math.cos phi1)
         sinphi1 (js/Math.sin phi1)
@@ -165,13 +170,19 @@
         (set-html! "course" (:course @boat))
         (<! (timeout tio)))))
 
+(def ACCD false)
+
 (defn boat-move []
   (let [helm (:helm @boat)
         engine (:engine @boat)
         course (:course @boat)
         speed (:speed @boat)]
     (if (not= (int engine) speed)
-      (vswap! boat assoc :speed (boost speed engine)))
+      (do (def ACCD true)
+        (vswap! boat assoc :speed (boost speed engine)))
+      (when ACCD
+        (boat-to-server)
+        (def ACCD false)))
     (vswap! boat assoc :coord (future-pos (:coord @boat) course speed boat-tio-hrs))
     (display-boat-data)))
 
@@ -190,10 +201,12 @@
              (< val -80) :hard-a-port
              (< val -20) :port)]
     (vswap! boat assoc :helm new)
-    (if (and (not= old new) (not= new :steady))
-      (turn (if (or (= new :starboard)(= new :hard-a-starboard)) inc dec)
-            (if (or (= new :starboard)(= new :port)) CRS-NOR CRS-HRD)
-            new))))
+    (if (not= old new)
+      (if (not= new :steady)
+        (turn (if (or (= new :starboard)(= new :hard-a-starboard)) inc dec)
+              (if (or (= new :starboard)(= new :port)) CRS-NOR CRS-HRD)
+              new)
+        (boat-to-server)))))
 
 (def throttle-control
   "<input type='test' value='0' style='width:90px'
@@ -301,8 +314,19 @@
                            :subject "behind the island"
                            :object a} :transit retrieve-answer))))
 
-(defn nearby-islands []
+(defn before-island [islands]
+  (selector3 "island" islands :itself)
+  (def function3
+    (fn [a]
+      (ask-server QST-PTH {:predicate "what-is"
+                           :subject "before the island"
+                           :object a} :transit retrieve-answer))))
+
+(defn nearby-islands-behind []
   (ask-server ANS-PTH nil :transit behind-island))
+
+(defn nearby-islands-before []
+  (ask-server ANS-PTH nil :transit before-island))
 
 (def lst1 ["ahead"
            "on the starboard bow"
@@ -312,7 +336,8 @@
            "abaft the starboard beam"
            "abaft the port beam"
            "astern"
-           "behind the island"])
+           "behind the island"
+           "before the island"])
 
 (defn what-is []
   (selector2 "?" lst1 :count)
@@ -324,7 +349,9 @@
                                               :subject (nth lst1 n)})
                         :transit retrieve-answer)
           8 (ask-server QST-PTH (merge @boat {:predicate "nearby-islands"})
-                        :transit nearby-islands)
+                        :transit nearby-islands-behind)
+          9 (ask-server QST-PTH (merge @boat {:predicate "nearby-islands"})
+                        :transit nearby-islands-before)
           (println [:WHAT-IS (nth lst1 n)]))))))
 
 (defn questionnaire []
