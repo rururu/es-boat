@@ -56147,6 +56147,7 @@ chart.core.clear_mapobs = function chart$core$clear_mapobs() {
   }
 };
 chart.core.event_handler = function chart$core$event_handler(response) {
+  cljs.core.println.call(null, new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "RESPONSE", "RESPONSE", -1861798567), response], null));
   var seq__12473 = cljs.core.seq.call(null, chart.core.read_transit.call(null, response));
   var chunk__12474 = null;
   var count__12475 = 0;
@@ -56157,6 +56158,7 @@ chart.core.event_handler = function chart$core$event_handler(response) {
       var map__12477__$1 = (!(map__12477 == null) ? map__12477.cljs$lang$protocol_mask$partition0$ & 64 || map__12477.cljs$core$ISeq$ ? true : false : false) ? cljs.core.apply.call(null, cljs.core.hash_map, map__12477) : map__12477;
       var evt = map__12477__$1;
       var event = cljs.core.get.call(null, map__12477__$1, new cljs.core.Keyword(null, "event", "event", 301435442));
+      cljs.core.println.call(null, new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "EVENT", "EVENT", 449814061), evt], null));
       var pred__12479_12499 = cljs.core._EQ_;
       var expr__12480_12500 = event;
       if (cljs.core.truth_(pred__12479_12499.call(null, new cljs.core.Keyword(null, "boat-add", "boat-add", 594095838), expr__12480_12500))) {
@@ -56212,6 +56214,7 @@ chart.core.event_handler = function chart$core$event_handler(response) {
           var map__12488__$1 = (!(map__12488 == null) ? map__12488.cljs$lang$protocol_mask$partition0$ & 64 || map__12488.cljs$core$ISeq$ ? true : false : false) ? cljs.core.apply.call(null, cljs.core.hash_map, map__12488) : map__12488;
           var evt = map__12488__$1;
           var event = cljs.core.get.call(null, map__12488__$1, new cljs.core.Keyword(null, "event", "event", 301435442));
+          cljs.core.println.call(null, new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "EVENT", "EVENT", 449814061), evt], null));
           var pred__12490_12520 = cljs.core._EQ_;
           var expr__12491_12521 = event;
           if (cljs.core.truth_(pred__12490_12520.call(null, new cljs.core.Keyword(null, "boat-add", "boat-add", 594095838), expr__12491_12521))) {

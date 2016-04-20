@@ -35522,6 +35522,9 @@ view3d.core.repeater = function(a, b) {
   }(c));
   return c;
 };
+view3d.core.write_transit = function(a) {
+  return cognitect.transit.write.call(null, cognitect.transit.writer.call(null, new cljs.core.Keyword(null, "json", "json", 1279968570)), a);
+};
 view3d.core.format = function(a) {
   for (var b = [], c = arguments.length, d = 0;;) {
     if (d < c) {
@@ -35586,7 +35589,7 @@ view3d.core.camera_work = function() {
   return view3d.core.fly_to.call(null, b, a, d, c, view3d.core.cam_tio_sec);
 };
 view3d.core.boat_to_server = function() {
-  return ajax.core.GET.call(null, view3d.core.CMD_PTH, new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null, "params", "params", 710516235), cljs.core.deref.call(null, view3d.core.boat), new cljs.core.Keyword(null, "handler", "handler", -195596612), view3d.core.no_handler, new cljs.core.Keyword(null, "error-handler", "error-handler", -484945776), view3d.core.error_handler], null));
+  return ajax.core.GET.call(null, [cljs.core.str(view3d.core.BSE_URL), cljs.core.str(view3d.core.CMD_PTH)].join(""), new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null, "params", "params", 710516235), cljs.core.deref.call(null, view3d.core.boat), new cljs.core.Keyword(null, "handler", "handler", -195596612), view3d.core.no_handler, new cljs.core.Keyword(null, "error-handler", "error-handler", -484945776), view3d.core.error_handler], null));
 };
 view3d.core.spherical_between = function(a, b, c, d) {
   var e = Math.cos(a);

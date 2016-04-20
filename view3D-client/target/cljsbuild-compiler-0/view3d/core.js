@@ -1,11 +1,12 @@
 // Compiled by ClojureScript 1.7.228 {}
 goog.provide('view3d.core');
 goog.require('cljs.core');
+goog.require('cognitect.transit');
+goog.require('ajax.core');
 goog.require('goog.string');
-goog.require('goog.string.format');
 goog.require('cljs.core.async');
 goog.require('cljs.reader');
-goog.require('ajax.core');
+goog.require('goog.string.format');
 cljs.core.enable_console_print_BANG_.call(null);
 view3d.core.PID180 = (Math.PI / (180));
 view3d.core.BOAT_TIO = (1000);
@@ -191,6 +192,9 @@ return cljs.core.async.impl.ioc_helpers.run_state_machine_wrapped.call(null,stat
 
 return c__9993__auto__;
 });
+view3d.core.write_transit = (function view3d$core$write_transit(x){
+return cognitect.transit.write.call(null,cognitect.transit.writer.call(null,new cljs.core.Keyword(null,"json","json",1279968570)),x);
+});
 /**
  * Formats a string using goog.string.format.
  */
@@ -305,7 +309,7 @@ var alt = new cljs.core.Keyword(null,"altitude","altitude",463588637).cljs$core$
 return view3d.core.fly_to.call(null,lat,lon,alt,crs,view3d.core.cam_tio_sec);
 });
 view3d.core.boat_to_server = (function view3d$core$boat_to_server(){
-return ajax.core.GET.call(null,view3d.core.CMD_PTH,new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"params","params",710516235),cljs.core.deref.call(null,view3d.core.boat),new cljs.core.Keyword(null,"handler","handler",-195596612),view3d.core.no_handler,new cljs.core.Keyword(null,"error-handler","error-handler",-484945776),view3d.core.error_handler], null));
+return ajax.core.GET.call(null,[cljs.core.str(view3d.core.BSE_URL),cljs.core.str(view3d.core.CMD_PTH)].join(''),new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"params","params",710516235),cljs.core.deref.call(null,view3d.core.boat),new cljs.core.Keyword(null,"handler","handler",-195596612),view3d.core.no_handler,new cljs.core.Keyword(null,"error-handler","error-handler",-484945776),view3d.core.error_handler], null));
 });
 view3d.core.spherical_between = (function view3d$core$spherical_between(phi1,lambda0,c,az){
 var cosphi1 = Math.cos(phi1);

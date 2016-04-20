@@ -17,7 +17,7 @@
 (def PORT 4444)
 (def APP nil)
 (def SERV nil)
-(def BOAT (volatile! {}))
+(def BOAT (volatile! {:id "b1"}))
 (def MAP-CENTER [44.124 -68.736])
 (defn index-page []
   (slurp (str ROOT "index.html")))
@@ -48,7 +48,16 @@
 
 (defn command [params]
   (println [:COMMAND params])
-(vswap! BOAT merge params)
+(let [crd (:coord params)
+       pp (assoc params 
+               :coord [(read-string (get crd "0"))
+	   (read-string (get crd "1"))])]
+  (vswap! BOAT merge pp)
+  (if (:chart @BOAT)
+    (pump-in-evt 
+      {:event :boat-maneuver
+       :id (:id @BOAT) 
+       :data @BOAT})))
 {:status 204})
 
 (defn answer []
@@ -77,7 +86,11 @@
 
 (defn chart-connect []
   (println "Chart client connected..")
-(vswap! BOAT assoc :CHART true)
+(vswap! BOAT assoc :chart true)
+(pump-in-evt 
+  {:event :boat-add 
+   :id (:id @BOAT) 
+   :data @BOAT})
 MAP-CENTER)
 
 (defn init-server []

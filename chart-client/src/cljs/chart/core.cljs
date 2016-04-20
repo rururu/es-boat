@@ -153,8 +153,9 @@
 ;; ------------------------ Event handler ---------------------------
 
 (defn event-handler [response]
+  (println [:RESPONSE response])
   (doseq [{:keys [event] :as evt} (read-transit response)]
-    ;;(println [:EVENT evt])
+    (println [:EVENT evt])
     (condp = event
       :boat-add (let [{:keys [id data]} evt]
                       (boat-add id data))

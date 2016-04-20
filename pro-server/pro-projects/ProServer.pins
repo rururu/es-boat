@@ -1,4 +1,4 @@
-; Tue Apr 19 13:54:44 MSK 2016
+; Wed Apr 20 13:57:43 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -48,7 +48,7 @@
 
 ([ProServer_Class100000] of  CloFunction
 
-	(source "(println [:COMMAND params])\n(vswap! BOAT merge params)\n(if (:chart true)\n  (pump-in-evt \n    {:event :boat-maneuver\n     :id (:id @BOAT) \n     :data @BOAT)}))\n{:status 204}")
+	(source "(println [:COMMAND params])\n(let [crd (:coord params)\n       pp (assoc params \n               :coord [(read-string (get crd \"0\"))\n	   (read-string (get crd \"1\"))])]\n  (vswap! BOAT merge pp)\n  (if (:chart @BOAT)\n    (pump-in-evt \n      {:event :boat-maneuver\n       :id (:id @BOAT) \n       :data @BOAT})))\n{:status 204}")
 	(title "command [params]"))
 
 ([ProServer_Class100001] of  CloVar
@@ -167,7 +167,7 @@
 
 ([ProServer_Class110004] of  CloFunction
 
-	(source "(println \"Chart client connected..\")\n(vswap! BOAT assoc :chart true)\n(pump-in-evt \n  {:event :boat-add \n   :id (:id @BOAT) \n   :data @BOAT)})\nMAP-CENTER")
+	(source "(println \"Chart client connected..\")\n(vswap! BOAT assoc :chart true)\n(pump-in-evt \n  {:event :boat-add \n   :id (:id @BOAT) \n   :data @BOAT})\nMAP-CENTER")
 	(title "chart-connect []"))
 
 ([ProServer_Class110005] of  CloFuncall
@@ -523,13 +523,17 @@
 
 ([ProServer_Class2] of  CloFunction
 
-	(source "(println \"INITIALIZING EXPERT SYSTEM\")\n(println \"1.Loading Clojure Programs...\")\n(if-let [wps (seq (cls-instances \"WorkingPrograms\"))]\n  (loop [i 1 pins (svs (first wps) \"cloPrograms\")]\n    (when (seq pins)\n      (println (str \" 1.\" i \" \" (sv (first pins) \"title\") \" = \" (ClojureTab/loadProgram (first pins)) ))\n      (recur (inc i) (rest pins))))\n  (println \"  Instance of WorkingPrograms not found!\"))\n;;(println \"2. Starting server...\")\n;;(eval (read-string \"(pro.server/start-server)\"))\n;;(println (str \"    Map center: \" (eval (read-string \"pro.server/MAP-CENTER\"))))\n(println \"EXPERT SYSTEM INITIALIZED\")")
+	(source "(println \"INITIALIZING EXPERT SYSTEM\")\n(println \"1.Loading Clojure Programs...\")\n(if-let [wps (seq (cls-instances \"WorkingPrograms\"))]\n  (loop [i 1 pins (svs (first wps) \"cloPrograms\")]\n    (when (seq pins)\n      (println (str \" 1.\" i \" \" (sv (first pins) \"title\") \" = \" (ClojureTab/loadProgram (first pins)) ))\n      (recur (inc i) (rest pins))))\n  (println \"  Instance of WorkingPrograms not found!\"))\n(println \"2. Starting Rule Engine...\")\n(eval (read-string \"(ru.rules/run-engine \\\"AS Run\\\")\"))\n(println \"3. Starting server...\")\n(eval (read-string \"(pro.server/start-server)\"))\n(println (str \"    Map center: \" (eval (read-string \"pro.server/MAP-CENTER\"))))\n(println \"EXPERT SYSTEM INITIALIZED\")")
 	(title "clojure-work []"))
 
 ([ProServer_Class20000] of  CloFunction
 
 	(source "(get-in @BOATS [id :speed])")
 	(title "speed [id]"))
+
+([ProServer_Class200000] of  CloFuncall
+
+	(source "(pro.server/write-transit [60.0 30.0])"))
 
 ([ProServer_Class200001] of  CloFuncall
 
@@ -639,6 +643,10 @@
 ([ProServer_Class200024] of  CloFuncall
 
 	(source "(ru.rules/dr)"))
+
+([ProServer_Class210001] of  CloFuncall
+
+	(source "(pro.server/write-transit {:a [60.0 30.0]})"))
 
 ([ProServer_Class3] of  WorkingPrograms
 

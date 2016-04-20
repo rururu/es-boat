@@ -3,8 +3,9 @@
    [goog.string :as gstring]
    [goog.string.format]
    [cljs.core.async :as async :refer [<! >! chan put! timeout close!]]
+   [cognitect.transit :as t]
    [cljs.reader :as r]
-   [ajax.core :refer (GET)])
+   [ajax.core :refer (GET ajax-request)])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
 (enable-console-print!)
@@ -55,6 +56,9 @@
   (go (while true
         (task)
         (<! (timeout timo)))))
+
+(defn write-transit [x]
+  (t/write (t/writer :json) x))
 
 (defn format
   "Formats a string using goog.string.format."
@@ -123,9 +127,10 @@
 ;; ------------------------ Boat movement ----------------------------
 
 (defn boat-to-server []
-  (GET CMD-PTH {:params @boat
-                :handler no-handler
-                :error-handler error-handler}))
+  (GET (str BSE-URL CMD-PTH)
+       {:params @boat
+        :handler no-handler
+        :error-handler error-handler}))
 
 (defn spherical-between [phi1 lambda0 c az]
   (let [cosphi1 (js/Math.cos phi1)

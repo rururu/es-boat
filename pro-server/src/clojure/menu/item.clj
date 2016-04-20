@@ -11,9 +11,11 @@
       (println (str " 1." i " " (sv (first pins) "title") " = " (ClojureTab/loadProgram (first pins)) ))
       (recur (inc i) (rest pins))))
   (println "  Instance of WorkingPrograms not found!"))
-;;(println "2. Starting server...")
-;;(eval (read-string "(pro.server/start-server)"))
-;;(println (str "    Map center: " (eval (read-string "pro.server/MAP-CENTER"))))
+(println "2. Starting Rule Engine...")
+(eval (read-string "(ru.rules/run-engine \"AS Run\")"))
+(println "3. Starting server...")
+(eval (read-string "(pro.server/start-server)"))
+(println (str "    Map center: " (eval (read-string "pro.server/MAP-CENTER"))))
 (println "EXPERT SYSTEM INITIALIZED"))
 
 (defn current-time []

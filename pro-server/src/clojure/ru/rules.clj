@@ -38,7 +38,14 @@
   (mapcat #(.getInstances %) fcs))
 
 (defn run-engine
-  ([hm inst]
+  ([title]
+  (when-let [ins (p/fifos "Run" "title" title)]
+    (run-engine title
+	(p/svs ins "rule-sets")
+	(p/svs ins "fact-classes")
+	(p/svs ins "facts")
+	(p/sv   ins "trace"))))
+([hm inst]
   (let [mp (into {} hm)
          tit (mp "title")
          rss (mp "rule-sets")
