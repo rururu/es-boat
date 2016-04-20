@@ -49,10 +49,13 @@
 (defn command [params]
   (println [:COMMAND params])
 (let [crd (:coord params)
-       pp (assoc params 
-               :coord [(read-string (get crd "0"))
-	   (read-string (get crd "1"))])]
-  (vswap! BOAT merge pp)
+       crd [(read-string (get crd "0"))
+              (read-string (get crd "1"))]]
+  (vswap! BOAT assoc
+	:coord crd
+	:turn-coord crd
+	:course (:course params)
+	:speed (:speed params))
   (if (:chart @BOAT)
     (pump-in-evt 
       {:event :boat-maneuver
@@ -91,6 +94,9 @@
   {:event :boat-add 
    :id (:id @BOAT) 
    :data @BOAT})
+(pump-in-evt 
+  {:event :boat-follow
+   :id (:id @BOAT)})
 MAP-CENTER)
 
 (defn init-server []

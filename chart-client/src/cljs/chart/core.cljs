@@ -17,6 +17,7 @@
 (def DLT-EVT 1000) ;; check event queue from server every 1000 msec (1 sec)
 (def DLT-MOV 200) ;; move flight every 200 msec (5 times per sec)
 (def DLT-POP 10000) ;; update popup every 10000 msec (10 sec)
+(def FOLLOW -1) ;; boat to follow
 (def URL-EVT "http://localhost:4444/events/")
 (def URL-CHR "http://localhost:4444/chart/")
 (def URL-OSM "http://{s}.tile.osm.org/{z}/{x}/{y}.png")
@@ -58,6 +59,37 @@
   (go (while true
         (task)
         (<! (timeout timo)))))
+
+(defn cond-repeater [task timo cond-func]
+  "Channel that exec task (function call) if cond-func"
+  (go (while true
+        (if cond-func
+          (task))
+        (<! (timeout timo)))))
+
+(defn map-view []
+  [(.. @chart -center -lat)
+   (.. @chart -center -lng)])
+
+(defn set-map-view [[lat lon]]
+  (let [cen (js/L.LatLng. lat lon)
+        zom (.getZoom @chart)]
+    (.setView @chart cen zom {})))
+
+(defn follow []
+  (if-let [mo (@mapobs FOLLOW)]
+    (set-map-view (:coord mo))))
+
+(defn follower-deviate []
+  (if-let [mo (@mapobs FOLLOW)]
+    (let [[lat1 lon1] (:coord mo)
+          [lat2 lon2] (map-view)
+          dlat (- lat1 lat2)
+          dlon (- lon1 lon2)]
+      (or (> dlat 0.02)
+          (> dlon 0.02)
+          (< dlat -0.02)
+          (< dlon -0.02)))))
 
 (defn create-marker [lat lon]
   (let [pos (js/L.LatLng. lat lon)
@@ -153,9 +185,8 @@
 ;; ------------------------ Event handler ---------------------------
 
 (defn event-handler [response]
-  (println [:RESPONSE response])
   (doseq [{:keys [event] :as evt} (read-transit response)]
-    (println [:EVENT evt])
+    ;;(println [:EVENT evt])
     (condp = event
       :boat-add (let [{:keys [id data]} evt]
                       (boat-add id data))
@@ -163,6 +194,8 @@
                       (delete-mapob id))
       :boat-maneuver (let [{:keys [id data]} evt]
                       (boat-maneuver id data))
+      :boat-follow (let [{:keys [id]} evt]
+                      (def FOLLOW id))
       (println (str "Unknown event: " [event evt])))))
 
 (defn error-handler [{:keys [status status-text]}]
@@ -211,6 +244,8 @@
       (.on m "mousemove"
            (fn [e] (mouse-move (.. e -latlng -lat) (.. e -latlng -lng))))
       (vreset! chart m)
+      (repeater #(check-events) DLT-EVT)
+      ;;(cond-repeater #(follow) DLT-EVT #(follower-deviate))
       (repeater #(check-events) DLT-EVT))
     (js/alert "No chart center from server!")))
 

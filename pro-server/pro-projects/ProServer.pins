@@ -1,4 +1,4 @@
-; Wed Apr 20 13:57:43 MSK 2016
+; Wed Apr 20 23:59:54 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -48,7 +48,7 @@
 
 ([ProServer_Class100000] of  CloFunction
 
-	(source "(println [:COMMAND params])\n(let [crd (:coord params)\n       pp (assoc params \n               :coord [(read-string (get crd \"0\"))\n	   (read-string (get crd \"1\"))])]\n  (vswap! BOAT merge pp)\n  (if (:chart @BOAT)\n    (pump-in-evt \n      {:event :boat-maneuver\n       :id (:id @BOAT) \n       :data @BOAT})))\n{:status 204}")
+	(source "(println [:COMMAND params])\n(let [crd (:coord params)\n       crd [(read-string (get crd \"0\"))\n              (read-string (get crd \"1\"))]]\n  (vswap! BOAT assoc\n	:coord crd\n	:turn-coord crd\n	:course (:course params)\n	:speed (:speed params))\n  (if (:chart @BOAT)\n    (pump-in-evt \n      {:event :boat-maneuver\n       :id (:id @BOAT) \n       :data @BOAT})))\n{:status 204}")
 	(title "command [params]"))
 
 ([ProServer_Class100001] of  CloVar
@@ -147,10 +147,6 @@
 	(source "[44.124 -68.736]")
 	(title "MAP-CENTER"))
 
-([ProServer_Class110001] of  CloFuncall
-
-	(source "(rete.core/facts-with-slot-value 'Island 'title = \"Andrew Island\")"))
-
 ([ProServer_Class110002] of  Rule
 
 	(lhs "?a (Answer accum ?acc)\n(Question predicate \"what-is\"\n	subject \"before the island\"\n	object ?tit1)\n(Island sector ?sec\n	title ?tit1\n	polar ?pol1)\n(Island sector ?sec\n	title ?tit2\n	polar ?pol2\n	(> (second ?pol1)\n	    (second ?pol2)))")
@@ -167,12 +163,8 @@
 
 ([ProServer_Class110004] of  CloFunction
 
-	(source "(println \"Chart client connected..\")\n(vswap! BOAT assoc :chart true)\n(pump-in-evt \n  {:event :boat-add \n   :id (:id @BOAT) \n   :data @BOAT})\nMAP-CENTER")
+	(source "(println \"Chart client connected..\")\n(vswap! BOAT assoc :chart true)\n(pump-in-evt \n  {:event :boat-add \n   :id (:id @BOAT) \n   :data @BOAT})\n(pump-in-evt \n  {:event :boat-follow\n   :id (:id @BOAT)})\nMAP-CENTER")
 	(title "chart-connect []"))
-
-([ProServer_Class110005] of  CloFuncall
-
-	(source "pro.server/BOAT"))
 
 ([ProServer_Class120000] of  CloProgram
 
@@ -308,14 +300,6 @@
 
 	(source "(println [:QUESTION pp])\n(let [frm ['Question\n	'predicate (:predicate pp)\n	'subject (:subject pp)\n	'subject-value (:subject-value pp)\n	'object (:object pp)\n	'object-value (:object-value pp)\n	'time (as/current-time)]\n       frm (if-let [crd (:coord pp)]\n                (concat frm\n	['coord [(read-string (get crd \"0\"))\n	            (read-string (get crd \"1\"))]\n	 'course (read-string (:course pp))\n	 'speed (read-string (:speed pp))])\n                frm)]\n  (rete/assert-frame frm)\n  (rete/fire)\n  {:status 204})")
 	(title "question [pp]"))
-
-([ProServer_Class150000] of  CloFuncall
-
-	(source "(ru.rules/pp 'Question)"))
-
-([ProServer_Class150001] of  CloFuncall
-
-	(source "(ru.rules/pp :all)"))
 
 ([ProServer_Class150003] of  CloVar
 
@@ -491,28 +475,12 @@
 	(source "(str tit (format \" (%.1f nm)\" dis))")
 	(title "tit-dis [[tit dis]]"))
 
-([ProServer_Class170003] of  CloFuncall
-
-	(source "pro.server/MAP-CENTER"))
-
-([ProServer_Class170004] of  CloFuncall
-
-	(source "(ru.rules/f 2)"))
-
-([ProServer_Class170005] of  CloFuncall
-
-	(source "(ru.rules/f 3)"))
-
 ([ProServer_Class180000] of  Rule
 
 	(lhs "(Answer accum ?acc)\n?q (Question predicate \"what-is\"\n	subject \"behind the island\"\n	object ?tit)")
 	(rhs "(let [sub (str \"behind the island \" ?tit)]\n  (pro.server/pump-in-ans (as/ans-islands @?acc sub))\n  (retract ?q))")
 	(salience -1)
 	(title "as:AnswerIslandsBehind"))
-
-([ProServer_Class190000] of  CloFuncall
-
-	(source "(ru.rules/lp 'Island)"))
 
 ([ProServer_Class190001] of  Rule
 
@@ -531,82 +499,10 @@
 	(source "(get-in @BOATS [id :speed])")
 	(title "speed [id]"))
 
-([ProServer_Class200000] of  CloFuncall
-
-	(source "(pro.server/write-transit [60.0 30.0])"))
-
-([ProServer_Class200001] of  CloFuncall
-
-	(source "(rete.core/facts-with-slot-value 'Island 'sector = 1)"))
-
-([ProServer_Class200002] of  CloFuncall
-
-	(source "(count (rete.core/facts-with-slot-value 'Island 'sector = 1))"))
-
-([ProServer_Class200003] of  CloFuncall
-
-	(source "(count (rete.core/facts-with-slot-value 'Island 'sector = 2))"))
-
-([ProServer_Class200004] of  CloFuncall
-
-	(source "(count (rete.core/facts-with-slot-value 'Island 'sector = 3))"))
-
-([ProServer_Class200005] of  CloFuncall
-
-	(source "(count (rete.core/facts-with-slot-value 'Island 'sector = 4))"))
-
-([ProServer_Class200006] of  CloFuncall
-
-	(source "(count (rete.core/facts-with-slot-value 'Island 'sector = 5))"))
-
-([ProServer_Class200007] of  CloFuncall
-
-	(source "(count (rete.core/facts-with-slot-value 'Island 'sector = 6))"))
-
-([ProServer_Class200008] of  CloFuncall
-
-	(source "(map println (rete.core/facts-with-slot-value 'Island 'sector = 6))"))
-
-([ProServer_Class200009] of  CloFuncall
-
-	(source "(rete.core/facts-with-slot-value 'Behind 'title = \"\")"))
-
 ([ProServer_Class20001] of  CloFunction
 
 	(source "(get-in @BOATS [id :course])")
 	(title "course [id]"))
-
-([ProServer_Class200010] of  CloFuncall
-
-	(source "(map println (rete.core/facts-with-slot-value 'Behind 'title = \"The Bandies\"))"))
-
-([ProServer_Class200011] of  CloFuncall
-
-	(source "(map println (rete.core/facts-with-slot-value 'Behind 'title = \"Big Brewster\"))"))
-
-([ProServer_Class200012] of  CloFuncall
-
-	(source "(map println (rete.core/facts-with-slot-value 'Behind 'title = \"Western Ear Island\"))"))
-
-([ProServer_Class200013] of  CloFuncall
-
-	(source "(count (rete.core/facts 'Behind))"))
-
-([ProServer_Class200014] of  CloFuncall
-
-	(source "(count (rete.core/fact-list 'Behind))"))
-
-([ProServer_Class200015] of  CloFuncall
-
-	(source "(rete.core/facts-with-slot-value 'Behind 'title = \"The Bandies\")"))
-
-([ProServer_Class200016] of  CloFuncall
-
-	(source "(rete.core/facts-with-slot-value 'Behind 'title = \"Big Brewster\")"))
-
-([ProServer_Class200017] of  CloFuncall
-
-	(source "(count (rete.core/fact-list 'Island))"))
 
 ([ProServer_Class200018] of  CloFunction
 
@@ -631,22 +527,6 @@
 	(rhs "(vswap! ?acc conj ?tit)")
 	(salience 0)
 	(title "as:NearbyIslands"))
-
-([ProServer_Class200022] of  CloFuncall
-
-	(source "(ru.rules/f 241)"))
-
-([ProServer_Class200023] of  CloFuncall
-
-	(source "(ru.rules/f 245)"))
-
-([ProServer_Class200024] of  CloFuncall
-
-	(source "(ru.rules/dr)"))
-
-([ProServer_Class210001] of  CloFuncall
-
-	(source "(pro.server/write-transit {:a [60.0 30.0]})"))
 
 ([ProServer_Class3] of  WorkingPrograms
 
