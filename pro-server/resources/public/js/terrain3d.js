@@ -35428,7 +35428,7 @@ view3d.core.BSE_URL = "http://localhost:4444/";
 view3d.core.MAP_PTH = "map-center/";
 view3d.core.QST_PTH = "question/";
 view3d.core.ANS_PTH = "answer/";
-view3d.core.CMD_PTH = "command/";
+view3d.core.CMD_PTH = "maneuver/";
 view3d.core.boat = cljs.core.volatile_BANG_.call(null, new cljs.core.PersistentArrayMap(null, 5, [new cljs.core.Keyword(null, "coord", "coord", -1453656639), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [0, 0], null), new cljs.core.Keyword(null, "speed", "speed", 1257663751), 0, new cljs.core.Keyword(null, "course", "course", 1455432948), 0, new cljs.core.Keyword(null, "helm", "helm", -1750767724), new cljs.core.Keyword(null, "steady", "steady", 549215053), new cljs.core.Keyword(null, 
 "engine", "engine", 1459054265), 0], null));
 view3d.core.boat_tio_hrs = view3d.core.BOAT_TIO / 36E5;
@@ -35909,7 +35909,7 @@ view3d.core.start_map = function(a) {
   if (cljs.core.truth_(a)) {
     var b = cljs.core.nth.call(null, a, 0, null), c = cljs.core.nth.call(null, a, 1, null);
     cljs.core._vreset_BANG_.call(null, view3d.core.boat, cljs.core.assoc.call(null, cljs.core._deref.call(null, view3d.core.boat), new cljs.core.Keyword(null, "coord", "coord", -1453656639), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [b, c], null)));
-    view3d.core.fly_to.call(null, b, c, (new cljs.core.Keyword(null, "altitude", "altitude", 463588637)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, view3d.core.camera)), 0, 10);
+    view3d.core.fly_to.call(null, b, c, (new cljs.core.Keyword(null, "altitude", "altitude", 463588637)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, view3d.core.camera)), 0, 2);
     view3d.core.set_html_BANG_.call(null, "course", (new cljs.core.Keyword(null, "course", "course", 1455432948)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, view3d.core.boat)));
     view3d.core.set_html_BANG_.call(null, "helm-tit", "helm");
     view3d.core.set_html_BANG_.call(null, "helm", view3d.core.helm_control);

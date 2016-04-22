@@ -16,6 +16,8 @@
 (println "3. Starting server...")
 (eval (read-string "(pro.server/start-server)"))
 (println (str "    Map center: " (eval (read-string "pro.server/MAP-CENTER"))))
+(println "4. Opening 3DView in browser...")
+(eval (read-string "(pro.server/view3D-in-browser)"))
 (println "EXPERT SYSTEM INITIALIZED"))
 
 (defn current-time []

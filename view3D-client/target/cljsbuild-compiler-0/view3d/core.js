@@ -18,7 +18,7 @@ view3d.core.BSE_URL = "http://localhost:4444/";
 view3d.core.MAP_PTH = "map-center/";
 view3d.core.QST_PTH = "question/";
 view3d.core.ANS_PTH = "answer/";
-view3d.core.CMD_PTH = "command/";
+view3d.core.CMD_PTH = "maneuver/";
 view3d.core.boat = cljs.core.volatile_BANG_.call(null,new cljs.core.PersistentArrayMap(null, 5, [new cljs.core.Keyword(null,"coord","coord",-1453656639),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [(0),(0)], null),new cljs.core.Keyword(null,"speed","speed",1257663751),(0),new cljs.core.Keyword(null,"course","course",1455432948),(0),new cljs.core.Keyword(null,"helm","helm",-1750767724),new cljs.core.Keyword(null,"steady","steady",549215053),new cljs.core.Keyword(null,"engine","engine",1459054265),(0)], null));
 view3d.core.boat_tio_hrs = (view3d.core.BOAT_TIO / (3600000));
 view3d.core.camera = cljs.core.volatile_BANG_.call(null,new cljs.core.PersistentArrayMap(null, 4, [new cljs.core.Keyword(null,"view","view",1247994814),"FORWARD",new cljs.core.Keyword(null,"pitch","pitch",1495126700),(0),new cljs.core.Keyword(null,"roll","roll",11266999),(0),new cljs.core.Keyword(null,"altitude","altitude",463588637),(2)], null));
@@ -838,7 +838,7 @@ var lat = cljs.core.nth.call(null,vec__12539,(0),null);
 var lon = cljs.core.nth.call(null,vec__12539,(1),null);
 cljs.core._vreset_BANG_.call(null,view3d.core.boat,cljs.core.assoc.call(null,cljs.core._deref.call(null,view3d.core.boat),new cljs.core.Keyword(null,"coord","coord",-1453656639),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [lat,lon], null)));
 
-view3d.core.fly_to.call(null,lat,lon,new cljs.core.Keyword(null,"altitude","altitude",463588637).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,view3d.core.camera)),(0),(10));
+view3d.core.fly_to.call(null,lat,lon,new cljs.core.Keyword(null,"altitude","altitude",463588637).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,view3d.core.camera)),(0),(2));
 
 view3d.core.set_html_BANG_.call(null,"course",new cljs.core.Keyword(null,"course","course",1455432948).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,view3d.core.boat)));
 

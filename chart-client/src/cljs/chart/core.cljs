@@ -27,6 +27,8 @@
 (def URL-GSA "http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}")
 (def URL-ICO "http://localhost:4444/img/yachtr.png")
 
+(def dlt-move-hrs (double (/ DLT-MOV 3600000)))
+
 ;; ----------------- Chart creation and control -------------------------
 
 (defn by-id  [id]
@@ -98,6 +100,20 @@
         mk (-> js/L (.rotatedMarker pos opt))]
     mk))
 
+(defn mapobPopup [id data]
+  (let [[lat lon] (:coord data)]
+    (str "<h3>" id "</h3>"
+         "<table>"
+         "<tr><td>latitude</td><td>" (format "%.4f" lat) "</td></tr>"
+         "<tr><td>longitude</td><td>" (format "%.4f" lon) "</td></tr>"
+         "<tr><td>course</td><td>" (:course data) "</td></tr>"
+         "<tr><td>speed</td><td>" (format "%.1f" (:speed data)) "</td></tr>"
+         "</table>")))
+
+(defn popup [id]
+  (if-let [data (@mapobs id)]
+    (.bindPopup (:marker data) (mapobPopup id data))))
+
 (defn spherical-between [phi1 lambda0 c az]
   (let [cosphi1 (js/Math.cos phi1)
         sinphi1 (js/Math.sin phi1)
@@ -118,37 +134,19 @@
         [phi2 lam2] (spherical-between phi lam way dir)]
     [(/ phi2 pid180) (/ lam2 pid180)]))
 
-(defn mapobPopup [id data]
-  (let [[lat lon] (:coord data)]
-    (str "<h3>" id "</h3>"
-         "<table>"
-         "<tr><td>latitude</td><td>" (format "%.4f" lat) "</td></tr>"
-         "<tr><td>longitude</td><td>" (format "%.4f" lon) "</td></tr>"
-         "<tr><td>course</td><td>" (:course data) "</td></tr>"
-         "<tr><td>speed</td><td>" (format "%.1f" (:speed data)) "</td></tr>"
-         "</table>")))
-
-(defn popup [id]
-  (if-let [data (@mapobs id)]
-    (.bindPopup (:marker data) (mapobPopup id data))))
-
 (defn move [id]
   (if-let [data (@mapobs id)]
     (let [spd (:speed data)]
       (if (> spd 0)
-        (let [etim (+ (:time-from-turn data) DLT-MOV)
-              ehrs (/ etim 36000000)
-              [lat lon] (future-pos (:turn-coord data)
-                                    (:course data)
-                                    spd
-                                    ehrs)
+        (let [[lat lon :as crd] (future-pos (:coord data)
+                                            (:course data)
+                                            spd
+                                            dlt-move-hrs)
               pos (js/L.LatLng. lat lon)]
           (.setLatLng (:marker data) pos)
           (vswap! mapobs assoc id
                   (merge data
-                         {:coord [lat lon]
-                          :time-from-turn etim})))))))
-
+                         {:coord crd})))))))
 
 (defn delete-mapob [id]
   (when-let [mob (@mapobs id)]
@@ -174,6 +172,7 @@
                     :poper (repeater #(popup id) DLT-POP)}))))
 
 (defn boat-maneuver [id data]
+  (println [:BM id data])
   (when-let [old (@mapobs id)]
     (vswap! mapobs assoc id (merge old data))
     (set! (.. (:marker old) -options -angle) (:course data))))
@@ -186,7 +185,7 @@
 
 (defn event-handler [response]
   (doseq [{:keys [event] :as evt} (read-transit response)]
-    ;;(println [:EVENT evt])
+    (println [:EVENT evt])
     (condp = event
       :boat-add (let [{:keys [id data]} evt]
                       (boat-add id data))
@@ -244,7 +243,6 @@
       (.on m "mousemove"
            (fn [e] (mouse-move (.. e -latlng -lat) (.. e -latlng -lng))))
       (vreset! chart m)
-      (repeater #(check-events) DLT-EVT)
       ;;(cond-repeater #(follow) DLT-EVT #(follower-deviate))
       (repeater #(check-events) DLT-EVT))
     (js/alert "No chart center from server!")))

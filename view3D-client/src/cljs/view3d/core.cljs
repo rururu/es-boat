@@ -23,7 +23,7 @@
 (def MAP-PTH "map-center/")
 (def QST-PTH "question/")
 (def ANS-PTH "answer/")
-(def CMD-PTH "command/")
+(def CMD-PTH "maneuver/")
 
 (def boat (volatile! {:coord [0 0]
                       :speed 0
@@ -31,7 +31,7 @@
                       :helm :steady
                       :engine 0}))
 
-(def boat-tio-hrs (/ BOAT-TIO 3600000))
+(def boat-tio-hrs (double (/ BOAT-TIO 3600000)))
 
 (def camera (volatile! {:view "FORWARD"
                         :pitch 0
@@ -188,7 +188,8 @@
       (when ACCD
         (boat-to-server)
         (def ACCD false)))
-    (vswap! boat assoc :coord (future-pos (:coord @boat) course speed boat-tio-hrs))
+    (vswap! boat assoc :coord
+            (future-pos (:coord @boat) course speed boat-tio-hrs))
     (display-boat-data)))
 
 ;; --------------------------- Controls ------------------------------
@@ -380,7 +381,7 @@
 (defn start-map [response]
   (if-let [[lat lon] response]
     (do (vswap! boat assoc :coord [lat lon])
-      (fly-to lat lon (:altitude @camera) 0 10)
+      (fly-to lat lon (:altitude @camera) 0 2)
       (set-html! "course" (:course @boat))
       (set-html! "helm-tit" "helm")
       (set-html! "helm" helm-control)

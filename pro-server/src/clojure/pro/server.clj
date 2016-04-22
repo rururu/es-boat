@@ -46,7 +46,7 @@
   (-> (r/response (write-transit (deref (future (pump-out EVT-CHN)))))
        (r/header "Access-Control-Allow-Origin" "*")))
 
-(defn command [params]
+(defn maneuver [params]
   (println [:COMMAND params])
 (let [crd (:coord params)
        crd [(read-string (get crd "0"))
@@ -94,9 +94,9 @@
   {:event :boat-add 
    :id (:id @BOAT) 
    :data @BOAT})
-(pump-in-evt 
-  {:event :boat-follow
-   :id (:id @BOAT)})
+;;(pump-in-evt 
+;;  {:event :boat-follow
+;;   :id (:id @BOAT)})
 MAP-CENTER)
 
 (defn init-server []
@@ -107,7 +107,7 @@ MAP-CENTER)
   (GET "/question/" [& params] (question params))
   (GET "/answer/" [] (answer))
   (GET "/events/" [] (events))
-  (GET "/command/" [& params] (command params))
+  (GET "/maneuver/" [& params] (maneuver params))
   (GET "/czml/" [] (cz/events))
   (route/files "/" (do (println [:ROOT-FILES ROOT]) {:root ROOT}))
   (route/resources "/")
@@ -135,4 +135,10 @@ MAP-CENTER)
   (.stop serv)
   (def SERV nil)
   (println "Server stopped!")))
+
+(defn view3D-in-browser []
+  (let [address (str "http://localhost:" PORT)]
+  (println "Location:" address)
+  (when (java.awt.Desktop/isDesktopSupported)
+    (.browse (java.awt.Desktop/getDesktop) (java.net.URI. address)))))
 

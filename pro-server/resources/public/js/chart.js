@@ -55785,6 +55785,7 @@ chart.core.URL_GHB = "http://{s}.google.com/vt/lyrs\x3ds,h\x26x\x3d{x}\x26y\x3d{
 chart.core.URL_GTR = "http://{s}.google.com/vt/lyrs\x3dp\x26x\x3d{x}\x26y\x3d{y}\x26z\x3d{z}";
 chart.core.URL_GSA = "http://{s}.google.com/vt/lyrs\x3ds\x26x\x3d{x}\x26y\x3d{y}\x26z\x3d{z}";
 chart.core.URL_ICO = "http://localhost:4444/img/yachtr.png";
+chart.core.dlt_move_hrs = chart.core.DLT_MOV / 36E5;
 chart.core.by_id = function chart$core$by_id(id) {
   return document.getElementById(id);
 };
@@ -56186,35 +56187,10 @@ chart.core.create_marker = function chart$core$create_marker(lat, lon) {
   var mk = L.rotatedMarker(pos, opt);
   return mk;
 };
-chart.core.spherical_between = function chart$core$spherical_between(phi1, lambda0, c, az) {
-  var cosphi1 = Math.cos(phi1);
-  var sinphi1 = Math.sin(phi1);
-  var cosaz = Math.cos(az);
-  var sinaz = Math.sin(az);
-  var sinc = Math.sin(c);
-  var cosc = Math.cos(c);
-  var phi2 = Math.asin(sinphi1 * cosc + cosphi1 * sinc * cosaz);
-  var lam2 = Math.atan2(sinc * sinaz, cosphi1 * cosc - sinphi1 * sinc * cosaz) + lambda0;
-  return new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [phi2, lam2], null);
-};
-chart.core.future_pos = function chart$core$future_pos(p__12506, crs, spd, tim) {
-  var vec__12509 = p__12506;
-  var lat = cljs.core.nth.call(null, vec__12509, 0, null);
-  var lon = cljs.core.nth.call(null, vec__12509, 1, null);
-  var phi = chart.core.pid180 * lat;
-  var lam = chart.core.pid180 * lon;
-  var dir = chart.core.pid180 * crs;
-  var way = spd * tim;
-  var way__$1 = chart.core.pid180 * (way / 60);
-  var vec__12510 = chart.core.spherical_between.call(null, phi, lam, way__$1, dir);
-  var phi2 = cljs.core.nth.call(null, vec__12510, 0, null);
-  var lam2 = cljs.core.nth.call(null, vec__12510, 1, null);
-  return new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [phi2 / chart.core.pid180, lam2 / chart.core.pid180], null);
-};
 chart.core.mapobPopup = function chart$core$mapobPopup(id, data) {
-  var vec__12512 = (new cljs.core.Keyword(null, "coord", "coord", -1453656639)).cljs$core$IFn$_invoke$arity$1(data);
-  var lat = cljs.core.nth.call(null, vec__12512, 0, null);
-  var lon = cljs.core.nth.call(null, vec__12512, 1, null);
+  var vec__12507 = (new cljs.core.Keyword(null, "coord", "coord", -1453656639)).cljs$core$IFn$_invoke$arity$1(data);
+  var lat = cljs.core.nth.call(null, vec__12507, 0, null);
+  var lon = cljs.core.nth.call(null, vec__12507, 1, null);
   return [cljs.core.str("\x3ch3\x3e"), cljs.core.str(id), cljs.core.str("\x3c/h3\x3e"), cljs.core.str("\x3ctable\x3e"), cljs.core.str("\x3ctr\x3e\x3ctd\x3elatitude\x3c/td\x3e\x3ctd\x3e"), cljs.core.str(chart.core.format.call(null, "%.4f", lat)), cljs.core.str("\x3c/td\x3e\x3c/tr\x3e"), cljs.core.str("\x3ctr\x3e\x3ctd\x3elongitude\x3c/td\x3e\x3ctd\x3e"), cljs.core.str(chart.core.format.call(null, "%.4f", lon)), cljs.core.str("\x3c/td\x3e\x3c/tr\x3e"), cljs.core.str("\x3ctr\x3e\x3ctd\x3ecourse\x3c/td\x3e\x3ctd\x3e"), 
   cljs.core.str((new cljs.core.Keyword(null, "course", "course", 1455432948)).cljs$core$IFn$_invoke$arity$1(data)), cljs.core.str("\x3c/td\x3e\x3c/tr\x3e"), cljs.core.str("\x3ctr\x3e\x3ctd\x3espeed\x3c/td\x3e\x3ctd\x3e"), cljs.core.str(chart.core.format.call(null, "%.1f", (new cljs.core.Keyword(null, "speed", "speed", 1257663751)).cljs$core$IFn$_invoke$arity$1(data))), cljs.core.str("\x3c/td\x3e\x3c/tr\x3e"), cljs.core.str("\x3c/table\x3e")].join("");
 };
@@ -56227,20 +56203,44 @@ chart.core.popup = function chart$core$popup(id) {
     return null;
   }
 };
+chart.core.spherical_between = function chart$core$spherical_between(phi1, lambda0, c, az) {
+  var cosphi1 = Math.cos(phi1);
+  var sinphi1 = Math.sin(phi1);
+  var cosaz = Math.cos(az);
+  var sinaz = Math.sin(az);
+  var sinc = Math.sin(c);
+  var cosc = Math.cos(c);
+  var phi2 = Math.asin(sinphi1 * cosc + cosphi1 * sinc * cosaz);
+  var lam2 = Math.atan2(sinc * sinaz, cosphi1 * cosc - sinphi1 * sinc * cosaz) + lambda0;
+  return new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [phi2, lam2], null);
+};
+chart.core.future_pos = function chart$core$future_pos(p__12508, crs, spd, tim) {
+  var vec__12511 = p__12508;
+  var lat = cljs.core.nth.call(null, vec__12511, 0, null);
+  var lon = cljs.core.nth.call(null, vec__12511, 1, null);
+  var phi = chart.core.pid180 * lat;
+  var lam = chart.core.pid180 * lon;
+  var dir = chart.core.pid180 * crs;
+  var way = spd * tim;
+  var way__$1 = chart.core.pid180 * (way / 60);
+  var vec__12512 = chart.core.spherical_between.call(null, phi, lam, way__$1, dir);
+  var phi2 = cljs.core.nth.call(null, vec__12512, 0, null);
+  var lam2 = cljs.core.nth.call(null, vec__12512, 1, null);
+  return new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [phi2 / chart.core.pid180, lam2 / chart.core.pid180], null);
+};
 chart.core.move = function chart$core$move(id) {
   var temp__4655__auto__ = cljs.core.deref.call(null, chart.core.mapobs).call(null, id);
   if (cljs.core.truth_(temp__4655__auto__)) {
     var data = temp__4655__auto__;
     var spd = (new cljs.core.Keyword(null, "speed", "speed", 1257663751)).cljs$core$IFn$_invoke$arity$1(data);
     if (spd > 0) {
-      var etim = (new cljs.core.Keyword(null, "time-from-turn", "time-from-turn", -1358887180)).cljs$core$IFn$_invoke$arity$1(data) + chart.core.DLT_MOV;
-      var ehrs = etim / 36E6;
-      var vec__12514 = chart.core.future_pos.call(null, (new cljs.core.Keyword(null, "turn-coord", "turn-coord", 1314090877)).cljs$core$IFn$_invoke$arity$1(data), (new cljs.core.Keyword(null, "course", "course", 1455432948)).cljs$core$IFn$_invoke$arity$1(data), spd, ehrs);
+      var vec__12514 = chart.core.future_pos.call(null, (new cljs.core.Keyword(null, "coord", "coord", -1453656639)).cljs$core$IFn$_invoke$arity$1(data), (new cljs.core.Keyword(null, "course", "course", 1455432948)).cljs$core$IFn$_invoke$arity$1(data), spd, chart.core.dlt_move_hrs);
       var lat = cljs.core.nth.call(null, vec__12514, 0, null);
       var lon = cljs.core.nth.call(null, vec__12514, 1, null);
+      var crd = vec__12514;
       var pos = new L.LatLng(lat, lon);
       (new cljs.core.Keyword(null, "marker", "marker", 865118313)).cljs$core$IFn$_invoke$arity$1(data).setLatLng(pos);
-      return cljs.core._vreset_BANG_.call(null, chart.core.mapobs, cljs.core.assoc.call(null, cljs.core._deref.call(null, chart.core.mapobs), id, cljs.core.merge.call(null, data, new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "coord", "coord", -1453656639), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [lat, lon], null), new cljs.core.Keyword(null, "time-from-turn", "time-from-turn", -1358887180), etim], null))));
+      return cljs.core._vreset_BANG_.call(null, chart.core.mapobs, cljs.core.assoc.call(null, cljs.core._deref.call(null, chart.core.mapobs), id, cljs.core.merge.call(null, data, new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "coord", "coord", -1453656639), crd], null))));
     } else {
       return null;
     }
@@ -56293,6 +56293,7 @@ chart.core.boat_add = function chart$core$boat_add(id, data) {
   }(vec__12520, lat, lon, mrk), chart.core.DLT_POP)], null))));
 };
 chart.core.boat_maneuver = function chart$core$boat_maneuver(id, data) {
+  cljs.core.println.call(null, new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "BM", "BM", -1819686332), id, data], null));
   var temp__4657__auto__ = cljs.core.deref.call(null, chart.core.mapobs).call(null, id);
   if (cljs.core.truth_(temp__4657__auto__)) {
     var old = temp__4657__auto__;
@@ -56366,6 +56367,7 @@ chart.core.event_handler = function chart$core$event_handler(response) {
       var map__12575__$1 = (!(map__12575 == null) ? map__12575.cljs$lang$protocol_mask$partition0$ & 64 || map__12575.cljs$core$ISeq$ ? true : false : false) ? cljs.core.apply.call(null, cljs.core.hash_map, map__12575) : map__12575;
       var evt = map__12575__$1;
       var event = cljs.core.get.call(null, map__12575__$1, new cljs.core.Keyword(null, "event", "event", 301435442));
+      cljs.core.println.call(null, new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "EVENT", "EVENT", 449814061), evt], null));
       var pred__12577_12601 = cljs.core._EQ_;
       var expr__12578_12602 = event;
       if (cljs.core.truth_(pred__12577_12601.call(null, new cljs.core.Keyword(null, "boat-add", "boat-add", 594095838), expr__12578_12602))) {
@@ -56428,6 +56430,7 @@ chart.core.event_handler = function chart$core$event_handler(response) {
           var map__12588__$1 = (!(map__12588 == null) ? map__12588.cljs$lang$protocol_mask$partition0$ & 64 || map__12588.cljs$core$ISeq$ ? true : false : false) ? cljs.core.apply.call(null, cljs.core.hash_map, map__12588) : map__12588;
           var evt = map__12588__$1;
           var event = cljs.core.get.call(null, map__12588__$1, new cljs.core.Keyword(null, "event", "event", 301435442));
+          cljs.core.println.call(null, new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "EVENT", "EVENT", 449814061), evt], null));
           var pred__12590_12625 = cljs.core._EQ_;
           var expr__12591_12626 = event;
           if (cljs.core.truth_(pred__12590_12625.call(null, new cljs.core.Keyword(null, "boat-add", "boat-add", 594095838), expr__12591_12626))) {
@@ -56513,11 +56516,6 @@ chart.core.start_chart = function chart$core$start_chart(response) {
       };
     }(m, tile1, tile2, tile3, tile4, tile5, base, ctrl, vec__12651, lat, lon, temp__4655__auto__));
     cljs.core.vreset_BANG_.call(null, chart.core.chart, m);
-    chart.core.repeater.call(null, function(m, tile1, tile2, tile3, tile4, tile5, base, ctrl, vec__12651, lat, lon, temp__4655__auto__) {
-      return function() {
-        return chart.core.check_events.call(null);
-      };
-    }(m, tile1, tile2, tile3, tile4, tile5, base, ctrl, vec__12651, lat, lon, temp__4655__auto__), chart.core.DLT_EVT);
     return chart.core.repeater.call(null, function(m, tile1, tile2, tile3, tile4, tile5, base, ctrl, vec__12651, lat, lon, temp__4655__auto__) {
       return function() {
         return chart.core.check_events.call(null);
