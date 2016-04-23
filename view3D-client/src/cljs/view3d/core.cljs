@@ -232,7 +232,7 @@
              <option value='DOWN'>DOWN</option>
              </select>")
   (set-html! "altitude" "altitude")
-  (set-html! "altitude-fld" (str "<input value='10' style='width:90px' "
+  (set-html! "altitude-fld" (str "<input value='2' style='width:90px' "
                                 "onchange='javascript:view3d.core.altitude(this.value)'>"))
   (set-html! "pitch" "pitch")
   (set-html! "pitch-fld" (str "<input value='0' style='width:90px' "

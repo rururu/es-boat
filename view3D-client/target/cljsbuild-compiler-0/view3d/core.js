@@ -587,7 +587,7 @@ view3d.core.set_html_BANG_.call(null,"view-fld","<select onchange='javascript:vi
 
 view3d.core.set_html_BANG_.call(null,"altitude","altitude");
 
-view3d.core.set_html_BANG_.call(null,"altitude-fld",[cljs.core.str("<input value='10' style='width:90px' "),cljs.core.str("onchange='javascript:view3d.core.altitude(this.value)'>")].join(''));
+view3d.core.set_html_BANG_.call(null,"altitude-fld",[cljs.core.str("<input value='2' style='width:90px' "),cljs.core.str("onchange='javascript:view3d.core.altitude(this.value)'>")].join(''));
 
 view3d.core.set_html_BANG_.call(null,"pitch","pitch");
 

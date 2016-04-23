@@ -16,8 +16,7 @@ $ lein run
 
 In the Protege window, run the menu item: Edit -> ClojureWork.
 
-This starts a script that loads needed programs, starts expert system and opens browser window with a HUD and the controls of a boat. Set a throttle to some
-reasonable boat speed value in nautical miles. Contol course of the boat with a helm.
+This starts a script that loads needed programs, starts expert system and opens browser window with a HUD and the controls of a boat. Set a throttle to some reasonable boat speed value in nautical miles. Contol course of the boat with a helm. The helm has 5 positions, from left to right: "hard a port", "port", "midship", "starboard", "hard a starboard".
 
 You can open a nautical chart in another browser window on the address http://localhost:4444/chart.html.
 
