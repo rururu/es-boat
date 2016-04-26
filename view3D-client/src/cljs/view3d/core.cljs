@@ -24,6 +24,7 @@
 (def QST-PTH "question/")
 (def ANS-PTH "answer/")
 (def CMD-PTH "maneuver/")
+(def CZML-PTH "czml/")
 
 (def boat (volatile! {:coord [0 0]
                       :speed 0
@@ -93,6 +94,20 @@
 (def viewer (js/Cesium.Viewer. "cesiumContainer"))
 
 (set! (.-terrainProvider viewer) terprov)
+
+(def cz-source (js/Cesium.CzmlDataSource.))
+
+(.add (.-dataSources viewer) cz-source)
+
+(defn cz-processor [e]
+  (println [:E e])
+  (let [data (.-data e)
+        data (js/JSON.parse data)]
+    (.process cz-source data)))
+
+(def evt-source (js/EventSource. (str BSE-URL CZML-PTH)))
+
+(.addEventListener evt-source "czml" cz-processor false)
 
 (defn fly-control [lat lon alt hea pit rol per]
   (let [dest (js/Cesium.Cartesian3.fromDegrees lon lat alt)]

@@ -19,6 +19,7 @@ view3d.core.MAP_PTH = "map-center/";
 view3d.core.QST_PTH = "question/";
 view3d.core.ANS_PTH = "answer/";
 view3d.core.CMD_PTH = "maneuver/";
+view3d.core.CZML_PTH = "czml/";
 view3d.core.boat = cljs.core.volatile_BANG_.call(null,new cljs.core.PersistentArrayMap(null, 5, [new cljs.core.Keyword(null,"coord","coord",-1453656639),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [(0),(0)], null),new cljs.core.Keyword(null,"speed","speed",1257663751),(0),new cljs.core.Keyword(null,"course","course",1455432948),(0),new cljs.core.Keyword(null,"helm","helm",-1750767724),new cljs.core.Keyword(null,"steady","steady",549215053),new cljs.core.Keyword(null,"engine","engine",1459054265),(0)], null));
 view3d.core.boat_tio_hrs = (view3d.core.BOAT_TIO / (3600000));
 view3d.core.camera = cljs.core.volatile_BANG_.call(null,new cljs.core.PersistentArrayMap(null, 4, [new cljs.core.Keyword(null,"view","view",1247994814),"FORWARD",new cljs.core.Keyword(null,"pitch","pitch",1495126700),(0),new cljs.core.Keyword(null,"roll","roll",11266999),(0),new cljs.core.Keyword(null,"altitude","altitude",463588637),(2)], null));
@@ -260,6 +261,17 @@ return ajax.core.GET.call(null,url,new cljs.core.PersistentArrayMap(null, 4, [ne
 view3d.core.terprov = (new Cesium.CesiumTerrainProvider({"url": "//assets.agi.com/stk-terrain/world", "requestWaterMask": false, "requestVertexNormals": false}));
 view3d.core.viewer = (new Cesium.Viewer("cesiumContainer"));
 view3d.core.viewer.terrainProvider = view3d.core.terprov;
+view3d.core.cz_source = (new Cesium.CzmlDataSource());
+view3d.core.viewer.dataSources.add(view3d.core.cz_source);
+view3d.core.cz_processor = (function view3d$core$cz_processor(e){
+cljs.core.println.call(null,new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"E","E",230849842),e], null));
+
+var data = e.data;
+var data__$1 = JSON.parse(data);
+return view3d.core.cz_source.process(data__$1);
+});
+view3d.core.evt_source = (new EventSource([cljs.core.str(view3d.core.BSE_URL),cljs.core.str(view3d.core.CZML_PTH)].join('')));
+view3d.core.evt_source.addEventListener("czml",view3d.core.cz_processor,false);
 view3d.core.fly_control = (function view3d$core$fly_control(lat,lon,alt,hea,pit,rol,per){
 var dest = Cesium.Cartesian3.fromDegrees(lon,lat,alt);
 return view3d.core.viewer.camera.flyTo({"destination": dest, "orientation": {"heading": Cesium.Math.toRadians(hea), "pitch": Cesium.Math.toRadians(pit), "roll": Cesium.Math.toRadians(rol)}, "duration": per, "easingFunction": ((function (dest){

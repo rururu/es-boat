@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jardesc>
+    <jar path="ClojureTab-1.5/ClojureTab-1.5.jar"/>
+    <options buildIfNeeded="true" compress="false" descriptionLocation="/ClojureTab-1.5/ClojureTab-1.5.jardesc" exportErrors="false" exportWarnings="false" includeDirectoryEntries="false" overwrite="true" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="false" manifestLocation="/ClojureTab-1.5/MANIFEST.MF" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
+        <file path="/ClojureTab-1.5/.classpath"/>
+        <javaElement handleIdentifier="=ClojureTab-1.5/src"/>
+        <file path="/ClojureTab-1.5/MANIFEST.MF"/>
+        <file path="/ClojureTab-1.5/.project"/>
+    </selectedElements>
+</jardesc>

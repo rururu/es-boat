@@ -1,4 +1,4 @@
-; Fri Apr 22 12:28:40 MSK 2016
+; Tue Apr 26 13:59:40 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -487,6 +487,10 @@
 	(salience -1)
 	(title "as:AnswerIslandsBehind"))
 
+([ProServer_Class190000] of  CloFuncall
+
+	(source "(cesium.core/location \"b2\" 44.1280 68.7360 20)"))
+
 ([ProServer_Class190001] of  Rule
 
 	(lhs "?b (Behind time ?tim1)\n(OSMData time ?tim2\n	(> ?tim2 ?tim1))")
@@ -496,13 +500,41 @@
 
 ([ProServer_Class2] of  CloFunction
 
-	(source "(println \"INITIALIZING EXPERT SYSTEM\")\n(println \"1.Loading Clojure Programs...\")\n(if-let [wps (seq (cls-instances \"WorkingPrograms\"))]\n  (loop [i 1 pins (svs (first wps) \"cloPrograms\")]\n    (when (seq pins)\n      (println (str \" 1.\" i \" \" (sv (first pins) \"title\") \" = \" (ClojureTab/loadProgram (first pins)) ))\n      (recur (inc i) (rest pins))))\n  (println \"  Instance of WorkingPrograms not found!\"))\n(println \"2. Starting Rule Engine...\")\n(eval (read-string \"(ru.rules/run-engine \\\"AS Run\\\")\"))\n(println \"3. Starting server...\")\n(eval (read-string \"(pro.server/start-server)\"))\n(println (str \"    Map center: \" (eval (read-string \"pro.server/MAP-CENTER\"))))\n(println \"4. Opening 3DView in browser...\")\n(eval (read-string \"(pro.server/view3D-in-browser)\"))\n(println \"EXPERT SYSTEM INITIALIZED\")")
+	(source "(println \"INITIALIZING EXPERT SYSTEM\")\n(println \"1.Loading Clojure Programs...\")\n(if-let [wps (seq (cls-instances \"WorkingPrograms\"))]\n  (loop [i 1 pins (svs (first wps) \"cloPrograms\")]\n    (when (seq pins)\n      (println (str \" 1.\" i \" \" (sv (first pins) \"title\") \" = \" (ClojureTab/loadProgram (first pins)) ))\n      (recur (inc i) (rest pins))))\n  (println \"  Instance of WorkingPrograms not found!\"))\n(println \"2.Starting Rule Engine...\")\n(ClojureTab/invoke \"ru.rules\" \"run-engine\" \"AS Run\")\n(println \"3.Starting server...\")\n(ClojureTab/invoke \"pro.server\" \"start-server\")\n(println (str \"    Map center: \" (eval (read-string \"pro.server/MAP-CENTER\"))))\n(println \"4.Opening 3DView in a browser...\")\n(ClojureTab/invoke  \"pro.server\" \"view3D-in-browser\")\n(println \"EXPERT SYSTEM INITIALIZED\")")
 	(title "clojure-work []"))
 
 ([ProServer_Class20000] of  CloFunction
 
 	(source "(get-in @BOATS [id :speed])")
 	(title "speed [id]"))
+
+([ProServer_Class200001] of  CloFuncall
+
+	(source "(cesium.core/location \"b2\" \"img/yachtr.png\" 44.1280 68.7360 20)"))
+
+([ProServer_Class200002] of  CloFuncall
+
+	(source "(cesium.core/events)"))
+
+([ProServer_Class200003] of  CloFuncall
+
+	(source "@cesium.core/CAM"))
+
+([ProServer_Class200004] of  CloFuncall
+
+	(source "(vswap! cesium.core/CAM assoc :chan "))
+
+([ProServer_Class200005] of  CloFuncall
+
+	(source "(vswap! cesium.core/CAM assoc :chan (chan))"))
+
+([ProServer_Class200006] of  CloFuncall
+
+	(source "(vswap! cesium.core/CAM assoc :chan (async/chan))"))
+
+([ProServer_Class200007] of  CloFuncall
+
+	(source "(vswap! cesium.core/CAM assoc :chan (clojure.core.async/chan))"))
 
 ([ProServer_Class20001] of  CloFunction
 
