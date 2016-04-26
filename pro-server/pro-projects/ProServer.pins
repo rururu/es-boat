@@ -1,4 +1,4 @@
-; Tue Apr 26 13:59:40 MSK 2016
+; Tue Apr 26 23:27:36 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -172,24 +172,14 @@
 		[ProServer_Class120003]
 		[ProServer_Class120004]
 		[ProServer_Class120005]
-		[ProServer_Class120006]
-		[ProServer_Class120007]
-		[ProServer_Class120008]
-		[ProServer_Class120010]
-		[ProServer_Class120011]
 		[ProServer_Class120012]
 		[ProServer_Class120014]
 		[ProServer_Class120015]
-		[ProServer_Class120016]
-		[ProServer_Class130001]
-		[ProServer_Class130002]
-		[ProServer_Class130003])
+		[ProServer_Class120016])
 	(cloNamespace [ProServer_Class120001])
 	(cloVars
 		[ProServer_Class120002]
-		[ProServer_Class120009]
-		[ProServer_Class120013]
-		[ProServer_Class130000])
+		[ProServer_Class120013])
 	(title "Cesium Server"))
 
 ([ProServer_Class120001] of  CloNamespace
@@ -199,53 +189,23 @@
 
 ([ProServer_Class120002] of  CloVar
 
-	(source "(defonce CAM (volatile! {:onboard nil\n                         :id nil\n                         :heading \"FORWARD\"\n                         :pitch -10.0\n                         :roll 0.0\n                         :chan nil}))")
-	(title "DEF-CAM"))
+	(source "(async/chan)")
+	(title "CZ-CHAN"))
 
 ([ProServer_Class120003] of  CloFunction
 
-	(source "(if-let [ch (:chan @CAM)]\n    (async/put! ch [typ (.trim dat)]))")
+	(source "(async/put! CZ-CHAN [typ (.trim dat)])")
 	(title "send-event [typ dat]"))
 
 ([ProServer_Class120004] of  CloFunction
 
-	(source "(loop [[bit ch] (alts!! [chn] :default :none) bits []]\n    (if (= bit :none)\n      bits\n      (recur (alts!! [chn] :default :none) (conj bits bit))))")
-	(title "pump-out-events [chn]"))
+	(source "(loop [[bit ch] (alts!! [CZ-CHAN] :default :none) bits []]\n    (if (= bit :none)\n      bits\n      (recur (alts!! [CZ-CHAN] :default :none) (conj bits bit))))")
+	(title "pump-out-events []"))
 
 ([ProServer_Class120005] of  CloFunction
 
-	(source "(if-let [ch (:chan @CAM)]\n    (let [evt-hr (fn [[typ dat]]\n                   (str \"event: \" typ \"\\ndata: \" dat \"\\n\\n\"))\n          ee (deref (future (pump-out-events ch)))\n          resp (if (seq ee)\n                 (apply str (map evt-hr ee))\n                 \"\")]\n      (->\n        (r/response resp)\n        (r/header \"Access-Control-Allow-Origin\" \"*\")\n        (r/header \"Content-Type\" \"text/event-stream;charset=utf-8\"))))")
+	(source "(let [evt-hr (fn [[typ dat]]\n                   (str \"event: \" typ \"\\ndata: \" dat \"\\n\\n\"))\n       ee (deref (future (pump-out-events)))\n       resp (if (seq ee)\n                 (apply str (map evt-hr ee))\n                 \"\")]\n  (-> (r/response resp)\n         (r/header \"Access-Control-Allow-Origin\" \"*\")\n         (r/header \"Content-Type\" \"text/event-stream;charset=utf-8\")))")
 	(title "events []"))
-
-([ProServer_Class120006] of  CloFunction
-
-	(source "(when (nil? (:chan @CAM))\n    (vswap! CAM assoc :chan (async/chan))\n    (println (str \"SSE Server started on channel: \" (:chan @CAM))))")
-	(title "start-sse-server []"))
-
-([ProServer_Class120007] of  CloFunction
-
-	(source "(when (:chan @CAM)\n    (vswap! CAM dissoc :chan)\n    (println \"SSE Server stopped.\"))")
-	(title "stop-sse-server []"))
-
-([ProServer_Class120008] of  CloFunction
-
-	(source "(let [p (str \"{\\\"ctrl\\\":\\\"\"\n               ctrl \"\\\",\\\"lat\\\":\"\n               lat \",\\\"lon\\\":\"\n               lon \",\\\"altitude\\\":\"\n               alt \",\\\"heading\\\":\"\n               hea \",\\\"pitch\\\":\"\n               pit \",\\\"roll\\\":\"\n               rol \",\\\"duration\\\":\"\n               per \"}\")]\n    (send-event \"fly\" p))")
-	(title "fly-control [ctrl lat lon alt hea pit rol per]"))
-
-([ProServer_Class120009] of  CloVar
-
-	(source "(volatile! 0)")
-	(title "OLD-CRS"))
-
-([ProServer_Class120010] of  CloFunction
-
-	(source "(if (> on-course crs)\n    (if (< (- on-course crs) 180)\n      :right\n      :left)\n    (if (< (- crs on-course) 180)\n      :left\n      :right))")
-	(title "what-side [crs on-course]"))
-
-([ProServer_Class120011] of  CloFunction
-
-	(source "(let [pitch (:pitch @CAM)\n        roll (:roll @CAM)\n        direct (fn [x] (cond\n                         (> x 360) (- x 360)\n                         (< x 0) (+ x 360)\n                         true x))\n        head (condp = (:heading @CAM)\n               \"FORWARD\" (direct crs)\n               \"BACKWARD\" (direct (+ crs 180))\n               \"RIGHT\" (direct (+ crs 90))\n               \"LEFT\" (direct (- crs 90))\n               \"UP\" (direct crs)\n               \"DOWN\" (direct crs))\n        dif (- crs @OLD-CRS)]\n    (vreset! OLD-CRS crs)\n    (fly-control \"fly\" lat lon alt head pitch roll per))")
-	(title "fly-to [lat lon alt crs per]"))
 
 ([ProServer_Class120012] of  CloFunction
 
@@ -254,7 +214,7 @@
 
 ([ProServer_Class120013] of  CloVar
 
-	(source "(volatile! true)")
+	(source "true")
 	(title "DOC-SND"))
 
 ([ProServer_Class120014] of  CloFunction
@@ -264,33 +224,13 @@
 
 ([ProServer_Class120015] of  CloFunction
 
-	(source "(when @DOC-SND\n    (send-event \"czml\" (doc))\n    (vreset! DOC-SND false))\n  (let [p (str \"{\\\"id\\\":\\\"\"\n               label\n               \"\\\",\\\"label\\\":{\\\"scale\\\":0.25,\\\"pixelOffset\\\":{\\\"cartesian2\\\":[8, -8]},\\\"text\\\":\\\"\"\n               label\n               \"\\\"},\\\"billboard\\\":{\\\"image\\\":\\\"\"\n               img-url\n               \"\\\"},\\\"position\\\":{\\\"cartographicDegrees\\\":[\"\n               lon\n               \", \"\n               lat\n               \", \"\n               alt\n               \"]}}\")]\n    (send-event \"czml\" p))")
+	(source "(when DOC-SND\n    (send-event \"czml\" (doc))\n    (def DOC-SND false))\n  (let [p (str \"{\\\"id\\\":\\\"\"\n               label\n               \"\\\",\\\"label\\\":{\\\"scale\\\":0.75,\\\"pixelOffset\\\":{\\\"cartesian2\\\":[8, -8]},\\\"text\\\":\\\"\"\n               label\n               \"\\\"},\\\"billboard\\\":{\\\"image\\\":\\\"\"\n               img-url\n               \"\\\"},\\\"position\\\":{\\\"cartographicDegrees\\\":[\"\n               lon\n               \", \"\n               lat\n               \", \"\n               alt\n               \"]}}\")]\n    (send-event \"czml\" p))")
 	(title "location [label img-url lat lon alt]"))
 
 ([ProServer_Class120016] of  CloFunction
 
-	(source "(when @DOC-SND\n    (send-event \"czml\" (doc))\n    (vreset! DOC-SND false))\n  (let [p (str \"{\\\"id\\\":\\\"\"\n               label\n               \"\\\",\\\"label\\\":{\\\"scale\\\":\"\n               (/ scale 2)\n               \",\\\"pixelOffset\\\":{\\\"cartesian2\\\":[8, -8]},\\\"text\\\":\\\"\"\n               label\n               \"\\\"},\\\"billboard\\\":{\\\"scale\\\":\"\n               scale\n               \",\\\"image\\\":\\\"\"\n               img-url\n               \"\\\"},\\\"position\\\":{\\\"cartographicDegrees\\\":[\\\"\"\n               tim1\n               \"\\\", \"\n               lon1\n               \", \"\n               lat1\n               \", \"\n               alt1\n               \",\\\"\"\n               tim2\n               \"\\\", \"\n               lon2\n               \", \"\n               lat2\n               \", \"\n               alt2\n               \"]}}\")]\n    (send-event \"czml\" p))")
+	(source "(when DOC-SND\n    (send-event \"czml\" (doc))\n    (def DOC-SND false))\n  (let [p (str \"{\\\"id\\\":\\\"\"\n               label\n               \"\\\",\\\"label\\\":{\\\"scale\\\":\"\n               (/ scale 2)\n               \",\\\"pixelOffset\\\":{\\\"cartesian2\\\":[8, -8]},\\\"text\\\":\\\"\"\n               label\n               \"\\\"},\\\"billboard\\\":{\\\"scale\\\":\"\n               scale\n               \",\\\"image\\\":\\\"\"\n               img-url\n               \"\\\"},\\\"position\\\":{\\\"cartographicDegrees\\\":[\\\"\"\n               tim1\n               \"\\\", \"\n               lon1\n               \", \"\n               lat1\n               \", \"\n               alt1\n               \",\\\"\"\n               tim2\n               \"\\\", \"\n               lon2\n               \", \"\n               lat2\n               \", \"\n               alt2\n               \"]}}\")]\n    (send-event \"czml\" p))")
 	(title "leg [label img-url scale [lat1 lon1 alt1 tim1] [lat2 lon2 alt2 tim2]]"))
-
-([ProServer_Class130000] of  CloVar
-
-	(source "20000")
-	(title "CZMW-INTL"))
-
-([ProServer_Class130001] of  CloFunction
-
-	(source "(let [id (:id @CAM)]\n    (let [[lat lon] (bm/coord id)\n           alt 40 ;; feets\n           crs (bm/course id)\n           per (/ CZMW-INTL 1000)] ;; msec to sec\n      (fly-to lat lon alt crs per)))")
-	(title "cesium-work []"))
-
-([ProServer_Class130002] of  CloFunction
-
-	(source "(when (nil? (:id @CAM))\n    (ap/repeater #(cesium-work) CZMW-INTL \"Start (cesium-work)..\")\n    (vswap! CAM assoc :id 0))\n(start-sse-server)")
-	(title "start-cesium []"))
-
-([ProServer_Class130003] of  CloFunction
-
-	(source "(println [:CAMERA params])\n  (vswap! CAM merge params)\n  (condp = (params :camera)\n    \"on\" (start-cesium)\n    \"off\"(stop-sse-server)\n    true)\n  (condp = (params :heading)\n    \"UP\" (vswap! CAM assoc :pitch 90.0)\n    \"DOWN\" (vswap! CAM assoc :pitch -90.0)\n    nil true\n    (vswap! CAM assoc :pitch 0.0))\n  \"\"")
-	(title "camera [params]"))
 
 ([ProServer_Class140000] of  CloFuncall
 
@@ -508,6 +448,10 @@
 	(source "(get-in @BOATS [id :speed])")
 	(title "speed [id]"))
 
+([ProServer_Class200000] of  CloFuncall
+
+	(source "(cesium.core/start-sse-server)"))
+
 ([ProServer_Class200001] of  CloFuncall
 
 	(source "(cesium.core/location \"b2\" \"img/yachtr.png\" 44.1280 68.7360 20)"))
@@ -564,6 +508,70 @@
 	(rhs "(vswap! ?acc conj ?tit)")
 	(salience 0)
 	(title "as:NearbyIslands"))
+
+([ProServer_Class210001] of  CloFuncall
+
+	(source "(in-ns 'cesium.core)"))
+
+([ProServer_Class210002] of  CloFuncall
+
+	(source "@DOC"))
+
+([ProServer_Class210003] of  CloFuncall
+
+	(source "@DOC-SND"))
+
+([ProServer_Class210004] of  CloFuncall
+
+	(source "(vreset! DOC-SND true)"))
+
+([ProServer_Class210005] of  CloFuncall
+
+	(source "(location \"b2\" \"img/yachtr.png\" 44.1280 68.7360 20)"))
+
+([ProServer_Class210006] of  CloFuncall
+
+	(source "(location \"b2\" \"img/yachtr.png\" 44.1280 -68.7360 20)"))
+
+([ProServer_Class210007] of  CloFuncall
+
+	(source "(cesium.core/location \"b2\" \"img/yachtr.png\" 44.1280 -68.7360 20)"))
+
+([ProServer_Class210008] of  CloFuncall
+
+	(source "(cesium.core/location \"BURNEV island\" \"img/yachtr.png\" 44.1280 -68.7310 20)"))
+
+([ProServer_Class210009] of  CloFuncall
+
+	(source "(cesium.core/location \"BURNEV island\" \"img/yachtr.png\" 44.1280 -68.7210 20)"))
+
+([ProServer_Class210010] of  CloFuncall
+
+	(source "cesium.core/DOC-SND"))
+
+([ProServer_Class210011] of  CloFuncall
+
+	(source "(cesium.core/location \"b444\" \"img/yachtr.png\" 44.1280 -68.7360 120)"))
+
+([ProServer_Class210012] of  CloFuncall
+
+	(source "(cesium.core/location \"Burnev Island\" \"img/yachtr.png\" 44.1280 -68.7310 120)"))
+
+([ProServer_Class210013] of  CloFuncall
+
+	(source "(cesium.core/location \"Burnev Island 2\" \"img/yachtr.png\" 44.1280 -68.7350 120)"))
+
+([ProServer_Class210014] of  CloFuncall
+
+	(source "(cesium.core/location \"Burnev Island 3\" \"img/yachtr.png\" 44.1280 -68.7350 20)"))
+
+([ProServer_Class210015] of  CloFuncall
+
+	(source "(cesium.core/location \"Burnev Island 4\" \"img/yachtr.png\" 44.1280 -68.7354 20)"))
+
+([ProServer_Class210016] of  CloFuncall
+
+	(source "(cesium.core/location \"Burnev Island 5\" \"img/yachtr.png\" 44.1280 -68.734 20)"))
 
 ([ProServer_Class3] of  WorkingPrograms
 

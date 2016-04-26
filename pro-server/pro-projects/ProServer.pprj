@@ -1,4 +1,4 @@
-; Tue Apr 26 13:59:40 MSK 2016
+; Tue Apr 26 23:27:36 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -20,11 +20,11 @@
 ([BROWSER_SLOT_NAMES] of  Property_List
 
 	(properties
-		[ProServer_ProjectKB_Class434]
-		[ProServer_ProjectKB_Class435]
-		[ProServer_ProjectKB_Class436]
-		[ProServer_ProjectKB_Class437]
-		[ProServer_ProjectKB_Class438]))
+		[ProServer_ProjectKB_Class454]
+		[ProServer_ProjectKB_Class455]
+		[ProServer_ProjectKB_Class456]
+		[ProServer_ProjectKB_Class457]
+		[ProServer_ProjectKB_Class458]))
 
 ([CLSES_TAB] of  Widget
 
@@ -155,34 +155,6 @@
 	(boolean_value FALSE)
 	(name "ButtonDisplayed-Delete Instance"))
 
-([KB_392067_Class430] of  Map
-
-	(entries
-		[KB_392067_Class431]
-		[KB_392067_Class432]
-		[KB_392067_Class433]))
-
-([KB_392067_Class431] of  Map_Entry
-
-	(key "suppress_instance_counting")
-	(key_class "java.lang.String")
-	(value "false")
-	(value_class "java.lang.String"))
-
-([KB_392067_Class432] of  Map_Entry
-
-	(key "add_name_on_instance_form")
-	(key_class "java.lang.String")
-	(value "false")
-	(value_class "java.lang.String"))
-
-([KB_392067_Class433] of  Map_Entry
-
-	(key "change_tracking_active")
-	(key_class "java.lang.String")
-	(value "false")
-	(value_class "java.lang.String"))
-
 ([KB_519390_Class0] of  String
 
 	(name "factory_class_name")
@@ -282,6 +254,34 @@
 
 	(name "instances_file_name")
 	(string_value "ProServer.pins"))
+
+([KB_970250_Class430] of  Map
+
+	(entries
+		[KB_970250_Class431]
+		[KB_970250_Class432]
+		[KB_970250_Class433]))
+
+([KB_970250_Class431] of  Map_Entry
+
+	(key "suppress_instance_counting")
+	(key_class "java.lang.String")
+	(value "false")
+	(value_class "java.lang.String"))
+
+([KB_970250_Class432] of  Map_Entry
+
+	(key "add_name_on_instance_form")
+	(key_class "java.lang.String")
+	(value "false")
+	(value_class "java.lang.String"))
+
+([KB_970250_Class433] of  Map_Entry
+
+	(key "change_tracking_active")
+	(key_class "java.lang.String")
+	(value "false")
+	(value_class "java.lang.String"))
 
 ([LAYOUT_PROPERTIES] of  Property_List
 
@@ -435,27 +435,27 @@
 ([ProServer_ProjectKB_Class352] of  Property_List
 )
 
-([ProServer_ProjectKB_Class434] of  String
+([ProServer_ProjectKB_Class454] of  String
 
 	(name "Rule")
 	(string_value "title{+}salience"))
 
-([ProServer_ProjectKB_Class435] of  String
+([ProServer_ProjectKB_Class455] of  String
 
 	(name "Answer")
 	(string_value "{Answer+}accum{+}time"))
 
-([ProServer_ProjectKB_Class436] of  String
+([ProServer_ProjectKB_Class456] of  String
 
 	(name "NearbyIslands")
 	(string_value "{NearbyIslands}list{+}time"))
 
-([ProServer_ProjectKB_Class437] of  String
+([ProServer_ProjectKB_Class457] of  String
 
 	(name "Question")
 	(string_value "predicate{+}subject{+}object"))
 
-([ProServer_ProjectKB_Class438] of  String
+([ProServer_ProjectKB_Class458] of  String
 
 	(name "OSMData")
 	(string_value "{OSMData+}volume{+}coord{+rad+}radius{+}time"))

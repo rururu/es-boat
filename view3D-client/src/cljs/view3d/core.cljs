@@ -100,8 +100,8 @@
 (.add (.-dataSources viewer) cz-source)
 
 (defn cz-processor [e]
-  (println [:E e])
   (let [data (.-data e)
+        _ (println data)
         data (js/JSON.parse data)]
     (.process cz-source data)))
 

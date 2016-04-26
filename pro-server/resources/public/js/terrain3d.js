@@ -35569,8 +35569,9 @@ view3d.core.viewer.terrainProvider = view3d.core.terprov;
 view3d.core.cz_source = new Cesium.CzmlDataSource;
 view3d.core.viewer.dataSources.add(view3d.core.cz_source);
 view3d.core.cz_processor = function(a) {
-  cljs.core.println.call(null, new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "E", "E", 230849842), a], null));
-  a = JSON.parse(a.data);
+  a = a.data;
+  cljs.core.println.call(null, a);
+  a = JSON.parse(a);
   return view3d.core.cz_source.process(a);
 };
 view3d.core.evt_source = new EventSource([cljs.core.str(view3d.core.BSE_URL), cljs.core.str(view3d.core.CZML_PTH)].join(""));
