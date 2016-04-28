@@ -1,4 +1,4 @@
-; Tue Apr 26 23:27:36 MSK 2016
+; Thu Apr 28 11:33:17 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -173,6 +173,7 @@
 		[ProServer_Class120004]
 		[ProServer_Class120005]
 		[ProServer_Class120012]
+		[ProServer_Class130000]
 		[ProServer_Class120014]
 		[ProServer_Class120015]
 		[ProServer_Class120016])
@@ -209,7 +210,7 @@
 
 ([ProServer_Class120012] of  CloFunction
 
-	(source "(let [cld (Calendar/getInstance)\n        yar (.get cld Calendar/YEAR )\n        mon (inc (.get cld Calendar/MONTH))\n        dat (.get cld Calendar/DATE)\n        hor (.get cld Calendar/HOUR_OF_DAY)\n        min (.get cld Calendar/MINUTE)\n        sec (.get cld Calendar/SECOND)]\n    (format \"%04d-%02d-%02dT%02d:%02d:%02dZ\" yar mon dat hor min sec))")
+	(source "(let [cld (Calendar/getInstance)\n       yar (.get cld Calendar/YEAR )\n       mon (inc (.get cld Calendar/MONTH))\n       dat (.get cld Calendar/DATE)\n       hor (.get cld Calendar/HOUR_OF_DAY)\n       min (.get cld Calendar/MINUTE)\n       sec (.get cld Calendar/SECOND)]\n    (format \"%04d-%02d-%02dT%02d:%02d:%02dZ\" yar mon dat hor min sec))")
 	(title "iso8601curt []"))
 
 ([ProServer_Class120013] of  CloVar
@@ -219,18 +220,31 @@
 
 ([ProServer_Class120014] of  CloFunction
 
-	(source "\"{\\\"id\\\":\\\"document\\\",\\\"version\\\":\\\"1.0\\\"}\"")
+	(source "(str \"{\\\"id\\\":\\\"document\\\",\\\"version\\\":\\\"1.0\\\",\\\"clock\\\":{\\\"currentTime\\\":\\\"\" (iso8601curt) \"\\\"}}\")")
 	(title "doc []"))
 
 ([ProServer_Class120015] of  CloFunction
 
-	(source "(when DOC-SND\n    (send-event \"czml\" (doc))\n    (def DOC-SND false))\n  (let [p (str \"{\\\"id\\\":\\\"\"\n               label\n               \"\\\",\\\"label\\\":{\\\"scale\\\":0.75,\\\"pixelOffset\\\":{\\\"cartesian2\\\":[8, -8]},\\\"text\\\":\\\"\"\n               label\n               \"\\\"},\\\"billboard\\\":{\\\"image\\\":\\\"\"\n               img-url\n               \"\\\"},\\\"position\\\":{\\\"cartographicDegrees\\\":[\"\n               lon\n               \", \"\n               lat\n               \", \"\n               alt\n               \"]}}\")]\n    (send-event \"czml\" p))")
-	(title "location [label img-url lat lon alt]"))
+	(source "(when DOC-SND\n    (send-event \"czml\" (doc))\n    (def DOC-SND false))\n  (let [p (str \"{\\\"id\\\":\\\"\"\n               label\n               \"\\\",\\\"availability\\\":\\\"\"\n               (iso8601curt) \"/\" (iso8601futt span-sec)\n               \"\\\",\\\"label\\\":{\\\"scale\\\":0.75,\\\"pixelOffset\\\":{\\\"cartesian2\\\":[8, -8]},\\\"text\\\":\\\"\"\n               label\n               \"\\\"},\\\"billboard\\\":{\\\"image\\\":\\\"\"\n               img-url\n               \"\\\"},\\\"position\\\":{\\\"cartographicDegrees\\\":[\"\n               lon\n               \", \"\n               lat\n               \", \"\n               alt\n               \"]}}\")]\n    (send-event \"czml\" p))")
+	(title "location [label img-url lat lon alt span-sec]"))
 
 ([ProServer_Class120016] of  CloFunction
 
 	(source "(when DOC-SND\n    (send-event \"czml\" (doc))\n    (def DOC-SND false))\n  (let [p (str \"{\\\"id\\\":\\\"\"\n               label\n               \"\\\",\\\"label\\\":{\\\"scale\\\":\"\n               (/ scale 2)\n               \",\\\"pixelOffset\\\":{\\\"cartesian2\\\":[8, -8]},\\\"text\\\":\\\"\"\n               label\n               \"\\\"},\\\"billboard\\\":{\\\"scale\\\":\"\n               scale\n               \",\\\"image\\\":\\\"\"\n               img-url\n               \"\\\"},\\\"position\\\":{\\\"cartographicDegrees\\\":[\\\"\"\n               tim1\n               \"\\\", \"\n               lon1\n               \", \"\n               lat1\n               \", \"\n               alt1\n               \",\\\"\"\n               tim2\n               \"\\\", \"\n               lon2\n               \", \"\n               lat2\n               \", \"\n               alt2\n               \"]}}\")]\n    (send-event \"czml\" p))")
 	(title "leg [label img-url scale [lat1 lon1 alt1 tim1] [lat2 lon2 alt2 tim2]]"))
+
+([ProServer_Class130000] of  CloFunction
+
+	(source "(let [cld (Calendar/getInstance)\n       mil (.getTimeInMillis cld)\n       _ (.setTimeInMillis cld (+ mil (* sec 1000)))\n        yar (.get cld Calendar/YEAR )\n        mon (inc (.get cld Calendar/MONTH))\n        dat (.get cld Calendar/DATE)\n        hor (.get cld Calendar/HOUR_OF_DAY)\n        min (.get cld Calendar/MINUTE)\n        sec (.get cld Calendar/SECOND)]\n    (format \"%04d-%02d-%02dT%02d:%02d:%02dZ\" yar mon dat hor min sec))")
+	(title "iso8601futt [sec]"))
+
+([ProServer_Class130001] of  CloFuncall
+
+	(source "(location \"b2\" \"img/yachtr.png\" 44.1280 -68.7360 20 5)"))
+
+([ProServer_Class130002] of  CloFuncall
+
+	(source "(location \"b2\" \"img/yachtr.png\" 44.1280 -68.7360 20 10)"))
 
 ([ProServer_Class140000] of  CloFuncall
 

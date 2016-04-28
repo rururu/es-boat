@@ -34,6 +34,18 @@
 
 (defn iso8601curt []
   (let [cld (Calendar/getInstance)
+       yar (.get cld Calendar/YEAR )
+       mon (inc (.get cld Calendar/MONTH))
+       dat (.get cld Calendar/DATE)
+       hor (.get cld Calendar/HOUR_OF_DAY)
+       min (.get cld Calendar/MINUTE)
+       sec (.get cld Calendar/SECOND)]
+    (format "%04d-%02d-%02dT%02d:%02d:%02dZ" yar mon dat hor min sec)))
+
+(defn iso8601futt [sec]
+  (let [cld (Calendar/getInstance)
+       mil (.getTimeInMillis cld)
+       _ (.setTimeInMillis cld (+ mil (* sec 1000)))
         yar (.get cld Calendar/YEAR )
         mon (inc (.get cld Calendar/MONTH))
         dat (.get cld Calendar/DATE)
@@ -43,14 +55,16 @@
     (format "%04d-%02d-%02dT%02d:%02d:%02dZ" yar mon dat hor min sec)))
 
 (defn doc []
-  "{\"id\":\"document\",\"version\":\"1.0\"}")
+  (str "{\"id\":\"document\",\"version\":\"1.0\",\"clock\":{\"currentTime\":\"" (iso8601curt) "\"}}"))
 
-(defn location [label img-url lat lon alt]
+(defn location [label img-url lat lon alt span-sec]
   (when DOC-SND
     (send-event "czml" (doc))
     (def DOC-SND false))
   (let [p (str "{\"id\":\""
                label
+               "\",\"availability\":\""
+               (iso8601curt) "/" (iso8601futt span-sec)
                "\",\"label\":{\"scale\":0.75,\"pixelOffset\":{\"cartesian2\":[8, -8]},\"text\":\""
                label
                "\"},\"billboard\":{\"image\":\""
