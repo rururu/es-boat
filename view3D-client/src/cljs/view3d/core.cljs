@@ -247,7 +247,7 @@
              <option value='DOWN'>DOWN</option>
              </select>")
   (set-html! "altitude" "altitude")
-  (set-html! "altitude-fld" (str "<input value='2' style='width:90px' "
+  (set-html! "altitude-fld" (str "<input value='10' style='width:90px' "
                                 "onchange='javascript:view3d.core.altitude(this.value)'>"))
   (set-html! "pitch" "pitch")
   (set-html! "pitch-fld" (str "<input value='0' style='width:90px' "
@@ -343,11 +343,23 @@
                            :subject "before the island"
                            :object a} :transit retrieve-answer))))
 
+(defn where-island [islands]
+  (selector3 "island" islands :itself)
+  (def function3
+    (fn [a]
+      (ask-server QST-PTH (merge @boat {:predicate "where-is"
+                                        :subject "island"
+                                        :object a})
+                  :transit retrieve-answer))))
+
 (defn nearby-islands-behind []
   (ask-server ANS-PTH nil :transit behind-island))
 
 (defn nearby-islands-before []
   (ask-server ANS-PTH nil :transit before-island))
+
+(defn nearby-islands-where []
+  (ask-server ANS-PTH nil :transit where-island))
 
 (def lst1 ["ahead"
            "on the starboard bow"
@@ -375,6 +387,18 @@
                         :transit nearby-islands-before)
           (println [:WHAT-IS (nth lst1 n)]))))))
 
+(def lst2 ["island"])
+
+(defn where-is []
+  (selector2 "?" lst2 :count)
+  (def function2
+    (fn [a]
+      (let [n (r/read-string a)]
+        (condp >= n
+          0 (ask-server QST-PTH (merge @boat {:predicate "nearby-islands"})
+                        :transit nearby-islands-where)
+          (println [:WHERE-IS (nth lst1 n)]))))))
+
 (defn questionnaire []
   (set-html! "ask" "Ask a question:")
   (selector1 "?" ["What is"
@@ -396,7 +420,7 @@
 (defn start-map [response]
   (if-let [[lat lon] response]
     (do (vswap! boat assoc :coord [lat lon])
-      (fly-to lat lon (:altitude @camera) 0 2)
+      (fly-to lat lon (:altitude @camera) 0 10)
       (set-html! "course" (:course @boat))
       (set-html! "helm-tit" "helm")
       (set-html! "helm" helm-control)

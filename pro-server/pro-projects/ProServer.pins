@@ -1,4 +1,4 @@
-; Thu Apr 28 11:33:17 MSK 2016
+; Wed May 04 13:32:57 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -417,6 +417,7 @@
 		[ProServer_Class200021]
 		[ProServer_Class70000]
 		[ProServer_Class110002]
+		[ProServer_Class210000]
 		[ProServer_Class100005]
 		[ProServer_Class200019]
 		[ProServer_Class180000]
@@ -523,6 +524,13 @@
 	(salience 0)
 	(title "as:NearbyIslands"))
 
+([ProServer_Class210000] of  Rule
+
+	(lhs "?q (Question predicate \"where-is\"\n	subject \"island\"\n	object ?tit)\n(Island sector ?sec\n	title ?tit\n	side ?sid\n	polar ?pol)")
+	(rhs "(let [[bea dis] ?pol\n       sid (condp = ?sid\n               \"AHEAD\"          \"ahead\"\n               \"STAR-BOW\"    \"on the starboard bow\"\n               \"STAR-BEAM\"   \"on the starboard beam\"\n               \"STAR-ABAFT\" \"abaft the starboard beam\"\n               \"ASTERN\"         \"astern\"\n               \"PORT-ABAFT\" \"abaft the port beam\"\n               \"PORT-BEAM\"  \"on the port beam\"\n               \"PORT-BOW\"   \"on the port bow\")\n       ans (str ?tit \" is in \" (format \"%.1f miles\" dis) \" \" sid)]\n  (pro.server/pump-in-ans ans))\n(retract ?q)")
+	(salience 0)
+	(title "as:WhereIsIsland"))
+
 ([ProServer_Class210001] of  CloFuncall
 
 	(source "(in-ns 'cesium.core)"))
@@ -586,6 +594,18 @@
 ([ProServer_Class210016] of  CloFuncall
 
 	(source "(cesium.core/location \"Burnev Island 5\" \"img/yachtr.png\" 44.1280 -68.734 20)"))
+
+([ProServer_Class220001] of  CloFuncall
+
+	(source "(ru.rules/sp :all)"))
+
+([ProServer_Class220002] of  CloFuncall
+
+	(source "(ru.rules/f 249)"))
+
+([ProServer_Class220003] of  CloFuncall
+
+	(source "(ru.rules/f 250)"))
 
 ([ProServer_Class3] of  WorkingPrograms
 
