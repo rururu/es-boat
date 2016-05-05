@@ -1,4 +1,4 @@
-; Wed May 04 13:32:57 MSK 2016
+; Thu May 05 22:42:40 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -176,7 +176,8 @@
 		[ProServer_Class130000]
 		[ProServer_Class120014]
 		[ProServer_Class120015]
-		[ProServer_Class120016])
+		[ProServer_Class120016]
+		[ProServer_Class220000])
 	(cloNamespace [ProServer_Class120001])
 	(cloVars
 		[ProServer_Class120002]
@@ -225,8 +226,8 @@
 
 ([ProServer_Class120015] of  CloFunction
 
-	(source "(when DOC-SND\n    (send-event \"czml\" (doc))\n    (def DOC-SND false))\n  (let [p (str \"{\\\"id\\\":\\\"\"\n               label\n               \"\\\",\\\"availability\\\":\\\"\"\n               (iso8601curt) \"/\" (iso8601futt span-sec)\n               \"\\\",\\\"label\\\":{\\\"scale\\\":0.75,\\\"pixelOffset\\\":{\\\"cartesian2\\\":[8, -8]},\\\"text\\\":\\\"\"\n               label\n               \"\\\"},\\\"billboard\\\":{\\\"image\\\":\\\"\"\n               img-url\n               \"\\\"},\\\"position\\\":{\\\"cartographicDegrees\\\":[\"\n               lon\n               \", \"\n               lat\n               \", \"\n               alt\n               \"]}}\")]\n    (send-event \"czml\" p))")
-	(title "location [label img-url lat lon alt span-sec]"))
+	(source "(when DOC-SND\n    (send-event \"czml\" (doc))\n    (def DOC-SND false))\n  (let [p (str \"{\\\"id\\\":\\\"\"\n               label\n               \"\\\",\\\"availability\\\":\\\"\"\n               (iso8601curt) \"/\" (iso8601futt span-sec)\n               \"\\\",\\\"label\\\":{\\\"scale\\\":\" \n               lab-scl\n               \" ,\\\"pixelOffset\\\":{\\\"cartesian2\\\":[8, -8]},\\\"text\\\":\\\"\"\n               label\n               \"\\\"},\\\"billboard\\\":{\\\"image\\\":\\\"\"\n               img-url\n               \"\\\"},\\\"position\\\":{\\\"cartographicDegrees\\\":[\"\n               lon\n               \", \"\n               lat\n               \", \"\n               alt\n               \"]}}\")]\n    (send-event \"czml\" p))")
+	(title "location [label lab-scl img-url lat lon alt span-sec]"))
 
 ([ProServer_Class120016] of  CloFunction
 
@@ -594,6 +595,11 @@
 ([ProServer_Class210016] of  CloFuncall
 
 	(source "(cesium.core/location \"Burnev Island 5\" \"img/yachtr.png\" 44.1280 -68.734 20)"))
+
+([ProServer_Class220000] of  CloFunction
+
+	(source "(let [min-scl 0.25\n       scl (+ min-scl (* (- 1 min-scl) (- 1 (/ dist max-dist))))]\n  (location txt scl \"img/arrdn.png\" lat lon 300 30))")
+	(title "point-out [txt [lat lon] dist max-dist]"))
 
 ([ProServer_Class220001] of  CloFuncall
 

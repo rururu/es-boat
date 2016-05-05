@@ -57,7 +57,7 @@
 (defn doc []
   (str "{\"id\":\"document\",\"version\":\"1.0\",\"clock\":{\"currentTime\":\"" (iso8601curt) "\"}}"))
 
-(defn location [label img-url lat lon alt span-sec]
+(defn location [label lab-scl img-url lat lon alt span-sec]
   (when DOC-SND
     (send-event "czml" (doc))
     (def DOC-SND false))
@@ -65,7 +65,9 @@
                label
                "\",\"availability\":\""
                (iso8601curt) "/" (iso8601futt span-sec)
-               "\",\"label\":{\"scale\":0.75,\"pixelOffset\":{\"cartesian2\":[8, -8]},\"text\":\""
+               "\",\"label\":{\"scale\":" 
+               lab-scl
+               " ,\"pixelOffset\":{\"cartesian2\":[8, -8]},\"text\":\""
                label
                "\"},\"billboard\":{\"image\":\""
                img-url
@@ -110,4 +112,9 @@
                alt2
                "]}}")]
     (send-event "czml" p)))
+
+(defn point-out [txt [lat lon] dist max-dist]
+  (let [min-scl 0.25
+       scl (+ min-scl (* (- 1 min-scl) (- 1 (/ dist max-dist))))]
+  (location txt scl "img/arrdn.png" lat lon 300 30)))
 
