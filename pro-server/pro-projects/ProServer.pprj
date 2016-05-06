@@ -1,4 +1,4 @@
-; Thu May 05 22:42:40 MSK 2016
+; Fri May 06 16:16:25 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -12,6 +12,7 @@
 	(height 100)
 	(is_hidden FALSE)
 	(name ":ANNOTATION-TEXT")
+	(property_list [ProServer_ProjectKB_Class442])
 	(widget_class_name "edu.stanford.smi.protege.widget.YellowStickyWidget")
 	(width 200)
 	(x 0)
@@ -20,11 +21,12 @@
 ([BROWSER_SLOT_NAMES] of  Property_List
 
 	(properties
-		[ProServer_ProjectKB_Class444]
-		[ProServer_ProjectKB_Class445]
-		[ProServer_ProjectKB_Class446]
-		[ProServer_ProjectKB_Class447]
-		[ProServer_ProjectKB_Class448]))
+		[ProServer_ProjectKB_Class437]
+		[ProServer_ProjectKB_Class438]
+		[ProServer_ProjectKB_Class439]
+		[ProServer_ProjectKB_Class440]
+		[ProServer_ProjectKB_Class10441]
+		[ProServer_ProjectKB_Class10442]))
 
 ([CLSES_TAB] of  Widget
 
@@ -61,12 +63,41 @@
 		[ANNOTATED_INSTANCE_WIDGET]
 		[CREATOR_WIDGET]
 		[CREATION_TIMESTAMP_WIDGET]
-		[ANNOTATION_TEXT_WIDGET]))
+		[ANNOTATION_TEXT_WIDGET]
+		[ProServer_ProjectKB_Class441]))
 
 ([INSTANCES_TAB] of  Widget
 
 	(is_hidden FALSE)
 	(widget_class_name "edu.stanford.smi.protege.widget.InstancesTab"))
+
+([KB_148195_Class433] of  Map
+
+	(entries
+		[KB_148195_Class434]
+		[KB_148195_Class435]
+		[KB_148195_Class436]))
+
+([KB_148195_Class434] of  Map_Entry
+
+	(key "suppress_instance_counting")
+	(key_class "java.lang.String")
+	(value "false")
+	(value_class "java.lang.String"))
+
+([KB_148195_Class435] of  Map_Entry
+
+	(key "add_name_on_instance_form")
+	(key_class "java.lang.String")
+	(value "false")
+	(value_class "java.lang.String"))
+
+([KB_148195_Class436] of  Map_Entry
+
+	(key "change_tracking_active")
+	(key_class "java.lang.String")
+	(value "false")
+	(value_class "java.lang.String"))
 
 ([KB_293772_Class306] of  Widget
 
@@ -161,7 +192,9 @@
 	(string_value "edu.stanford.smi.protege.storage.clips.ClipsKnowledgeBaseFactory"))
 
 ([KB_519390_Class1] of  Map
-)
+
+	(entries [ProServer_ProjectKB_Class10445])
+	(referenced_maps [ProServer_ProjectKB_Class10443]))
 
 ([KB_519390_Class11] of  Property_List
 
@@ -254,34 +287,6 @@
 
 	(name "instances_file_name")
 	(string_value "ProServer.pins"))
-
-([KB_773145_Class430] of  Map
-
-	(entries
-		[KB_773145_Class431]
-		[KB_773145_Class432]
-		[KB_773145_Class433]))
-
-([KB_773145_Class431] of  Map_Entry
-
-	(key "suppress_instance_counting")
-	(key_class "java.lang.String")
-	(value "false")
-	(value_class "java.lang.String"))
-
-([KB_773145_Class432] of  Map_Entry
-
-	(key "add_name_on_instance_form")
-	(key_class "java.lang.String")
-	(value "false")
-	(value_class "java.lang.String"))
-
-([KB_773145_Class433] of  Map_Entry
-
-	(key "change_tracking_active")
-	(key_class "java.lang.String")
-	(value "false")
-	(value_class "java.lang.String"))
 
 ([LAYOUT_PROPERTIES] of  Property_List
 
@@ -395,6 +400,34 @@
 		[ProServer_ProjectKB_Class347]
 		[ProServer_ProjectKB_Class349]))
 
+([ProServer_ProjectKB_Class10441] of  String
+
+	(name "StartPoint")
+	(string_value "title"))
+
+([ProServer_ProjectKB_Class10442] of  String
+
+	(name "OSMData")
+	(string_value "{OSMData+}volume{+}coord{+rad+}radius{+}time"))
+
+([ProServer_ProjectKB_Class10443] of  Map
+
+	(entries [ProServer_ProjectKB_Class10444]))
+
+([ProServer_ProjectKB_Class10444] of  Map_Entry
+
+	(key "ProServer_Class240001")
+	(key_class "edu.stanford.smi.protege.model.Frame")
+	(value "8 227 210 132")
+	(value_class "java.awt.Rectangle"))
+
+([ProServer_ProjectKB_Class10445] of  Map_Entry
+
+	(key "InstanceDisplay.yellow_stickies")
+	(key_class "java.lang.String")
+	(value "ProServer_ProjectKB_Class10443")
+	(value_class "java.util.Map"))
+
 ([ProServer_ProjectKB_Class345] of  Widget
 
 	(is_hidden TRUE)
@@ -435,30 +468,32 @@
 ([ProServer_ProjectKB_Class352] of  Property_List
 )
 
-([ProServer_ProjectKB_Class444] of  String
+([ProServer_ProjectKB_Class437] of  String
 
 	(name "Rule")
 	(string_value "title{+}salience"))
 
-([ProServer_ProjectKB_Class445] of  String
+([ProServer_ProjectKB_Class438] of  String
 
 	(name "Answer")
 	(string_value "{Answer+}accum{+}time"))
 
-([ProServer_ProjectKB_Class446] of  String
+([ProServer_ProjectKB_Class439] of  String
 
 	(name "NearbyIslands")
 	(string_value "{NearbyIslands}list{+}time"))
 
-([ProServer_ProjectKB_Class447] of  String
+([ProServer_ProjectKB_Class440] of  String
 
 	(name "Question")
 	(string_value "predicate{+}subject{+}object"))
 
-([ProServer_ProjectKB_Class448] of  String
+([ProServer_ProjectKB_Class441] of  Property_List
 
-	(name "OSMData")
-	(string_value "{OSMData+}volume{+}coord{+rad+}radius{+}time"))
+	(name "layout properties"))
+
+([ProServer_ProjectKB_Class442] of  Property_List
+)
 
 ([QUERIES_TAB] of  Widget
 

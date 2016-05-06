@@ -1,4 +1,4 @@
-; Thu May 05 22:42:40 MSK 2016
+; Fri May 06 16:16:25 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -196,4 +196,15 @@
 		(create-accessor read-write))
 	(multislot accum
 		(type STRING)
+		(create-accessor read-write)))
+
+(defclass StartPoint
+	(is-a Advisor+Skipper)
+	(role concrete)
+	(single-slot title
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(multislot coord
+		(type FLOAT)
 		(create-accessor read-write)))

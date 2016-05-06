@@ -126,9 +126,13 @@
                 (:pitch @camera))
         roll (:roll @camera)
         head (norm-crs (condp = (:view @camera)
-                         "BACKWARD" (+ crs 180)
-                         "RIGHT" (+ crs 90)
-                         "LEFT" (- crs 90)
+                         "ASTERN" (+ crs 180)
+                         "STARBOARD" (+ crs 90)
+                         "PORT" (- crs 90)
+                         "STAR-BOW" (+ crs 45)
+                         "PORT-BOW" (- crs 45)
+                         "STAR-ABAFT" (+ crs 135)
+                         "PORT-ABAFT" (- crs 135)
                          crs))]
     (fly-control lat lon alt head pitch roll per)))
 
@@ -239,10 +243,14 @@
 (defn camera-control []
   (set-html! "view" "view")
   (set-html! "view-fld" "<select onchange='javascript:view3d.core.view(this.value)' style='width:96px'>
-             <option value='FORWARD'>FORWARD</option>
-             <option value='BACKWARD'>BACKWARD</option>
-             <option value='RIGHT'>RIGHT</option>
-             <option value='LEFT'>LEFT</option>
+             <option value='AHEAD'>AHEAD</option>
+             <option value='STAR-BOW'>STAR-BOW</option>
+             <option value='PORT-BOW'>PORT-BOW</option>
+             <option value='STARBOARD'>STARBOARD</option>
+             <option value='PORT'>PORT</option>
+             <option value='STAR-ABAFT'>STAR-ABAFT</option>
+             <option value='PORT-ABAFT'>PORT-ABAFT</option>
+             <option value='ASTERN'>ASTERN</option>
              <option value='UP'>UP</option>
              <option value='DOWN'>DOWN</option>
              </select>")

@@ -1,5 +1,5 @@
 (ns pro.server
-(:import java.io.ByteArrayOutputStream)
+(:use protege.core)
 (:require [ring.adapter.jetty :as jetty]
               [ring.util.response :as r]
               [compojure.core :refer [defroutes GET]]
@@ -9,7 +9,8 @@
               [clojure.core.async :as async :refer [chan alts!! put! <! <!! go timeout]]
               [boat.mov :as bm]
               [cesium.core :as cz]
-              [rete.core :as rete]))
+              [rete.core :as rete])
+(:import java.io.ByteArrayOutputStream))
 
 (def ROOT (str (System/getProperty "user.dir") "/resources/public/"))
 (def EVT-CHN (chan))
@@ -18,7 +19,6 @@
 (def APP nil)
 (def SERV nil)
 (def BOAT (volatile! {:id "b1"}))
-(def MAP-CENTER [44.124 -68.736])
 (defn index-page []
   (slurp (str ROOT "index.html")))
 
@@ -46,6 +46,13 @@
   (-> (r/response (write-transit (deref (future (pump-out EVT-CHN)))))
        (r/header "Access-Control-Allow-Origin" "*")))
 
+(defn pump-in-mvr []
+  (if (:chart @BOAT)
+    (pump-in-evt 
+      {:event :boat-maneuver
+       :id (:id @BOAT) 
+       :data @BOAT})))
+
 (defn maneuver [params]
   (println [:COMMAND params])
 (let [crd (:coord params)
@@ -56,11 +63,7 @@
 	:turn-coord crd
 	:course (:course params)
 	:speed (:speed params))
-  (if (:chart @BOAT)
-    (pump-in-evt 
-      {:event :boat-maneuver
-       :id (:id @BOAT) 
-       :data @BOAT})))
+  (pump-in-mvr))
 {:status 204})
 
 (defn answer []
@@ -87,9 +90,18 @@
   (rete/fire)
   {:status 204}))
 
+(defn map-center []
+  (if-let [ins (fainst (cls-instances "StartPoint") nil)]
+  (vec (svs ins "coord"))
+  (do (println "Annotated instance of StartPoint not found!")
+    [44.124 -68.736])))
+
 (defn chart-connect []
   (println "Chart client connected..")
-(vswap! BOAT assoc :chart true)
+(vswap! BOAT assoc 
+	:chart true
+	:coord (map-center)
+	:course 0)
 (pump-in-evt 
   {:event :boat-add 
    :id (:id @BOAT) 
@@ -97,12 +109,16 @@
 ;;(pump-in-evt 
 ;;  {:event :boat-follow
 ;;   :id (:id @BOAT)})
-MAP-CENTER)
+(go (while (:chart @BOAT)
+           (pump-in-mvr)
+           (println [:BOAT @BOAT])
+           (<! (timeout 120000))))
+(map-center))
 
 (defn init-server []
   (defroutes app-routes
   (GET "/" [] (index-page))
-  (GET "/map-center/" [] (write-transit MAP-CENTER))
+  (GET "/map-center/" [] (write-transit (map-center)))
   (GET "/chart/" [] (write-transit (chart-connect)))
   (GET "/question/" [& params] (question params))
   (GET "/answer/" [] (answer))

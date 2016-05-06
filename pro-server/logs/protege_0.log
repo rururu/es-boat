@@ -485,3 +485,39 @@
 2016.05.05 22:05:30.001 MSK INFO: *** SYSTEM START ***
 2016.05.05 22:05:32.599 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
 2016.05.05 22:05:34.376 MSK INFO: Load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 1 sec (ui) -- ProjectManager$3.run()
+2016.05.06 11:12:41.608 MSK INFO: *** SYSTEM START ***
+2016.05.06 11:12:41.626 MSK WARNING: Look and feel not found: com.apple.laf.AquaLookAndFeel -- SystemUtilities.setLookAndFeel()
+2016.05.06 11:12:42.188 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.05.06 11:12:43.512 MSK INFO: Load time for file:/home/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.05.06 11:33:52.092 MSK INFO: *** SYSTEM START ***
+2016.05.06 11:33:52.101 MSK WARNING: Look and feel not found: com.apple.laf.AquaLookAndFeel -- SystemUtilities.setLookAndFeel()
+2016.05.06 11:33:52.320 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.05.06 11:33:53.268 MSK INFO: Load time for file:/home/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.05.06 14:07:01.739 MSK INFO: *** SYSTEM START ***
+2016.05.06 14:07:01.746 MSK WARNING: Look and feel not found: com.apple.laf.AquaLookAndFeel -- SystemUtilities.setLookAndFeel()
+2016.05.06 14:07:02.014 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.05.06 14:07:02.989 MSK INFO: Load time for file:/home/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.05.06 15:33:36.055 MSK INFO: *** SYSTEM START ***
+2016.05.06 15:33:36.062 MSK WARNING: Look and feel not found: com.apple.laf.AquaLookAndFeel -- SystemUtilities.setLookAndFeel()
+2016.05.06 15:33:36.273 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.05.06 15:33:37.262 MSK INFO: Load time for file:/home/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.05.06 15:53:29.516 MSK INFO: *** SYSTEM START ***
+2016.05.06 15:53:29.522 MSK WARNING: Look and feel not found: com.apple.laf.AquaLookAndFeel -- SystemUtilities.setLookAndFeel()
+2016.05.06 15:53:29.772 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.05.06 15:53:30.694 MSK INFO: Load time for file:/home/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.05.06 15:54:38.252 MSK INFO: *** SYSTEM START ***
+2016.05.06 15:54:38.258 MSK WARNING: Look and feel not found: com.apple.laf.AquaLookAndFeel -- SystemUtilities.setLookAndFeel()
+2016.05.06 15:54:38.515 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.05.06 15:54:39.466 MSK INFO: Load time for file:/home/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.05.06 15:57:20.272 MSK INFO: *** SYSTEM START ***
+2016.05.06 15:57:20.278 MSK WARNING: Look and feel not found: com.apple.laf.AquaLookAndFeel -- SystemUtilities.setLookAndFeel()
+2016.05.06 15:57:20.512 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.05.06 15:57:21.412 MSK INFO: Load time for file:/home/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.05.06 15:59:01.745 MSK INFO: *** SYSTEM START ***
+2016.05.06 15:59:01.750 MSK WARNING: Look and feel not found: com.apple.laf.AquaLookAndFeel -- SystemUtilities.setLookAndFeel()
+2016.05.06 15:59:02.009 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.05.06 15:59:02.930 MSK INFO: Load time for file:/home/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.05.06 16:12:19.671 MSK INFO: *** SYSTEM START ***
+2016.05.06 16:12:19.676 MSK WARNING: Look and feel not found: com.apple.laf.AquaLookAndFeel -- SystemUtilities.setLookAndFeel()
+2016.05.06 16:12:19.920 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.05.06 16:12:20.845 MSK INFO: Load time for file:/home/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()

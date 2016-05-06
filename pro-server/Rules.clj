@@ -16,13 +16,40 @@
 (pro.server/pump-in-ans (as/ans-islands @?acc ?sub))
 (retract ?q))
 
+(as:IslandsBefore 0
+?a (Answer accum ?acc)
+(Question predicate "what-is"
+	subject "before the island"
+	object ?tit1)
+(Island sector ?sec
+	title ?tit1
+	polar ?pol1)
+(Island sector ?sec
+	title ?tit2
+	polar ?pol2
+	(> (second ?pol1)
+	    (second ?pol2)))
+=>
+(vswap! ?acc conj [?tit2 (second ?pol2)]))
+
+(as:AnswerIslandsBefore -1
+(Answer accum ?acc)
+?q (Question predicate "what-is"
+	subject "before the island"
+	object ?tit)
+=>
+(let [sub (str "before the island " ?tit)]
+  (pro.server/pump-in-ans (as/ans-islands @?acc sub))
+  (retract ?q)))
+
 (as:UpdatePolarCoord 1
 ?i (Island coord ?ico
 	time ?tim1)
 (Question coord ?bco
 	course ?crs
 	time ?tim2
-	(> ?tim2 ?tim1))
+	((vector? ?bco)
+	 (> ?tim2 ?tim1)))
 =>
 (let [bea (geo.calc/bear-deg ?bco ?ico)
        dis (geo.calc/distance-nm ?bco ?ico)
@@ -105,15 +132,7 @@
 (Answer accum ?acc)
 ?q (Question predicate "what-is"
 	subject "behind the island"
-	object ?tit1)
-(Island sector ?sec
-	title ?tit1
-	polar ?pol1)
-(Island sector ?sec
-	title ?tit2
-	polar ?pol2
-	(< (second ?pol1)
-	    (second ?pol2)))
+	object ?tit)
 =>
 (let [sub (str "behind the island " ?tit)]
   (pro.server/pump-in-ans (as/ans-islands @?acc sub))
@@ -126,6 +145,46 @@
 =>
 (retract ?b))
 
+(as:AnswerNearbyIslands -1
+(Answer accum ?acc)
+?q (Question predicate "nearby-islands")
+=>
+(pro.server/pump-in-ans (sort @?acc))
+(retract ?q))
+
+(as:NearbyIslands 0
+?a (Answer accum ?acc)
+(Question predicate "nearby-islands")
+(Island title ?tit)
+=>
+(vswap! ?acc conj ?tit))
+
+(as:WhereIsIsland 0
+(OSMData radius ?rad)
+?q (Question predicate "where-is"
+	subject "island"
+	object ?tit)
+(Island sector ?sec
+	title ?tit
+	side ?sid
+	polar ?pol
+	coord ?crd)
+=>
+(let [[bea dis] ?pol
+       sid (condp = ?sid
+               "AHEAD"          "ahead"
+               "STAR-BOW"    "on the starboard bow"
+               "STAR-BEAM"   "on the starboard beam"
+               "STAR-ABAFT" "abaft the starboard beam"
+               "ASTERN"         "astern"
+               "PORT-ABAFT" "abaft the port beam"
+               "PORT-BEAM"  "on the port beam"
+               "PORT-BOW"   "on the port bow")
+       ans (str ?tit " is in " (format "%.1f miles" dis) " " sid)]
+  (pro.server/pump-in-ans ans)
+  (cesium.core/point-out ?tit ?crd dis ?rad))
+(retract ?q))
+
 (as:WhatIsPortAbaft 0
 ?a (Answer accum ?acc)
 (Question predicate "what-is"
@@ -134,6 +193,22 @@
 	polar ?pol)
 =>
 (vswap! ?acc conj [?tit (second ?pol)]))
+
+(as:IslandsBehind 0
+?a (Answer accum ?acc)
+(Question predicate "what-is"
+	subject "behind the island"
+	object ?tit1)
+(Island sector ?sec
+	title ?tit1
+	polar ?pol1)
+(Island sector ?sec
+	title ?tit2
+	polar ?pol2
+	(< (second ?pol1)
+	    (second ?pol2)))
+=>
+(vswap! ?acc conj [?tit2 (second ?pol2)]))
 
 (as:InitAnswer 1
 ?a (Answer time ?tim1)
@@ -152,7 +227,9 @@
 	time ?tim2
 	((> ?tim2 ?tim1)
 	 [(= ?vol 0)
-	  (osm.data/obsolete ?crd1 ?crd2)]))
+	  ((vector? ?crd1)
+                           (vector? ?crd2) 
+ 	   (osm.data/obsolete ?crd1 ?crd2))]))
 =>
 (let [osm (osm.data/get-osm-data ?crd2 ?rad)
        cnt (count osm)]
@@ -168,6 +245,7 @@
 (OSMData volume ?vol 
 	time ?tim2
 	((> ?vol 0)
+	 (vector? ?bco)
 	 (> ?tim2 ?tim1)))
 =>
 (let [ii (osm.data/filter-kv "place" "island" @osm.data/DATA)
@@ -186,19 +264,4 @@
 	sector sec
 	side sid
 	time ?tim2)))))
-
-(as:AnswerNearbyIslands -1
-(Answer accum ?acc)
-?q (Question predicate "nearby-islands")
-=>
-(println [:ACC @?acc])
-(pro.server/pump-in-ans @?acc)
-(retract ?q))
-
-(as:NearbyIslands 0
-?a (Answer accum ?acc)
-(Question predicate "nearby-islands")
-(Island title ?tit)
-=>
-(vswap! ?acc conj ?tit))
 

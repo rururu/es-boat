@@ -5,3 +5,15 @@
 (exit)
 (-main)
 (exit)
+(-main)
+(in-ns 'cesium.core)
+DOC-SND
+(def DOC-SND true)
+DOC-SND
+(def DOC-SND true)
+DOC-SND
+(-main)
+DOC-SND
+(in-ns 'cesium.core)
+DOC-SND
+(-main)
