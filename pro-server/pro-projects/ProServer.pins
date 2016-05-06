@@ -1,4 +1,4 @@
-; Fri May 06 16:16:25 MSK 2016
+; Fri May 06 23:06:07 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -142,6 +142,17 @@
 	(source "(let [etim (+ (:time-from-turn bdt) BOAT-TIO)\n       ehrs (/ etim 36000000)]\n  (assoc bdt :coord (geo/future-pos (:turn-coord bdt) (:course bdt) (:speed bdt) ehrs)\n                    :time-from-turn etim))")
 	(title "move [bdt]"))
 
+([ProServer_Class110000] of  StartPoint
+
+	(coord 62.4444 5.88)
+	(title "Geiranger Entrance"))
+
+([ProServer_Class110001] of  %3AINSTANCE-ANNOTATION
+
+	(%3AANNOTATED-INSTANCE [ProServer_Class110000])
+	(%3ACREATION-TIMESTAMP "2016.05.06 22:32:35.365 MSK")
+	(%3ACREATOR "ru"))
+
 ([ProServer_Class110002] of  Rule
 
 	(lhs "?a (Answer accum ?acc)\n(Question predicate \"what-is\"\n	subject \"before the island\"\n	object ?tit1)\n(Island sector ?sec\n	title ?tit1\n	polar ?pol1)\n(Island sector ?sec\n	title ?tit2\n	polar ?pol2\n	(> (second ?pol1)\n	    (second ?pol2)))")
@@ -158,7 +169,7 @@
 
 ([ProServer_Class110004] of  CloFunction
 
-	(source "(println \"Chart client connected..\")\n(vswap! BOAT assoc \n	:chart true\n	:coord (map-center)\n	:course 0)\n(pump-in-evt \n  {:event :boat-add \n   :id (:id @BOAT) \n   :data @BOAT})\n;;(pump-in-evt \n;;  {:event :boat-follow\n;;   :id (:id @BOAT)})\n(go (while (:chart @BOAT)\n           (pump-in-mvr)\n           (println [:BOAT @BOAT])\n           (<! (timeout 120000))))\n(map-center)")
+	(source "(println \"Chart client connected..\")\n(vswap! BOAT assoc \n	:chart true\n	:coord (map-center)\n	:course 0)\n(pump-in-evt \n  {:event :boat-add \n   :id (:id @BOAT) \n   :data @BOAT})\n;;(pump-in-evt \n;;  {:event :boat-follow\n;;   :id (:id @BOAT)})\n(map-center)")
 	(title "chart-connect []"))
 
 ([ProServer_Class120000] of  CloProgram
@@ -622,12 +633,6 @@
 
 	(source "(if-let [ins (fainst (cls-instances \"StartPoint\") nil)]\n  (vec (svs ins \"coord\"))\n  (do (println \"Annotated instance of StartPoint not found!\")\n    [44.124 -68.736]))")
 	(title "map-center []"))
-
-([ProServer_Class240001] of  %3AINSTANCE-ANNOTATION
-
-	(%3AANNOTATED-INSTANCE [ProServer_Class230002])
-	(%3ACREATION-TIMESTAMP "2016.05.06 15:38:38.582 MSK")
-	(%3ACREATOR "ru"))
 
 ([ProServer_Class240002] of  CloFuncall
 

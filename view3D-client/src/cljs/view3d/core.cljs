@@ -15,6 +15,7 @@
 
 (def PID180 (/ Math.PI 180)) ;; 1 degree in radians
 (def BOAT-TIO 1000) ;; boat movement timeout interval (1 sec)
+(def BOAT-SRV 120000) ;; boat to server every 2 min
 (def CRS-NOR 250) ;; turn 4 degrees per second
 (def CRS-HRD 100) ;; turn 10 degrees per second
 (def SPD-STP 0.5) ;; boost 0.5 knots per second
@@ -438,6 +439,7 @@
       (println [:CAMERA camera])
       (println [:BOAT boat])
       (repeater #(boat-move) BOAT-TIO)
+      (repeater #(boat-to-server) BOAT-SRV)
       (repeater #(camera-work) CAM-TIO)
       (questionnaire))
     (js/alert "No map center from server!")))

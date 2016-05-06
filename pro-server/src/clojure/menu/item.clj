@@ -15,7 +15,7 @@
 (ClojureTab/invoke "ru.rules" "run-engine" "AS Run")
 (println "3.Starting server...")
 (ClojureTab/invoke "pro.server" "start-server")
-(ClojureTab/invoke "pro.server" "map-center")
+(println (str "StartPoint: " (ClojureTab/invoke "pro.server" "map-center")))
 (println "4.Opening 3DView in a browser...")
 (ClojureTab/invoke  "pro.server" "view3D-in-browser")
 (println "EXPERT SYSTEM INITIALIZED"))
