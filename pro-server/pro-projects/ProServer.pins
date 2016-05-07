@@ -1,4 +1,4 @@
-; Fri May 06 23:06:07 MSK 2016
+; Sat May 07 23:08:35 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -432,7 +432,7 @@
 	(templates
 		[OSMData]
 		[Island]
-		[NearbyIslands]
+		[NearbyObjects]
 		[Question]
 		[Answer])
 	(title "AdvisorSkipper"))
@@ -570,54 +570,10 @@
 
 	(source "(cesium.core/location \"BURNEV island\" \"img/yachtr.png\" 44.1280 -68.7310 20)"))
 
-([ProServer_Class210009] of  CloFuncall
-
-	(source "(cesium.core/location \"BURNEV island\" \"img/yachtr.png\" 44.1280 -68.7210 20)"))
-
-([ProServer_Class210010] of  CloFuncall
-
-	(source "cesium.core/DOC-SND"))
-
-([ProServer_Class210011] of  CloFuncall
-
-	(source "(cesium.core/location \"b444\" \"img/yachtr.png\" 44.1280 -68.7360 120)"))
-
-([ProServer_Class210012] of  CloFuncall
-
-	(source "(cesium.core/location \"Burnev Island\" \"img/yachtr.png\" 44.1280 -68.7310 120)"))
-
-([ProServer_Class210013] of  CloFuncall
-
-	(source "(cesium.core/location \"Burnev Island 2\" \"img/yachtr.png\" 44.1280 -68.7350 120)"))
-
-([ProServer_Class210014] of  CloFuncall
-
-	(source "(cesium.core/location \"Burnev Island 3\" \"img/yachtr.png\" 44.1280 -68.7350 20)"))
-
-([ProServer_Class210015] of  CloFuncall
-
-	(source "(cesium.core/location \"Burnev Island 4\" \"img/yachtr.png\" 44.1280 -68.7354 20)"))
-
-([ProServer_Class210016] of  CloFuncall
-
-	(source "(cesium.core/location \"Burnev Island 5\" \"img/yachtr.png\" 44.1280 -68.734 20)"))
-
 ([ProServer_Class220000] of  CloFunction
 
 	(source "(let [min-scl 0.25\n       scl (+ min-scl (* (- 1 min-scl) (- 1 (/ dist max-dist))))]\n  (location txt scl \"img/arrdn.png\" lat lon 100 40))")
 	(title "point-out [txt [lat lon] dist max-dist]"))
-
-([ProServer_Class220001] of  CloFuncall
-
-	(source "(ru.rules/sp :all)"))
-
-([ProServer_Class220002] of  CloFuncall
-
-	(source "(ru.rules/f 249)"))
-
-([ProServer_Class220003] of  CloFuncall
-
-	(source "(ru.rules/f 250)"))
 
 ([ProServer_Class230000] of  CloFunction
 
@@ -634,9 +590,81 @@
 	(source "(if-let [ins (fainst (cls-instances \"StartPoint\") nil)]\n  (vec (svs ins \"coord\"))\n  (do (println \"Annotated instance of StartPoint not found!\")\n    [44.124 -68.736]))")
 	(title "map-center []"))
 
-([ProServer_Class240002] of  CloFuncall
+([ProServer_Class250000] of  CloFuncall
 
-	(source "(ru.rules/dr)"))
+	(source "(in-ns 'osm.data)"))
+
+([ProServer_Class250001] of  CloFuncall
+
+	(source "(tags @DATA)"))
+
+([ProServer_Class250002] of  CloFuncall
+
+	(source "(map println (tags @DATA))"))
+
+([ProServer_Class250003] of  CloFuncall
+
+	(source "(tag-tags-namcor \"place\")"))
+
+([ProServer_Class250004] of  CloFuncall
+
+	(source "(filter-k \"place\" @DATA)"))
+
+([ProServer_Class250005] of  CloFuncall
+
+	(source "(filter-k? \"place\" @DATA)"))
+
+([ProServer_Class250006] of  CloFuncall
+
+	(source "(filter-k? \"name\" @DATA)"))
+
+([ProServer_Class250007] of  CloFuncall
+
+	(source "(map println (filter-k? \"name\" @DATA))"))
+
+([ProServer_Class250008] of  CloFuncall
+
+	(source "(do (map println (filter-k? \"name\" @DATA)) 1)"))
+
+([ProServer_Class250009] of  CloFuncall
+
+	(source "(doseq [e (filter-k? \"name\" @DATA)] (println e))"))
+
+([ProServer_Class250010] of  CloFuncall
+
+	(source "(doseq [e (filter-k? \"name\" @DATA)] (ctpl e))"))
+
+([ProServer_Class250011] of  CloFuncall
+
+	(source "(doseq [e (filter-k? \"name\" @DATA)] (protege.core/ctpl e))"))
+
+([ProServer_Class250012] of  CloFuncall
+
+	(source "(def x (filter-k? \"name\" @DATA))"))
+
+([ProServer_Class250013] of  CloFuncall
+
+	(source "(nth x 0)"))
+
+([ProServer_Class250014] of  CloFuncall
+
+	(source "(nth x 6)"))
+
+([ProServer_Class250015] of  CloFuncall
+
+	(source "(nth x 7)"))
+
+([ProServer_Class250016] of  CloFuncall
+
+	(source "(get (nth x 7) \"name\")"))
+
+([ProServer_Class250017] of  CloFuncall
+
+	(source "(set (keys (nth x 7)))"))
+
+([ProServer_Class250018] of  CloFuncall
+
+	(source "(filter #(not (.startsWith % \"seamark\")) (set (keys (nth x 7))))"))
 
 ([ProServer_Class3] of  WorkingPrograms
 
@@ -814,7 +842,7 @@
 	(source "(let [knots (max (min knots SPD-MAX) SPD-MIN)]\n  (vswap! BOATS assoc-in [id :engine] knots))")
 	(title "boat-engine [id knots]"))
 
-([ProServer_Class60002] of  NearbyIslands
+([ProServer_Class60002] of  NearbyObjects
 
 	(time 0))
 

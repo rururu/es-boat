@@ -160,4 +160,12 @@
   z-index:100;
   color:yellow
 }
+#display2 {
+  position:fixed;
+  top:200px;
+  left:60px;
+  padding:5px;
+  z-index:100;
+  color:yellow
+}
 

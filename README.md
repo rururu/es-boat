@@ -20,7 +20,7 @@ This starts a script that loads needed programs, starts expert system and opens 
 
 You can open a nautical chart in another browser window on the address http://localhost:4444/chart.html.
 
-For now expert system answer questions only about nearby islands. Stay tuned.
+For now expert system answer questions only about nearby islands and shows them on the HUD. Stay tuned.
 
 Copyright and license
 ----

@@ -35835,7 +35835,6 @@ view3d.core.selector1 = function(a, b, c) {
 };
 view3d.core.function1 = null;
 view3d.core.handler1 = function(a) {
-  view3d.core.set_html_BANG_.call(null, "display", "");
   return view3d.core.function1.call(null, a);
 };
 view3d.core.selector2 = function(a, b, c) {
@@ -35845,7 +35844,6 @@ view3d.core.selector2 = function(a, b, c) {
 };
 view3d.core.function2 = null;
 view3d.core.handler2 = function(a) {
-  view3d.core.set_html_BANG_.call(null, "display", "");
   return view3d.core.function2.call(null, a);
 };
 view3d.core.selector3 = function(a, b, c) {
@@ -35854,10 +35852,10 @@ view3d.core.selector3 = function(a, b, c) {
 };
 view3d.core.function3 = null;
 view3d.core.handler3 = function(a) {
-  view3d.core.set_html_BANG_.call(null, "display", "");
   return view3d.core.function3.call(null, a);
 };
 view3d.core.display_answer = function(a) {
+  view3d.core.set_html_BANG_.call(null, "display2", view3d.core.get_html.call(null, "display"));
   return view3d.core.set_html_BANG_.call(null, "display", a);
 };
 view3d.core.retrieve_answer = function() {

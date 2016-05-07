@@ -298,7 +298,6 @@
 (def function1 nil)
 
 (defn handler1 [selected]
-  (set-html! "display" "")
   (function1 selected))
 
 (defn selector2 [header lst typ]
@@ -312,7 +311,6 @@
 (def function2 nil)
 
 (defn handler2 [selected]
-  (set-html! "display" "")
   (function2 selected))
 
 (defn selector3 [header lst typ]
@@ -325,12 +323,12 @@
 (def function3 nil)
 
 (defn handler3 [selected]
-  (set-html! "display" "")
   (function3 selected))
 
 ;; ------------------------ Questionnaire -----------------------------
 
 (defn display-answer [answer]
+  (set-html! "display2" (get-html "display"))
   (set-html! "display" answer))
 
 (defn retrieve-answer []

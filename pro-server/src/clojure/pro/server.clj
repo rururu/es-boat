@@ -109,10 +109,6 @@
 ;;(pump-in-evt 
 ;;  {:event :boat-follow
 ;;   :id (:id @BOAT)})
-(go (while (:chart @BOAT)
-           (pump-in-mvr)
-           (println [:BOAT @BOAT])
-           (<! (timeout 120000))))
 (map-center))
 
 (defn init-server []

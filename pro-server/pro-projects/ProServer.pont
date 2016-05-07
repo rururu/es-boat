@@ -1,4 +1,4 @@
-; Fri May 06 23:06:07 MSK 2016
+; Sat May 07 23:08:35 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -12,6 +12,10 @@
 		(create-accessor read-write))
 	(single-slot course
 		(type INTEGER)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot amenity
+		(type STRING)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot radius
@@ -40,6 +44,10 @@
 		(type STRING)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
+	(single-slot natural
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
 	(single-slot subject-value
 		(type STRING)
 ;+		(cardinality 0 1)
@@ -50,6 +58,10 @@
 		(create-accessor read-write))
 	(single-slot sector
 		(type INTEGER)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot place
+		(type STRING)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot volume
@@ -68,12 +80,12 @@
 ;+		(cardinality 0 1)
 		(create-accessor read-write)))
 
-(defclass Islands
+(defclass Geo
 	(is-a USER)
 	(role abstract))
 
 (defclass Island
-	(is-a Islands)
+	(is-a Geo)
 	(role concrete)
 	(single-slot time
 		(type INTEGER)
@@ -98,8 +110,8 @@
 ;+		(cardinality 0 1)
 		(create-accessor read-write)))
 
-(defclass NearbyIslands
-	(is-a Islands)
+(defclass NearbyObjects
+	(is-a Geo)
 	(role concrete)
 	(single-slot time
 		(type INTEGER)
@@ -107,6 +119,33 @@
 		(create-accessor read-write))
 	(multislot list
 		(type STRING)
+		(create-accessor read-write)))
+
+(defclass NearbyIslands
+	(is-a NearbyObjects)
+	(role concrete))
+
+(defclass NamedObject
+	(is-a Geo)
+	(role concrete)
+	(single-slot title
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(multislot coord
+		(type FLOAT)
+		(create-accessor read-write))
+	(single-slot amenity
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot place
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot natural
+		(type STRING)
+;+		(cardinality 0 1)
 		(create-accessor read-write)))
 
 (defclass OSM+Onto

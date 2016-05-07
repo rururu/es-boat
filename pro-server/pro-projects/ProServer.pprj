@@ -1,4 +1,4 @@
-; Fri May 06 23:06:07 MSK 2016
+; Sat May 07 23:08:35 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -21,12 +21,12 @@
 ([BROWSER_SLOT_NAMES] of  Property_List
 
 	(properties
-		[ProServer_ProjectKB_Class20453]
-		[ProServer_ProjectKB_Class20454]
-		[ProServer_ProjectKB_Class20455]
-		[ProServer_ProjectKB_Class20456]
-		[ProServer_ProjectKB_Class20457]
-		[ProServer_ProjectKB_Class20458]))
+		[ProServer_ProjectKB_Class10446]
+		[ProServer_ProjectKB_Class10447]
+		[ProServer_ProjectKB_Class10448]
+		[ProServer_ProjectKB_Class10449]
+		[ProServer_ProjectKB_Class10450]
+		[ProServer_ProjectKB_Class10451]))
 
 ([CLSES_TAB] of  Widget
 
@@ -70,34 +70,6 @@
 
 	(is_hidden FALSE)
 	(widget_class_name "edu.stanford.smi.protege.widget.InstancesTab"))
-
-([KB_188604_Class433] of  Map
-
-	(entries
-		[KB_188604_Class434]
-		[KB_188604_Class435]
-		[KB_188604_Class436]))
-
-([KB_188604_Class434] of  Map_Entry
-
-	(key "suppress_instance_counting")
-	(key_class "java.lang.String")
-	(value "false")
-	(value_class "java.lang.String"))
-
-([KB_188604_Class435] of  Map_Entry
-
-	(key "add_name_on_instance_form")
-	(key_class "java.lang.String")
-	(value "false")
-	(value_class "java.lang.String"))
-
-([KB_188604_Class436] of  Map_Entry
-
-	(key "change_tracking_active")
-	(key_class "java.lang.String")
-	(value "false")
-	(value_class "java.lang.String"))
 
 ([KB_293772_Class306] of  Widget
 
@@ -193,8 +165,8 @@
 
 ([KB_519390_Class1] of  Map
 
-	(entries [ProServer_ProjectKB_Class20461])
-	(referenced_maps [ProServer_ProjectKB_Class20459]))
+	(entries [ProServer_ProjectKB_Class10454])
+	(referenced_maps [ProServer_ProjectKB_Class10452]))
 
 ([KB_519390_Class11] of  Property_List
 
@@ -287,6 +259,34 @@
 
 	(name "instances_file_name")
 	(string_value "ProServer.pins"))
+
+([KB_608630_Class433] of  Map
+
+	(entries
+		[KB_608630_Class434]
+		[KB_608630_Class435]
+		[KB_608630_Class436]))
+
+([KB_608630_Class434] of  Map_Entry
+
+	(key "suppress_instance_counting")
+	(key_class "java.lang.String")
+	(value "false")
+	(value_class "java.lang.String"))
+
+([KB_608630_Class435] of  Map_Entry
+
+	(key "add_name_on_instance_form")
+	(key_class "java.lang.String")
+	(value "false")
+	(value_class "java.lang.String"))
+
+([KB_608630_Class436] of  Map_Entry
+
+	(key "change_tracking_active")
+	(key_class "java.lang.String")
+	(value "false")
+	(value_class "java.lang.String"))
 
 ([LAYOUT_PROPERTIES] of  Property_List
 
@@ -400,52 +400,52 @@
 		[ProServer_ProjectKB_Class347]
 		[ProServer_ProjectKB_Class349]))
 
-([ProServer_ProjectKB_Class20453] of  String
+([ProServer_ProjectKB_Class10446] of  String
 
 	(name "Rule")
 	(string_value "title{+}salience"))
 
-([ProServer_ProjectKB_Class20454] of  String
+([ProServer_ProjectKB_Class10447] of  String
 
 	(name "Answer")
 	(string_value "{Answer+}accum{+}time"))
 
-([ProServer_ProjectKB_Class20455] of  String
-
-	(name "NearbyIslands")
-	(string_value "{NearbyIslands}list{+}time"))
-
-([ProServer_ProjectKB_Class20456] of  String
+([ProServer_ProjectKB_Class10448] of  String
 
 	(name "Question")
 	(string_value "predicate{+}subject{+}object"))
 
-([ProServer_ProjectKB_Class20457] of  String
+([ProServer_ProjectKB_Class10449] of  String
 
 	(name "StartPoint")
 	(string_value "title"))
 
-([ProServer_ProjectKB_Class20458] of  String
+([ProServer_ProjectKB_Class10450] of  String
+
+	(name "NearbyObjects")
+	(string_value "{NearbyIslands}list{+}time"))
+
+([ProServer_ProjectKB_Class10451] of  String
 
 	(name "OSMData")
 	(string_value "{OSMData+}volume{+}coord{+rad+}radius{+}time"))
 
-([ProServer_ProjectKB_Class20459] of  Map
+([ProServer_ProjectKB_Class10452] of  Map
 
-	(entries [ProServer_ProjectKB_Class20460]))
+	(entries [ProServer_ProjectKB_Class10453]))
 
-([ProServer_ProjectKB_Class20460] of  Map_Entry
+([ProServer_ProjectKB_Class10453] of  Map_Entry
 
 	(key "ProServer_Class110001")
 	(key_class "edu.stanford.smi.protege.model.Frame")
 	(value "-6 224 224 146")
 	(value_class "java.awt.Rectangle"))
 
-([ProServer_ProjectKB_Class20461] of  Map_Entry
+([ProServer_ProjectKB_Class10454] of  Map_Entry
 
 	(key "InstanceDisplay.yellow_stickies")
 	(key_class "java.lang.String")
-	(value "ProServer_ProjectKB_Class20459")
+	(value "ProServer_ProjectKB_Class10452")
 	(value_class "java.util.Map"))
 
 ([ProServer_ProjectKB_Class345] of  Widget
