@@ -1,4 +1,4 @@
-; Sat May 07 23:08:35 MSK 2016
+; Sun May 08 20:51:26 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -69,10 +69,6 @@
 	(rhs "(pro.server/pump-in-ans (as/ans-islands @?acc ?sub))\n(retract ?q)")
 	(salience -1)
 	(title "as:AnswerIslandsOnSide"))
-
-([ProServer_Class100006] of  CloFuncall
-
-	(source "(pro.server/start-server)"))
 
 ([ProServer_Class100008] of  CloNamespace
 
@@ -245,18 +241,6 @@
 	(source "(let [cld (Calendar/getInstance)\n       mil (.getTimeInMillis cld)\n       _ (.setTimeInMillis cld (+ mil (* sec 1000)))\n        yar (.get cld Calendar/YEAR )\n        mon (inc (.get cld Calendar/MONTH))\n        dat (.get cld Calendar/DATE)\n        hor (.get cld Calendar/HOUR_OF_DAY)\n        min (.get cld Calendar/MINUTE)\n        sec (.get cld Calendar/SECOND)]\n    (format \"%04d-%02d-%02dT%02d:%02d:%02dZ\" yar mon dat hor min sec))")
 	(title "iso8601futt [sec]"))
 
-([ProServer_Class130001] of  CloFuncall
-
-	(source "(location \"b2\" \"img/yachtr.png\" 44.1280 -68.7360 20 5)"))
-
-([ProServer_Class130002] of  CloFuncall
-
-	(source "(location \"b2\" \"img/yachtr.png\" 44.1280 -68.7360 20 10)"))
-
-([ProServer_Class140000] of  CloFuncall
-
-	(source "(pro.server/stop-server)"))
-
 ([ProServer_Class140002] of  CloFunction
 
 	(source "(println [:QUESTION pp])\n(let [frm ['Question\n	'predicate (:predicate pp)\n	'subject (:subject pp)\n	'subject-value (:subject-value pp)\n	'object (:object pp)\n	'object-value (:object-value pp)\n	'time (as/current-time)]\n       frm (if-let [crd (:coord pp)]\n                (concat frm\n	['coord [(read-string (get crd \"0\"))\n	            (read-string (get crd \"1\"))]\n	 'course (read-string (:course pp))\n	 'speed (read-string (:speed pp))])\n                frm)]\n  (rete/assert-frame frm)\n  (rete/fire)\n  {:status 204})")
@@ -343,6 +327,7 @@
 	(facts
 		[ProServer_Class50001]
 		[ProServer_Class60002]
+		[ProServer_Class260002]
 		[ProServer_Class80002])
 	(rule-sets [ProServer_Class160099])
 	(title "AS Run")
@@ -361,8 +346,9 @@
 		[ProServer_Class160044]
 		[ProServer_Class160045]
 		[ProServer_Class160043]
-		[ProServer_Class160046]
 		[ProServer_Class160062]
+		[ProServer_Class160046]
+		[ProServer_Class260004]
 		[ProServer_Class160068]
 		[ProServer_Class90013]
 		[ProServer_Class150015])
@@ -398,7 +384,7 @@
 ([ProServer_Class160062] of  CloFunction
 
 	(source "(filter #(some? (get % k)) data)")
-	(title "filter-k? [k data]"))
+	(title "filter-k [k data]"))
 
 ([ProServer_Class160068] of  CloFunction
 
@@ -409,7 +395,9 @@
 
 	(rules
 		[ProServer_Class160009]
+		[ProServer_Class260000]
 		[ProServer_Class90006]
+		[ProServer_Class260003]
 		[ProServer_Class90012]
 		[ProServer_Class150021]
 		[ProServer_Class80001]
@@ -431,8 +419,10 @@
 		[ProServer_Class110003])
 	(templates
 		[OSMData]
+		[NamedObject]
 		[Island]
 		[NearbyObjects]
+		[NearbyIslands]
 		[Question]
 		[Answer])
 	(title "AdvisorSkipper"))
@@ -448,10 +438,6 @@
 	(rhs "(let [sub (str \"behind the island \" ?tit)]\n  (pro.server/pump-in-ans (as/ans-islands @?acc sub))\n  (retract ?q))")
 	(salience -1)
 	(title "as:AnswerIslandsBehind"))
-
-([ProServer_Class190000] of  CloFuncall
-
-	(source "(cesium.core/location \"b2\" 44.1280 68.7360 20)"))
 
 ([ProServer_Class190001] of  Rule
 
@@ -469,38 +455,6 @@
 
 	(source "(get-in @BOATS [id :speed])")
 	(title "speed [id]"))
-
-([ProServer_Class200000] of  CloFuncall
-
-	(source "(cesium.core/start-sse-server)"))
-
-([ProServer_Class200001] of  CloFuncall
-
-	(source "(cesium.core/location \"b2\" \"img/yachtr.png\" 44.1280 68.7360 20)"))
-
-([ProServer_Class200002] of  CloFuncall
-
-	(source "(cesium.core/events)"))
-
-([ProServer_Class200003] of  CloFuncall
-
-	(source "@cesium.core/CAM"))
-
-([ProServer_Class200004] of  CloFuncall
-
-	(source "(vswap! cesium.core/CAM assoc :chan "))
-
-([ProServer_Class200005] of  CloFuncall
-
-	(source "(vswap! cesium.core/CAM assoc :chan (chan))"))
-
-([ProServer_Class200006] of  CloFuncall
-
-	(source "(vswap! cesium.core/CAM assoc :chan (async/chan))"))
-
-([ProServer_Class200007] of  CloFuncall
-
-	(source "(vswap! cesium.core/CAM assoc :chan (clojure.core.async/chan))"))
 
 ([ProServer_Class20001] of  CloFunction
 
@@ -538,38 +492,6 @@
 	(salience 0)
 	(title "as:WhereIsIsland"))
 
-([ProServer_Class210001] of  CloFuncall
-
-	(source "(in-ns 'cesium.core)"))
-
-([ProServer_Class210002] of  CloFuncall
-
-	(source "@DOC"))
-
-([ProServer_Class210003] of  CloFuncall
-
-	(source "@DOC-SND"))
-
-([ProServer_Class210004] of  CloFuncall
-
-	(source "(vreset! DOC-SND true)"))
-
-([ProServer_Class210005] of  CloFuncall
-
-	(source "(location \"b2\" \"img/yachtr.png\" 44.1280 68.7360 20)"))
-
-([ProServer_Class210006] of  CloFuncall
-
-	(source "(location \"b2\" \"img/yachtr.png\" 44.1280 -68.7360 20)"))
-
-([ProServer_Class210007] of  CloFuncall
-
-	(source "(cesium.core/location \"b2\" \"img/yachtr.png\" 44.1280 -68.7360 20)"))
-
-([ProServer_Class210008] of  CloFuncall
-
-	(source "(cesium.core/location \"BURNEV island\" \"img/yachtr.png\" 44.1280 -68.7310 20)"))
-
 ([ProServer_Class220000] of  CloFunction
 
 	(source "(let [min-scl 0.25\n       scl (+ min-scl (* (- 1 min-scl) (- 1 (/ dist max-dist))))]\n  (location txt scl \"img/arrdn.png\" lat lon 100 40))")
@@ -590,81 +512,36 @@
 	(source "(if-let [ins (fainst (cls-instances \"StartPoint\") nil)]\n  (vec (svs ins \"coord\"))\n  (do (println \"Annotated instance of StartPoint not found!\")\n    [44.124 -68.736]))")
 	(title "map-center []"))
 
-([ProServer_Class250000] of  CloFuncall
+([ProServer_Class260000] of  Rule
 
-	(source "(in-ns 'osm.data)"))
+	(lhs "?no (NamedObject time ?tim1)\n(OSMData time ?tim2\n	(> ?tim2 ?tim1))")
+	(rhs "(retract ?no)")
+	(salience 2)
+	(title "as:RetractObsoleteObjects"))
 
-([ProServer_Class250001] of  CloFuncall
+([ProServer_Class260002] of  NearbyObjects
 
-	(source "(tags @DATA)"))
+	(time 0))
 
-([ProServer_Class250002] of  CloFuncall
+([ProServer_Class260003] of  Rule
 
-	(source "(map println (tags @DATA))"))
+	(lhs "?no (NearbyObjects time ?tim1)\n(Question coord ?bco\n	course ?crs)\n(OSMData volume ?vol \n	time ?tim2\n	((> ?vol 0)\n	 (vector? ?bco)\n	 (> ?tim2 ?tim1)))")
+	(rhs "(let [nos (osm.data/filter-k \"name\" @osm.data/DATA)\n       nos (osm.data/filter-kv-not \"place\" \"island\" nos)\n       pls (osm.data/filter-k \"place\" nos)\n       nls (osm.data/filter-k \"natural\" nos)\n       ams (osm.data/filter-k \"amenity\" nos)]\n  (modify ?no place-list (vec (map #(get % \"name\") pls))\n	natural-list (vec (map #(get % \"name\") nls))\n	amenity-list (vec (map #(get % \"name\") ams))\n	time ?tim2)\n  (doseq [pl pls]\n    (asser NamedObject \n	title (get pl \"name\")\n	coord [(get pl \"lat\") (get pl \"lon\")]\n	place (get pl \"place\")\n	time ?tim2))\n  (doseq [nl nls]\n    (asser NamedObject \n	title (get nl \"name\")\n	coord [(get nl \"lat\") (get nl \"lon\")]\n	natural (get nl \"natural\")\n	time ?tim2))\n  (doseq [am ams]\n    (asser NamedObject \n	title (get am \"name\")\n	coord [(get am \"lat\") (get am \"lon\")]\n	amenity (get am \"amenity\")\n	time ?tim2)))")
+	(salience 1)
+	(title "as:AssertNearbyObjects"))
 
-([ProServer_Class250003] of  CloFuncall
+([ProServer_Class260004] of  CloFunction
 
-	(source "(tag-tags-namcor \"place\")"))
+	(source "(filter #(not= (get % k) v) data)")
+	(title "filter-kv-not [k v data]"))
 
-([ProServer_Class250004] of  CloFuncall
+([ProServer_Class260005] of  CloFuncall
 
-	(source "(filter-k \"place\" @DATA)"))
+	(source "(rete.core/log-lst \"beta-net-plan.txt\" rete.core/BPLAN) "))
 
-([ProServer_Class250005] of  CloFuncall
+([ProServer_Class260006] of  CloFuncall
 
-	(source "(filter-k? \"place\" @DATA)"))
-
-([ProServer_Class250006] of  CloFuncall
-
-	(source "(filter-k? \"name\" @DATA)"))
-
-([ProServer_Class250007] of  CloFuncall
-
-	(source "(map println (filter-k? \"name\" @DATA))"))
-
-([ProServer_Class250008] of  CloFuncall
-
-	(source "(do (map println (filter-k? \"name\" @DATA)) 1)"))
-
-([ProServer_Class250009] of  CloFuncall
-
-	(source "(doseq [e (filter-k? \"name\" @DATA)] (println e))"))
-
-([ProServer_Class250010] of  CloFuncall
-
-	(source "(doseq [e (filter-k? \"name\" @DATA)] (ctpl e))"))
-
-([ProServer_Class250011] of  CloFuncall
-
-	(source "(doseq [e (filter-k? \"name\" @DATA)] (protege.core/ctpl e))"))
-
-([ProServer_Class250012] of  CloFuncall
-
-	(source "(def x (filter-k? \"name\" @DATA))"))
-
-([ProServer_Class250013] of  CloFuncall
-
-	(source "(nth x 0)"))
-
-([ProServer_Class250014] of  CloFuncall
-
-	(source "(nth x 6)"))
-
-([ProServer_Class250015] of  CloFuncall
-
-	(source "(nth x 7)"))
-
-([ProServer_Class250016] of  CloFuncall
-
-	(source "(get (nth x 7) \"name\")"))
-
-([ProServer_Class250017] of  CloFuncall
-
-	(source "(set (keys (nth x 7)))"))
-
-([ProServer_Class250018] of  CloFuncall
-
-	(source "(filter #(not (.startsWith % \"seamark\")) (set (keys (nth x 7))))"))
+	(source "(ru.rules/sp :all)"))
 
 ([ProServer_Class3] of  WorkingPrograms
 
@@ -842,7 +719,7 @@
 	(source "(let [knots (max (min knots SPD-MAX) SPD-MIN)]\n  (vswap! BOATS assoc-in [id :engine] knots))")
 	(title "boat-engine [id knots]"))
 
-([ProServer_Class60002] of  NearbyObjects
+([ProServer_Class60002] of  NearbyIslands
 
 	(time 0))
 

@@ -534,3 +534,6 @@
 2016.05.07 21:05:21.705 MSK INFO: *** SYSTEM START ***
 2016.05.07 21:05:22.151 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
 2016.05.07 21:05:22.904 MSK INFO: Load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.05.08 12:57:36.627 MSK INFO: *** SYSTEM START ***
+2016.05.08 12:57:37.895 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.05.08 12:57:39.946 MSK INFO: Load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 1 sec (ui) -- ProjectManager$3.run()

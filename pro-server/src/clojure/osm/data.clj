@@ -31,11 +31,14 @@
     (println e)
     nil)))
 
+(defn filter-k [k data]
+  (filter #(some? (get % k)) data))
+
 (defn filter-kv [k v data]
   (filter #(= (get % k) v) data))
 
-(defn filter-k? [k data]
-  (filter #(some? (get % k)) data))
+(defn filter-kv-not [k v data]
+  (filter #(not= (get % k) v) data))
 
 (defn tags [data]
   (sort (set (mapcat keys data))))
