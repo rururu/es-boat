@@ -1,10 +1,14 @@
 Island:
- :?: {:? {:? {:? {:? {:? {:? 0}}, "AHEAD" {:? {:? 7}}, "ASTERN" {:? {:? 9}}, "PORT-ABAFT" {:? {:? 11}}, "PORT-BEAM" {:? {:? 13}}, "PORT-BOW" {:? {:? 15}}, "STAR-ABAFT" {:? {:? 17}}, "STAR-BEAM" {:? {:? 19}}, "STAR-BOW" {:? {:? 21}}}}}}
+ :?: {:? {:? {:? {:? {:? {:? 0}}, "AHEAD" {:? {:? 8}}, "ASTERN" {:? {:? 10}}, "PORT-ABAFT" {:? {:? 12}}, "PORT-BEAM" {:? {:? 14}}, "PORT-BOW" {:? {:? 16}}, "STAR-ABAFT" {:? {:? 18}}, "STAR-BEAM" {:? {:? 20}}, "STAR-BOW" {:? {:? 22}}}}}}
 OSMData:
  :?: {:? {:? {:? {:? 1}}}}
+NamedObject:
+ :?: {:? {:? {:? {:? {:? {:? {:? {:? 2}}}}}}}}
 Question:
- :?: {:? {:? {:? {:? {:? {:? {:? {:? {:? 2}}}}, "nearby-islands" {:? {:? {:? {:? 5}}}}, "what-is" {:? {"behind the island" {:? {:? 23}}, "on the port bow" {:? {:? 14}}, "on the port beam" {:? {:? 12}}, :? {:? {:? 22}}, "astern" {:? {:? 8}}, "abaft the port beam" {:? {:? 10}}, "on the starboard beam" {:? {:? 18}}, "abaft the starboard beam" {:? {:? 16}}, "on the starboard bow" {:? {:? 20}}, "ahead" {:? {:? 6}}}}}}}}}
+ :?: {:? {:? {:? {:? {:? {:? {:? {:? {:? 3}}}}, "what-is" {:? {"behind the island" {:? {:? 24}}, "before the island" {:? {:? 25}}, "on the port bow" {:? {:? 15}}, "on the port beam" {:? {:? 13}}, :? {:? {:? 27}}, "astern" {:? {:? 9}}, "abaft the port beam" {:? {:? 11}}, "on the starboard beam" {:? {:? 19}}, "abaft the starboard beam" {:? {:? 17}}, "on the starboard bow" {:? {:? 21}}, "ahead" {:? {:? 7}}}}, "nearby-islands" {:? {:? {:? {:? 23}}}}, "where-is" {:? {"island" {:? {:? 26}}}}}}}}}
+NearbyObjects:
+ :?: {:? {:? {:? {:? 4}}}}
 NearbyIslands:
- :?: {:? {:? 3}}
+ :?: {:? {:? 5}}
 Answer:
- :?: {:? {:? 4}}
+ :?: {:? {:? 6}}

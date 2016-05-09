@@ -1,4 +1,4 @@
-; Sun May 08 20:51:26 MSK 2016
+; Mon May 09 23:20:35 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -241,6 +241,17 @@
 	(source "(let [cld (Calendar/getInstance)\n       mil (.getTimeInMillis cld)\n       _ (.setTimeInMillis cld (+ mil (* sec 1000)))\n        yar (.get cld Calendar/YEAR )\n        mon (inc (.get cld Calendar/MONTH))\n        dat (.get cld Calendar/DATE)\n        hor (.get cld Calendar/HOUR_OF_DAY)\n        min (.get cld Calendar/MINUTE)\n        sec (.get cld Calendar/SECOND)]\n    (format \"%04d-%02d-%02dT%02d:%02d:%02dZ\" yar mon dat hor min sec))")
 	(title "iso8601futt [sec]"))
 
+([ProServer_Class140000] of  Rule
+
+	(lhs "?no (NamedObject coord ?oco\n	time ?tim1)\n(Question coord ?bco\n	course ?crs\n	time ?tim2\n	((vector? ?bco)\n	 (> ?tim2 ?tim1)))")
+	(rhs "(let [bea (geo.calc/bear-deg ?bco ?oco)\n       dis (geo.calc/distance-nm ?bco ?oco)\n       sec (geo.calc/sector bea ?crs)\n       sid (geo.calc/side sec)]\n  (modify ?no polar [bea dis]\n	side sid\n	time ?tim2))")
+	(salience 1)
+	(title "as:UpdatePolarCoordObject"))
+
+([ProServer_Class140001] of  CloFuncall
+
+	(source "(ru.rules/f 7)"))
+
 ([ProServer_Class140002] of  CloFunction
 
 	(source "(println [:QUESTION pp])\n(let [frm ['Question\n	'predicate (:predicate pp)\n	'subject (:subject pp)\n	'subject-value (:subject-value pp)\n	'object (:object pp)\n	'object-value (:object-value pp)\n	'time (as/current-time)]\n       frm (if-let [crd (:coord pp)]\n                (concat frm\n	['coord [(read-string (get crd \"0\"))\n	            (read-string (get crd \"1\"))]\n	 'course (read-string (:course pp))\n	 'speed (read-string (:speed pp))])\n                frm)]\n  (rete/assert-frame frm)\n  (rete/fire)\n  {:status 204})")
@@ -250,6 +261,10 @@
 
 	(source "(let [address (str \"http://localhost:\" PORT)]\n  (println \"Location:\" address)\n  (when (java.awt.Desktop/isDesktopSupported)\n    (.browse (java.awt.Desktop/getDesktop) (java.net.URI. address))))")
 	(title "view3D-in-browser []"))
+
+([ProServer_Class150002] of  CloFuncall
+
+	(source "(ru.rules/f 13)"))
 
 ([ProServer_Class150003] of  CloVar
 
@@ -266,7 +281,7 @@
 	(lhs "?i (Island coord ?ico\n	time ?tim1)\n(Question coord ?bco\n	course ?crs\n	time ?tim2\n	((vector? ?bco)\n	 (> ?tim2 ?tim1)))")
 	(rhs "(let [bea (geo.calc/bear-deg ?bco ?ico)\n       dis (geo.calc/distance-nm ?bco ?ico)\n       sec (geo.calc/sector bea ?crs)\n       sid (geo.calc/side sec)]\n  (modify ?i polar [bea dis]\n	sector sec\n	side sid\n	time ?tim2))")
 	(salience 1)
-	(title "as:UpdatePolarCoord"))
+	(title "as:UpdatePolarCoordIsland"))
 
 ([ProServer_Class160000] of  Rule
 
@@ -331,7 +346,7 @@
 		[ProServer_Class80002])
 	(rule-sets [ProServer_Class160099])
 	(title "AS Run")
-	(trace FALSE))
+	(trace TRUE))
 
 ([ProServer_Class160030] of  Rule
 
@@ -400,6 +415,7 @@
 		[ProServer_Class260003]
 		[ProServer_Class90012]
 		[ProServer_Class150021]
+		[ProServer_Class140000]
 		[ProServer_Class80001]
 		[ProServer_Class160000]
 		[ProServer_Class100004]
@@ -432,12 +448,20 @@
 	(source "(str tit (format \" (%.1f nm)\" dis))")
 	(title "tit-dis [[tit dis]]"))
 
+([ProServer_Class170003] of  CloFuncall
+
+	(source "(ru.rules/f 8)"))
+
 ([ProServer_Class180000] of  Rule
 
 	(lhs "(Answer accum ?acc)\n?q (Question predicate \"what-is\"\n	subject \"behind the island\"\n	object ?tit)")
 	(rhs "(let [sub (str \"behind the island \" ?tit)]\n  (pro.server/pump-in-ans (as/ans-islands @?acc sub))\n  (retract ?q))")
 	(salience -1)
 	(title "as:AnswerIslandsBehind"))
+
+([ProServer_Class190000] of  CloFuncall
+
+	(source "(ru.rules/f 10)"))
 
 ([ProServer_Class190001] of  Rule
 
@@ -455,6 +479,22 @@
 
 	(source "(get-in @BOATS [id :speed])")
 	(title "speed [id]"))
+
+([ProServer_Class200001] of  CloFuncall
+
+	(source "(ru.rules/f 41)"))
+
+([ProServer_Class200002] of  CloFuncall
+
+	(source "(ru.rules/f 54)"))
+
+([ProServer_Class200003] of  CloFuncall
+
+	(source "(ru.rules/f 48)"))
+
+([ProServer_Class200004] of  CloFuncall
+
+	(source "(ru.rules/f 47)"))
 
 ([ProServer_Class20001] of  CloFunction
 
