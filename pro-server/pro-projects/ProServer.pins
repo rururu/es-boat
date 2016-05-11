@@ -1,4 +1,4 @@
-; Wed May 11 12:29:26 MSK 2016
+; Wed May 11 22:37:39 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -142,12 +142,6 @@
 
 	(coord 62.4444 5.88)
 	(title "Geiranger Entrance"))
-
-([ProServer_Class110001] of  %3AINSTANCE-ANNOTATION
-
-	(%3AANNOTATED-INSTANCE [ProServer_Class110000])
-	(%3ACREATION-TIMESTAMP "2016.05.06 22:32:35.365 MSK")
-	(%3ACREATOR "ru"))
 
 ([ProServer_Class110002] of  Rule
 
@@ -347,7 +341,7 @@
 		[ProServer_Class270001])
 	(rule-sets [ProServer_Class160099])
 	(title "AS Run")
-	(trace TRUE))
+	(trace FALSE))
 
 ([ProServer_Class160030] of  Rule
 
@@ -521,7 +515,7 @@
 
 ([ProServer_Class200018] of  CloFunction
 
-	(source "(let [acc (sort-by second accum)\n       cnt (count acc)]\n  (condp > cnt\n    1 \"No islands in sight.\"\n    2 (str \"Island \" (tit-dis (first acc)) \" is \" subject)\n    6 (str \"Islands: \" (apply str (interpose \", \" (map tit-dis acc))) \" are \" subject)\n    (str \"Islands: \" (apply str (interpose \", \" (map tit-dis (take 5 acc)))) \" and more \" (- cnt 5) \" islands are \" subject)))")
+	(source "(let [acc (sort-by second accum)\n       cnt (count acc)]\n  (condp > cnt\n    1 (str \"No islands in sight \" subject)\n    2 (str \"Island \" (tit-dis (first acc)) \" is \" subject)\n    6 (str \"Islands: \" (apply str (interpose \", \" (map tit-dis acc))) \" are \" subject)\n    (str \"Islands: \" (apply str (interpose \", \" (map tit-dis (take 5 acc)))) \" and more \" (- cnt 5) \" islands are \" subject)))")
 	(title "ans-islands [accum subject]"))
 
 ([ProServer_Class200019] of  Rule
@@ -643,13 +637,13 @@
 ([ProServer_Class250000] of  Rule
 
 	(lhs "(Answer2 place-list ?pll\n	natural-list ?nal\n	amenity-list ?aml)\n?q (Question predicate \"what-is\"\n	subject ?sub)")
-	(rhs "(println [:AOOS @?pll @?nal @?aml])\n(pro.server/pump-in-ans \n  (as/ans-objects @?pll @?nal @?aml ?sub))\n(retract ?q)")
+	(rhs "(pro.server/pump-in-ans \n  (as/ans-objects @?pll @?nal @?aml ?sub))\n(retract ?q)")
 	(salience -2)
 	(title "as:AnswerObjectsOnSide"))
 
 ([ProServer_Class250001] of  CloFunction
 
-	(source "(letfn [(anso [acc cnt pfx]\n	(println [:ANSO acc cnt pfx])\n	(condp > cnt\n	  1 \"\"\n	  2 (str pfx \" object \" (tit-dis (first acc)) \"\\n\")\n	  6 (str pfx \" objects: \" (apply str (interpose \", \" (map tit-dis acc))) \"\\n\")\n	  (str pfx \" objects: \" (apply str (interpose \", \" (map tit-dis (take 5 acc)))) \" and more \" (- cnt 5) \"\\n\")))]\n  (let [pll (sort-by second places)\n          nal (sort-by second naturals)\n          aml (sort-by second amenitys)\n          r \n    (str (anso pll (count pll) \"Place\")\n          (anso nal (count nal) \"Natural\")\n          (anso aml (count aml) \"Amenity\"))]\n  (println [:R r])\n  r))")
+	(source "(letfn [(anso [acc cnt pfx]\n	(condp > cnt\n	  1 \"\"\n	  2 (str pfx \" object \" (tit-dis (first acc)) \",<br>\")\n	  6 (str pfx \" objects: \" (apply str (interpose \", \" (map tit-dis acc))) \",<br>\")\n	  (str pfx \" objects: \" (apply str (interpose \", \" (map tit-dis (take 5 acc)))) \" and more \" (- cnt 5) \",<br>\")))]\n  (let [pll (sort-by second places)\n          nal (sort-by second naturals)\n          aml (sort-by second amenitys)\n          cpl (count pll)\n          cnl (count nal)\n          cal (count aml)]\n    (str\n      (if (= (+ cpl cnl cal) 0)\n        \"No objects in sight \"\n        (str (anso pll cpl \"Place\")\n              (anso nal cnl \"Natural\")\n              (anso aml cal \"Amenity\")))\n      \"are \" subject)))")
 	(title "ans-objects [places naturals amenitys subject]"))
 
 ([ProServer_Class260000] of  Rule
@@ -694,6 +688,12 @@
 ([ProServer_Class270002] of  CloFuncall
 
 	(source "(ru.rules/f 18)"))
+
+([ProServer_Class280000] of  %3AINSTANCE-ANNOTATION
+
+	(%3AANNOTATED-INSTANCE [ProServer_Class230002])
+	(%3ACREATION-TIMESTAMP "2016.05.11 21:55:25.838 MSK")
+	(%3ACREATOR "ru"))
 
 ([ProServer_Class3] of  WorkingPrograms
 

@@ -778,6 +778,13 @@ view3d.core.set_html_BANG_.call(null,"display2",view3d.core.get_html.call(null,"
 return view3d.core.set_html_BANG_.call(null,"display",answer);
 });
 view3d.core.retrieve_answer = (function view3d$core$retrieve_answer(){
+view3d.core.display_answer.call(null,"");
+
+return view3d.core.ask_server.call(null,view3d.core.ANS_PTH,null,new cljs.core.Keyword(null,"transit","transit",359458387),view3d.core.display_answer);
+});
+view3d.core.retrieve_2_answers = (function view3d$core$retrieve_2_answers(){
+view3d.core.ask_server.call(null,view3d.core.ANS_PTH,null,new cljs.core.Keyword(null,"transit","transit",359458387),view3d.core.display_answer);
+
 return view3d.core.ask_server.call(null,view3d.core.ANS_PTH,null,new cljs.core.Keyword(null,"transit","transit",359458387),view3d.core.display_answer);
 });
 view3d.core.behind_island = (function view3d$core$behind_island(islands){
@@ -819,7 +826,7 @@ var n = cljs.reader.read_string.call(null,a);
 var pred__12523 = cljs.core._GT__EQ_;
 var expr__12524 = n;
 if(cljs.core.truth_(pred__12523.call(null,(7),expr__12524))){
-return view3d.core.ask_server.call(null,view3d.core.QST_PTH,cljs.core.merge.call(null,cljs.core.deref.call(null,view3d.core.boat),new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"predicate","predicate",-1742501860),"what-is",new cljs.core.Keyword(null,"subject","subject",-1411880451),cljs.core.nth.call(null,view3d.core.lst1,n)], null)),new cljs.core.Keyword(null,"transit","transit",359458387),view3d.core.retrieve_answer);
+return view3d.core.ask_server.call(null,view3d.core.QST_PTH,cljs.core.merge.call(null,cljs.core.deref.call(null,view3d.core.boat),new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"predicate","predicate",-1742501860),"what-is",new cljs.core.Keyword(null,"subject","subject",-1411880451),cljs.core.nth.call(null,view3d.core.lst1,n)], null)),new cljs.core.Keyword(null,"transit","transit",359458387),view3d.core.retrieve_2_answers);
 } else {
 if(cljs.core.truth_(pred__12523.call(null,(8),expr__12524))){
 return view3d.core.ask_server.call(null,view3d.core.QST_PTH,cljs.core.merge.call(null,cljs.core.deref.call(null,view3d.core.boat),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"predicate","predicate",-1742501860),"nearby-islands"], null)),new cljs.core.Keyword(null,"transit","transit",359458387),view3d.core.nearby_islands_behind);

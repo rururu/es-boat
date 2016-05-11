@@ -332,6 +332,11 @@
   (set-html! "display" answer))
 
 (defn retrieve-answer []
+  (display-answer "")
+  (ask-server ANS-PTH nil :transit display-answer))
+
+(defn retrieve-2-answers []
+  (ask-server ANS-PTH nil :transit display-answer)
   (ask-server ANS-PTH nil :transit display-answer))
 
 (defn behind-island [islands]
@@ -387,7 +392,7 @@
         (condp >= n
           7 (ask-server QST-PTH (merge @boat {:predicate "what-is"
                                               :subject (nth lst1 n)})
-                        :transit retrieve-answer)
+                        :transit retrieve-2-answers)
           8 (ask-server QST-PTH (merge @boat {:predicate "nearby-islands"})
                         :transit nearby-islands-behind)
           9 (ask-server QST-PTH (merge @boat {:predicate "nearby-islands"})
