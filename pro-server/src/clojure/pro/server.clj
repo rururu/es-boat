@@ -67,8 +67,10 @@
 {:status 204})
 
 (defn answer []
-  (-> (r/response (write-transit (deref (future (<!! ANS-CHN)))))
-      (r/header "Access-Control-Allow-Origin" "*")))
+  (let [ans (deref (future (<!! ANS-CHN)))]
+  (println [:ANS ans])
+  (-> (r/response (write-transit ans))
+        (r/header "Access-Control-Allow-Origin" "*"))))
 
 (defn question [pp]
   (println [:QUESTION pp])

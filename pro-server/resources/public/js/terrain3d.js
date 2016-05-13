@@ -35560,7 +35560,6 @@ view3d.core.no_handler = function(a) {
   return null;
 };
 view3d.core.ask_server = function(a, b, c, d) {
-  cljs.core.println.call(null, new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "ASK-SERV", "ASK-SERV", 1346632841), b], null));
   a = [cljs.core.str(view3d.core.BSE_URL), cljs.core.str(a)].join("");
   return ajax.core.GET.call(null, a, new cljs.core.PersistentArrayMap(null, 4, [new cljs.core.Keyword(null, "params", "params", 710516235), b, new cljs.core.Keyword(null, "handler", "handler", -195596612), d, new cljs.core.Keyword(null, "error-handler", "error-handler", -484945776), view3d.core.error_handler, new cljs.core.Keyword(null, "response-format", "response-format", 1664465322), c], null));
 };
@@ -35570,9 +35569,7 @@ view3d.core.viewer.terrainProvider = view3d.core.terprov;
 view3d.core.cz_source = new Cesium.CzmlDataSource;
 view3d.core.viewer.dataSources.add(view3d.core.cz_source);
 view3d.core.cz_processor = function(a) {
-  a = a.data;
-  cljs.core.println.call(null, a);
-  a = JSON.parse(a);
+  a = JSON.parse(a.data);
   return view3d.core.cz_source.process(a);
 };
 view3d.core.evt_source = new EventSource([cljs.core.str(view3d.core.BSE_URL), cljs.core.str(view3d.core.CZML_PTH)].join(""));

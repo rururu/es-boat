@@ -79,7 +79,7 @@
 (defn no-handler [response])
 
 (defn ask-server [path params resp-format handler]
-  (println [:ASK-SERV params])
+  ;;(println [:ASK-SERV path params])
   (let [url (str BSE-URL path)]
     (GET url {:params params
               :handler handler
@@ -102,7 +102,6 @@
 
 (defn cz-processor [e]
   (let [data (.-data e)
-        _ (println data)
         data (js/JSON.parse data)]
     (.process cz-source data)))
 

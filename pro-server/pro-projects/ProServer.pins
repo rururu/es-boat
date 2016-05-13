@@ -1,4 +1,4 @@
-; Wed May 11 22:37:39 MSK 2016
+; Fri May 13 23:02:20 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -248,7 +248,7 @@
 
 ([ProServer_Class140002] of  CloFunction
 
-	(source "(println [:QUESTION pp])\n(let [frm ['Question\n	'predicate (:predicate pp)\n	'subject (:subject pp)\n	'subject-value (:subject-value pp)\n	'object (:object pp)\n	'object-value (:object-value pp)\n	'time (as/current-time)]\n       frm (if-let [crd (:coord pp)]\n                (concat frm\n	['coord [(read-string (get crd \"0\"))\n	            (read-string (get crd \"1\"))]\n	 'course (read-string (:course pp))\n	 'speed (read-string (:speed pp))])\n                frm)]\n  (rete/assert-frame frm)\n  (rete/fire)\n  {:status 204})")
+	(source ";;(println [:QUESTION pp])\n(let [frm ['Question\n	'predicate (:predicate pp)\n	'subject (:subject pp)\n	'subject-value (:subject-value pp)\n	'object (:object pp)\n	'object-value (:object-value pp)\n	'time (as/current-time)]\n       frm (if-let [crd (:coord pp)]\n                (concat frm\n	['coord [(read-string (get crd \"0\"))\n	            (read-string (get crd \"1\"))]\n	 'course (read-string (:course pp))\n	 'speed (read-string (:speed pp))])\n                frm)]\n  (rete/assert-frame frm)\n  (rete/fire)\n  {:status 204})")
 	(title "question [pp]"))
 
 ([ProServer_Class150000] of  CloFunction
@@ -521,7 +521,7 @@
 ([ProServer_Class200019] of  Rule
 
 	(lhs "(Answer accum ?acc)\n?q (Question predicate \"nearby-islands\")")
-	(rhs "(pro.server/pump-in-ans (sort @?acc))")
+	(rhs "(pro.server/pump-in-ans (sort @?acc))\n(retract ?q)")
 	(salience -1)
 	(title "as:AnswerNearbyIslands"))
 
@@ -546,15 +546,15 @@
 
 ([ProServer_Class210001] of  Rule
 
-	(lhs "(Answer2 place-list ?pll\n	natural-list ?nal\n	amenity-list ?aml)\n(Question predicate \"what-is\"\n	subject \"ahead\")\n(NamedObject title ?tit \n	side \"AHEAD\"\n	polar ?pol\n	place ?pla\n	natural ?nat\n	amenity ?ame)")
-	(rhs "(cond\n  (some? ?pla) (vswap! ?pll conj [?tit (second ?pol)])\n  (some? ?nat) (vswap! ?nal conj [?tit (second ?pol)])\n  (some? ?ame) (vswap! ?aml conj [?tit (second ?pol)]))")
+	(lhs "(Answer2 place-list ?pll\n	natural-list ?nal\n	amenity-list ?aml)\n(Question predicate \"what-is\"\n	subject \"ahead\")\n(NamedObject title ?tit \n	side \"AHEAD\"\n	polar ?pol\n	place ?pla\n	natural ?nat\n	amenity ?ame\n	aeroway ?aer\n	highway ?hig\n	waterway ?wat\n	tourism ?tou)")
+	(rhs "(cond\n  (some? ?pla) (vswap! ?pll conj [?pla ?tit (second ?pol)])\n  (some? ?nat) (vswap! ?nal conj [?nat ?tit (second ?pol)])\n  (some? ?ame) (vswap! ?aml conj [?ame ?tit (second ?pol)])\n  (some? ?aer) (vswap! ?aml conj [?aer ?tit (second ?pol)])\n  (some? ?hig) (vswap! ?aml conj [?hig ?tit (second ?pol)])\n  (some? ?wat) (vswap! ?aml conj [?wat ?tit (second ?pol)])\n  (some? ?tou) (vswap! ?aml conj [?tou ?tit (second ?pol)]))")
 	(salience 0)
 	(title "as:WhatIsAhead_Obj"))
 
 ([ProServer_Class210002] of  Rule
 
 	(lhs "(Answer2 place-list ?pll\n	natural-list ?nal\n	amenity-list ?aml)\n(Question predicate \"what-is\"\n	subject \"astern\")\n(NamedObject title ?tit \n	side \"ASTERN\"\n	polar ?pol\n	place ?pla\n	natural ?nat\n	amenity ?ame)")
-	(rhs "(cond\n  (some? ?pla) (vswap! ?pll conj [?tit (second ?pol)])\n  (some? ?nat) (vswap! ?nal conj [?tit (second ?pol)])\n  (some? ?ame) (vswap! ?aml conj [?tit (second ?pol)]))")
+	(rhs "(cond\n  (some? ?pla) (vswap! ?pll conj [?pla ?tit (second ?pol)])\n  (some? ?nat) (vswap! ?nal conj [?nat ?tit (second ?pol)])\n  (some? ?ame) (vswap! ?aml conj [?ame ?tit (second ?pol)])\n  (some? ?aer) (vswap! ?aml conj [?aer ?tit (second ?pol)])\n  (some? ?hig) (vswap! ?aml conj [?hig ?tit (second ?pol)])\n  (some? ?wat) (vswap! ?aml conj [?wat ?tit (second ?pol)])\n  (some? ?tou) (vswap! ?aml conj [?tou ?tit (second ?pol)]))")
 	(salience 0)
 	(title "as:WhatIsAstern_Obj"))
 
@@ -568,35 +568,35 @@
 ([ProServer_Class210004] of  Rule
 
 	(lhs "(Answer2 place-list ?pll\n	natural-list ?nal\n	amenity-list ?aml)\n(Question predicate \"what-is\"\n	subject \"on the port beam\")\n(NamedObject title ?tit \n	side \"PORT-BEAM\"\n	polar ?pol\n	place ?pla\n	natural ?nat\n	amenity ?ame)")
-	(rhs "(cond\n  (some? ?pla) (vswap! ?pll conj [?tit (second ?pol)])\n  (some? ?nat) (vswap! ?nal conj [?tit (second ?pol)])\n  (some? ?ame) (vswap! ?aml conj [?tit (second ?pol)]))")
+	(rhs "(cond\n  (some? ?pla) (vswap! ?pll conj [?pla ?tit (second ?pol)])\n  (some? ?nat) (vswap! ?nal conj [?nat ?tit (second ?pol)])\n  (some? ?ame) (vswap! ?aml conj [?ame ?tit (second ?pol)])\n  (some? ?aer) (vswap! ?aml conj [?aer ?tit (second ?pol)])\n  (some? ?hig) (vswap! ?aml conj [?hig ?tit (second ?pol)])\n  (some? ?wat) (vswap! ?aml conj [?wat ?tit (second ?pol)])\n  (some? ?tou) (vswap! ?aml conj [?tou ?tit (second ?pol)]))")
 	(salience 0)
 	(title "as:WhatIsPortBeam_Obj"))
 
 ([ProServer_Class210005] of  Rule
 
 	(lhs "(Answer2 place-list ?pll\n	natural-list ?nal\n	amenity-list ?aml)\n(Question predicate \"what-is\"\n	subject \"on the port bow\")\n(NamedObject title ?tit \n	side \"PORT-BOW\"\n	polar ?pol\n	place ?pla\n	natural ?nat\n	amenity ?ame)")
-	(rhs "(cond\n  (some? ?pla) (vswap! ?pll conj [?tit (second ?pol)])\n  (some? ?nat) (vswap! ?nal conj [?tit (second ?pol)])\n  (some? ?ame) (vswap! ?aml conj [?tit (second ?pol)]))")
+	(rhs "(cond\n  (some? ?pla) (vswap! ?pll conj [?pla ?tit (second ?pol)])\n  (some? ?nat) (vswap! ?nal conj [?nat ?tit (second ?pol)])\n  (some? ?ame) (vswap! ?aml conj [?ame ?tit (second ?pol)])\n  (some? ?aer) (vswap! ?aml conj [?aer ?tit (second ?pol)])\n  (some? ?hig) (vswap! ?aml conj [?hig ?tit (second ?pol)])\n  (some? ?wat) (vswap! ?aml conj [?wat ?tit (second ?pol)])\n  (some? ?tou) (vswap! ?aml conj [?tou ?tit (second ?pol)]))")
 	(salience 0)
 	(title "as:WhatIsPortBow_Obj"))
 
 ([ProServer_Class210006] of  Rule
 
 	(lhs "(Answer2 place-list ?pll\n	natural-list ?nal\n	amenity-list ?aml)\n(Question predicate \"what-is\"\n	subject \"abaft the starboard beam\")\n(NamedObject title ?tit \n	side \"STAR-ABAFT\"\n	polar ?pol\n	place ?pla\n	natural ?nat\n	amenity ?ame)")
-	(rhs "(cond\n  (some? ?pla) (vswap! ?pll conj [?tit (second ?pol)])\n  (some? ?nat) (vswap! ?nal conj [?tit (second ?pol)])\n  (some? ?ame) (vswap! ?aml conj [?tit (second ?pol)]))")
+	(rhs "(cond\n  (some? ?pla) (vswap! ?pll conj [?pla ?tit (second ?pol)])\n  (some? ?nat) (vswap! ?nal conj [?nat ?tit (second ?pol)])\n  (some? ?ame) (vswap! ?aml conj [?ame ?tit (second ?pol)])\n  (some? ?aer) (vswap! ?aml conj [?aer ?tit (second ?pol)])\n  (some? ?hig) (vswap! ?aml conj [?hig ?tit (second ?pol)])\n  (some? ?wat) (vswap! ?aml conj [?wat ?tit (second ?pol)])\n  (some? ?tou) (vswap! ?aml conj [?tou ?tit (second ?pol)]))")
 	(salience 0)
 	(title "as:WhatIsStarAbaft_Obj"))
 
 ([ProServer_Class210007] of  Rule
 
 	(lhs "(Answer2 place-list ?pll\n	natural-list ?nal\n	amenity-list ?aml)\n(Question predicate \"what-is\"\n	subject \"on the starboard beam\")\n(NamedObject title ?tit \n	side \"STAR-BEAM\"\n	polar ?pol\n	place ?pla\n	natural ?nat\n	amenity ?ame)")
-	(rhs "(cond\n  (some? ?pla) (vswap! ?pll conj [?tit (second ?pol)])\n  (some? ?nat) (vswap! ?nal conj [?tit (second ?pol)])\n  (some? ?ame) (vswap! ?aml conj [?tit (second ?pol)]))")
+	(rhs "(cond\n  (some? ?pla) (vswap! ?pll conj [?pla ?tit (second ?pol)])\n  (some? ?nat) (vswap! ?nal conj [?nat ?tit (second ?pol)])\n  (some? ?ame) (vswap! ?aml conj [?ame ?tit (second ?pol)])\n  (some? ?aer) (vswap! ?aml conj [?aer ?tit (second ?pol)])\n  (some? ?hig) (vswap! ?aml conj [?hig ?tit (second ?pol)])\n  (some? ?wat) (vswap! ?aml conj [?wat ?tit (second ?pol)])\n  (some? ?tou) (vswap! ?aml conj [?tou ?tit (second ?pol)]))")
 	(salience 0)
 	(title "as:WhatIsStarBeam_Obj"))
 
 ([ProServer_Class210008] of  Rule
 
 	(lhs "(Answer2 place-list ?pll\n	natural-list ?nal\n	amenity-list ?aml)\n(Question predicate \"what-is\"\n	subject \"on the starboard bow\")\n(NamedObject title ?tit \n	side \"STAR-BOW\"\n	polar ?pol\n	place ?pla\n	natural ?nat\n	amenity ?ame)")
-	(rhs "(cond\n  (some? ?pla) (vswap! ?pll conj [?tit (second ?pol)])\n  (some? ?nat) (vswap! ?nal conj [?tit (second ?pol)])\n  (some? ?ame) (vswap! ?aml conj [?tit (second ?pol)]))")
+	(rhs "(cond\n  (some? ?pla) (vswap! ?pll conj [?pla ?tit (second ?pol)])\n  (some? ?nat) (vswap! ?nal conj [?nat ?tit (second ?pol)])\n  (some? ?ame) (vswap! ?aml conj [?ame ?tit (second ?pol)])\n  (some? ?aer) (vswap! ?aml conj [?aer ?tit (second ?pol)])\n  (some? ?hig) (vswap! ?aml conj [?hig ?tit (second ?pol)])\n  (some? ?wat) (vswap! ?aml conj [?wat ?tit (second ?pol)])\n  (some? ?tou) (vswap! ?aml conj [?tou ?tit (second ?pol)]))")
 	(salience 0)
 	(title "as:WhatIsStarBow_Obj"))
 
@@ -609,9 +609,9 @@
 
 ([ProServer_Class210012] of  Rule
 
-	(lhs "(Answer2 place-list ?pll\n	natural-list ?nal\n	amenity-list ?aml)\n?q (Question predicate \"nearby-objects\"\n	subject ?sub)")
-	(rhs "(condp = ?sub\n  \"place\" (pro.server/pump-in-ans (sort @?pll))\n  \"natural\" (pro.server/pump-in-ans (sort @?nal))\n  \"amenity\" (pro.server/pump-in-ans (sort @?aml)))\n(retract ?q)")
-	(salience -2)
+	(lhs "(Answer2 place-list ?pll\n	natural-list ?nal\n	amenity-list ?aml\n	aeroway-list ?ael\n	highway-list ?hil\n	waterway-list ?wal\n	tourism-list ?tol)\n?q (Question predicate \"nearby-objects\"\n	subject ?sub)")
+	(rhs "(condp = ?sub\n  \"place\" (pro.server/pump-in-ans (sort @?pll))\n  \"natural\" (pro.server/pump-in-ans (sort @?nal))\n  \"amenity\" (pro.server/pump-in-ans (sort @?aml)))\n  \"aeroway\" (pro.server/pump-in-ans (sort @?ael)))\n  \"highway\" (pro.server/pump-in-ans (sort @?hil)))\n  \"waterway\" (pro.server/pump-in-ans (sort @?wal)))\n  \"tourism\" (pro.server/pump-in-ans (sort @?tol)))\n(retract ?q)")
+	(salience -1)
 	(title "as:AnswerNearbyObjects"))
 
 ([ProServer_Class220000] of  CloFunction
@@ -636,14 +636,14 @@
 
 ([ProServer_Class250000] of  Rule
 
-	(lhs "(Answer2 place-list ?pll\n	natural-list ?nal\n	amenity-list ?aml)\n?q (Question predicate \"what-is\"\n	subject ?sub)")
-	(rhs "(pro.server/pump-in-ans \n  (as/ans-objects @?pll @?nal @?aml ?sub))\n(retract ?q)")
+	(lhs "(Answer2 place-list ?pll\n	natural-list ?nal\n	amenity-list ?aml\n	aeroway-list ?ael\n	highway-list ?hil\n	waterway-list ?wal\n	tourism-list ?tol)\n?q (Question predicate \"what-is\"\n	subject ?sub)")
+	(rhs "(pro.server/pump-in-ans \n  (as/ans-objects @?pll @?nal @?aml @?ael @?hil @?wal @?tol ?sub))\n(retract ?q)")
 	(salience -2)
 	(title "as:AnswerObjectsOnSide"))
 
 ([ProServer_Class250001] of  CloFunction
 
-	(source "(letfn [(anso [acc cnt pfx]\n	(condp > cnt\n	  1 \"\"\n	  2 (str pfx \" object \" (tit-dis (first acc)) \",<br>\")\n	  6 (str pfx \" objects: \" (apply str (interpose \", \" (map tit-dis acc))) \",<br>\")\n	  (str pfx \" objects: \" (apply str (interpose \", \" (map tit-dis (take 5 acc)))) \" and more \" (- cnt 5) \",<br>\")))]\n  (let [pll (sort-by second places)\n          nal (sort-by second naturals)\n          aml (sort-by second amenitys)\n          cpl (count pll)\n          cnl (count nal)\n          cal (count aml)]\n    (str\n      (if (= (+ cpl cnl cal) 0)\n        \"No objects in sight \"\n        (str (anso pll cpl \"Place\")\n              (anso nal cnl \"Natural\")\n              (anso aml cal \"Amenity\")))\n      \"are \" subject)))")
+	(source "(letfn [(anso [acc cnt pfx]\n	(condp > cnt\n	  1 \"\"\n	  2 (str pfx \" object \" (kind-tit-dis (first acc)) \",<br>\")\n	  6 (str pfx \" objects: \" (apply str (interpose \", \" (map kind-tit-dis acc))) \",<br>\")\n	  (str pfx \" objects: \" (apply str (interpose \", \" (map kind-tit-dis (take 5 acc)))) \" and more \" (- cnt 5) \",<br>\")))]\n  (let [pll (sort-by second places)\n          nal (sort-by second naturals)\n          aml (sort-by second amenitys)\n          cpl (count pll)\n          cnl (count nal)\n          cal (count aml)]\n    (str\n      (if (= (+ cpl cnl cal) 0)\n        \"No objects in sight \"\n        (str (anso pll cpl \"Place\")\n              (anso nal cnl \"Natural\")\n              (anso aml cal \"Amenity\")))\n      \"are \" subject)))")
 	(title "ans-objects [places naturals amenitys subject]"))
 
 ([ProServer_Class260000] of  Rule
@@ -660,7 +660,7 @@
 ([ProServer_Class260003] of  Rule
 
 	(lhs "?no (NearbyObjects time ?tim1)\n(Question coord ?bco\n	course ?crs)\n(OSMData volume ?vol \n	time ?tim2\n	((> ?vol 0)\n	 (vector? ?bco)\n	 (> ?tim2 ?tim1)))")
-	(rhs "(let [nos (osm.data/filter-k \"name\" @osm.data/DATA)\n       nos (osm.data/filter-kv-not \"place\" \"island\" nos)\n       pls (osm.data/filter-k \"place\" nos)\n       nls (osm.data/filter-k \"natural\" nos)\n       ams (osm.data/filter-k \"amenity\" nos)]\n  (modify ?no place-list (vec (map #(get % \"name\") pls))\n	natural-list (vec (map #(get % \"name\") nls))\n	amenity-list (vec (map #(get % \"name\") ams))\n	time ?tim2)\n  (doseq [pl pls]\n    (asser NamedObject \n	title (get pl \"name\")\n	coord [(get pl \"lat\") (get pl \"lon\")]\n	place (get pl \"place\")\n	time ?tim2))\n  (doseq [nl nls]\n    (asser NamedObject \n	title (get nl \"name\")\n	coord [(get nl \"lat\") (get nl \"lon\")]\n	natural (get nl \"natural\")\n	time ?tim2))\n  (doseq [am ams]\n    (asser NamedObject \n	title (get am \"name\")\n	coord [(get am \"lat\") (get am \"lon\")]\n	amenity (get am \"amenity\")\n	time ?tim2)))")
+	(rhs "(let [nos (osm.data/filter-k \"name\" @osm.data/DATA)\n       nos (osm.data/filter-kv-not \"place\" \"island\" nos)\n       pls (osm.data/filter-k \"place\" nos)\n       nls (osm.data/filter-k \"natural\" nos)\n       ams (osm.data/filter-k \"amenity\" nos)\n       aes (osm.data/filter-k \"aeroway\" nos)\n       his (osm.data/filter-k \"highway\" nos)\n       was (osm.data/filter-k \"waterway\" nos)\n       tos (osm.data/filter-k \"tourism\" nos)]\n  (modify ?no place-list (vec (map #(get % \"name\") pls))\n	natural-list (vec (map #(get % \"name\") nls))\n	amenity-list (vec (map #(get % \"name\") ams))\n	aeroway-list (vec (map #(get % \"name\") aes))\n	highway-list (vec (map #(get % \"name\") his))\n	waterway-list (vec (map #(get % \"name\") was))\n	tourism-list (vec (map #(get % \"name\") tos))\n	time ?tim2)\n  (doseq [x pls]\n    (asser NamedObject title (get x \"name\") coord [(get x \"lat\") (get x \"lon\")]\n	place (get x \"place\") time ?tim2))\n  (doseq [x nls]\n    (asser NamedObject title (get x \"name\") coord [(get x \"lat\") (get x \"lon\")]\n	natural (get x \"natural\") time ?tim2))\n  (doseq [x ams]\n    (asser NamedObject title (get x \"name\") coord [(get x \"lat\") (get x \"lon\")]\n	amenity (get x \"amenity\") time ?tim2)))\n  (doseq [x aes]\n    (asser NamedObject title (get x \"name\") coord [(get x \"lat\") (get x \"lon\")]\n	aeroway (get x \"aeroway\") time ?tim2)))\n  (doseq [x his]\n    (asser NamedObject title (get x \"name\") coord [(get x \"lat\") (get x \"lon\")]\n	highway (get x \"highway\") time ?tim2)))\n  (doseq [x was]\n    (asser NamedObject title (get x \"name\") coord [(get x \"lat\") (get x \"lon\")]\n	waterway (get x \"waterway\") time ?tim2)))\n  (doseq [x tos]\n    (asser NamedObject title (get x \"name\") coord [(get x \"lat\") (get x \"lon\")]\n	tourism (get x \"tourism\") time ?tim2)))")
 	(salience 1)
 	(title "as:AssertNearbyObjects"))
 
@@ -695,6 +695,15 @@
 	(%3ACREATION-TIMESTAMP "2016.05.11 21:55:25.838 MSK")
 	(%3ACREATOR "ru"))
 
+([ProServer_Class290000] of  CloFuncall
+
+	(source "(ru.rules/pp :all)"))
+
+([ProServer_Class290001] of  CloFunction
+
+	(source "(str kind \" \" tit (format \" (%.1f nm)\" dis))")
+	(title "kind-tit-dis [[kind tit dis]]"))
+
 ([ProServer_Class3] of  WorkingPrograms
 
 	(cloPrograms
@@ -713,9 +722,29 @@
 ([ProServer_Class30000] of  Rule
 
 	(lhs "(Answer2 place-list ?pll\n	natural-list ?nal\n	amenity-list ?aml)\n(Question predicate \"what-is\"\n	subject \"abaft the port beam\")\n(NamedObject title ?tit \n	side \"PORT-ABAFT\"\n	polar ?pol\n	place ?pla\n	natural ?nat\n	amenity ?ame)")
-	(rhs "(cond\n  (some? ?pla) (vswap! ?pll conj [?tit (second ?pol)])\n  (some? ?nat) (vswap! ?nal conj [?tit (second ?pol)])\n  (some? ?ame) (vswap! ?aml conj [?tit (second ?pol)]))")
+	(rhs "(cond\n  (some? ?pla) (vswap! ?pll conj [?pla ?tit (second ?pol)])\n  (some? ?nat) (vswap! ?nal conj [?nat ?tit (second ?pol)])\n  (some? ?ame) (vswap! ?aml conj [?ame ?tit (second ?pol)])\n  (some? ?aer) (vswap! ?aml conj [?aer ?tit (second ?pol)])\n  (some? ?hig) (vswap! ?aml conj [?hig ?tit (second ?pol)])\n  (some? ?wat) (vswap! ?aml conj [?wat ?tit (second ?pol)])\n  (some? ?tou) (vswap! ?aml conj [?tou ?tit (second ?pol)]))")
 	(salience 0)
 	(title "as:WhatIsPortAbaft_Obj"))
+
+([ProServer_Class300000] of  CloFuncall
+
+	(source "(in-ns 'osm.data)"))
+
+([ProServer_Class300001] of  CloFuncall
+
+	(source "(count @DATA)"))
+
+([ProServer_Class300002] of  CloFuncall
+
+	(source "(tags @DATA)"))
+
+([ProServer_Class300003] of  CloFuncall
+
+	(source "(map println tags @DATA)"))
+
+([ProServer_Class300004] of  CloFuncall
+
+	(source "(map println (tags @DATA))"))
 
 ([ProServer_Class30001] of  CloProgram
 
@@ -909,7 +938,7 @@
 ([ProServer_Class80001] of  Rule
 
 	(lhs "?a2 (Answer2 time ?tim1)\n(Question time ?tim2\n	(> ?tim2 ?tim1))")
-	(rhs "(modify ?a2 time ?tim2\n	place-list (volatile! [])\n	natural-list (volatile! [])\n	amenity-list (volatile! []))")
+	(rhs "(modify ?a2 time ?tim2\n	place-list (volatile! [])\n	natural-list (volatile! [])\n	amenity-list (volatile! [])\n	aeroway-list (volatile! [])\n	highway-list (volatile! [])\n	waterway-list (volatile! [])\n	tourism-list (volatile! []))")
 	(salience 1)
 	(title "as:InitAnswer2"))
 
@@ -1014,7 +1043,7 @@
 
 ([ProServer_Class90001] of  CloFunction
 
-	(source "(-> (r/response (write-transit (deref (future (<!! ANS-CHN)))))\n      (r/header \"Access-Control-Allow-Origin\" \"*\"))")
+	(source "(let [ans (deref (future (<!! ANS-CHN)))]\n  ;;(println [:ANS ans])\n  (-> (r/response (write-transit ans))\n        (r/header \"Access-Control-Allow-Origin\" \"*\")))")
 	(title "answer []"))
 
 ([ProServer_Class90002] of  CloVar
@@ -1045,6 +1074,7 @@
 		[ProServer_Class100011]
 		[ProServer_Class170000]
 		[ProServer_Class200018]
+		[ProServer_Class290001]
 		[ProServer_Class250001])
 	(cloNamespace [ProServer_Class100008])
 	(title "Advisor Skipper"))

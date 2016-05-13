@@ -254,8 +254,6 @@ view3d.core.no_handler = (function view3d$core$no_handler(response){
 return null;
 });
 view3d.core.ask_server = (function view3d$core$ask_server(path,params,resp_format,handler){
-cljs.core.println.call(null,new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"ASK-SERV","ASK-SERV",1346632841),params], null));
-
 var url = [cljs.core.str(view3d.core.BSE_URL),cljs.core.str(path)].join('');
 return ajax.core.GET.call(null,url,new cljs.core.PersistentArrayMap(null, 4, [new cljs.core.Keyword(null,"params","params",710516235),params,new cljs.core.Keyword(null,"handler","handler",-195596612),handler,new cljs.core.Keyword(null,"error-handler","error-handler",-484945776),view3d.core.error_handler,new cljs.core.Keyword(null,"response-format","response-format",1664465322),resp_format], null));
 });
@@ -266,7 +264,6 @@ view3d.core.cz_source = (new Cesium.CzmlDataSource());
 view3d.core.viewer.dataSources.add(view3d.core.cz_source);
 view3d.core.cz_processor = (function view3d$core$cz_processor(e){
 var data = e.data;
-var _ = cljs.core.println.call(null,data);
 var data__$1 = JSON.parse(data);
 return view3d.core.cz_source.process(data__$1);
 });

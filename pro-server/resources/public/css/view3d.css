@@ -154,7 +154,7 @@
 }
 #display {
   position:fixed;
-  top:100px;
+  top:80px;
   left:60px;
   padding:5px;
   z-index:100;
@@ -162,7 +162,7 @@
 }
 #display2 {
   position:fixed;
-  top:200px;
+  top:220px;
   left:60px;
   padding:5px;
   z-index:100;
