@@ -52,3 +52,10 @@
   (or (> (Math/abs (- lat1 lat2)) 0.02)
      (> (Math/abs (- lon1 lon2)) 0.02)))
 
+(defn tag-stat []
+  (let [sta (for [t (tags @DATA)]
+	(let [fl (filter-k t @DATA)]
+	  [t (count fl)]))
+        sta  (filter #(> (second %) 0) sta)]
+  (sort second sta)))
+

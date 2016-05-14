@@ -1,4 +1,4 @@
-; Fri May 13 23:02:20 MSK 2016
+; Sat May 14 12:47:49 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -48,7 +48,7 @@
 
 ([ProServer_Class100000] of  CloFunction
 
-	(source "(println [:COMMAND params])\n(let [crd (:coord params)\n       crd [(read-string (get crd \"0\"))\n              (read-string (get crd \"1\"))]]\n  (vswap! BOAT assoc\n	:coord crd\n	:turn-coord crd\n	:course (:course params)\n	:speed (:speed params))\n  (pump-in-mvr))\n{:status 204}")
+	(source ";;(println [:MANEUVER params])\n(let [crd (:coord params)\n       crd [(read-string (get crd \"0\"))\n              (read-string (get crd \"1\"))]]\n  (vswap! BOAT assoc\n	:coord crd\n	:turn-coord crd\n	:course (:course params)\n	:speed (:speed params))\n  (pump-in-mvr))\n{:status 204}")
 	(title "maneuver [params]"))
 
 ([ProServer_Class100001] of  CloVar
@@ -361,7 +361,8 @@
 		[ProServer_Class260004]
 		[ProServer_Class160068]
 		[ProServer_Class90013]
-		[ProServer_Class150015])
+		[ProServer_Class150015]
+		[ProServer_Class280005])
 	(cloNamespace [ProServer_Class160042])
 	(cloVars [ProServer_Class150003])
 	(title "OSM Data"))
@@ -643,8 +644,8 @@
 
 ([ProServer_Class250001] of  CloFunction
 
-	(source "(letfn [(anso [acc cnt pfx]\n	(condp > cnt\n	  1 \"\"\n	  2 (str pfx \" object \" (kind-tit-dis (first acc)) \",<br>\")\n	  6 (str pfx \" objects: \" (apply str (interpose \", \" (map kind-tit-dis acc))) \",<br>\")\n	  (str pfx \" objects: \" (apply str (interpose \", \" (map kind-tit-dis (take 5 acc)))) \" and more \" (- cnt 5) \",<br>\")))]\n  (let [pll (sort-by second places)\n          nal (sort-by second naturals)\n          aml (sort-by second amenitys)\n          cpl (count pll)\n          cnl (count nal)\n          cal (count aml)]\n    (str\n      (if (= (+ cpl cnl cal) 0)\n        \"No objects in sight \"\n        (str (anso pll cpl \"Place\")\n              (anso nal cnl \"Natural\")\n              (anso aml cal \"Amenity\")))\n      \"are \" subject)))")
-	(title "ans-objects [places naturals amenitys subject]"))
+	(source "(letfn [(anso [acc cnt pfx]\n	(condp > cnt\n	  1 \"\"\n	  2 (str pfx \" object \" (kind-tit-dis (first acc)) \",<br>\")\n	  6 (str pfx \" objects: \" (apply str (interpose \", \" (map kind-tit-dis acc))) \",<br>\")\n	  (str pfx \" objects: \" (apply str (interpose \", \" (map kind-tit-dis (take 5 acc)))) \" and more \" (- cnt 5) \",<br>\")))]\n  (let [pll (sort-by second pll) cpl (count pll)\n          nal (sort-by second nal) cnl (count nal)\n          aml (sort-by second aml) cal (count aml)\n          ael (sort-by second ael) cae (count ael)\n          hil (sort-by second hil) chi (count hil)\n          wal (sort-by second wal) cwa (count wal)\n          tol (sort-by second tol) cto (count tol)]\n    (str\n      (if (= (+ cpl cnl cal cae chi cwa cto) 0)\n        \"No objects in sight \"\n        (str (anso pll cpl \"Place\")\n              (anso nal cnl \"Natural\")\n              (anso aml cal \"Amenity\")\n              (anso ael cae \"Aeroway\")\n              (anso hil chi \"Highway\")\n              (anso wal cwa \"Waterway\")\n              (anso tol cto \"Tourism\")))\n      \"are \" subject)))")
+	(title "ans-objects [pll nal aml ael hil wal tol subject]"))
 
 ([ProServer_Class260000] of  Rule
 
@@ -660,7 +661,7 @@
 ([ProServer_Class260003] of  Rule
 
 	(lhs "?no (NearbyObjects time ?tim1)\n(Question coord ?bco\n	course ?crs)\n(OSMData volume ?vol \n	time ?tim2\n	((> ?vol 0)\n	 (vector? ?bco)\n	 (> ?tim2 ?tim1)))")
-	(rhs "(let [nos (osm.data/filter-k \"name\" @osm.data/DATA)\n       nos (osm.data/filter-kv-not \"place\" \"island\" nos)\n       pls (osm.data/filter-k \"place\" nos)\n       nls (osm.data/filter-k \"natural\" nos)\n       ams (osm.data/filter-k \"amenity\" nos)\n       aes (osm.data/filter-k \"aeroway\" nos)\n       his (osm.data/filter-k \"highway\" nos)\n       was (osm.data/filter-k \"waterway\" nos)\n       tos (osm.data/filter-k \"tourism\" nos)]\n  (modify ?no place-list (vec (map #(get % \"name\") pls))\n	natural-list (vec (map #(get % \"name\") nls))\n	amenity-list (vec (map #(get % \"name\") ams))\n	aeroway-list (vec (map #(get % \"name\") aes))\n	highway-list (vec (map #(get % \"name\") his))\n	waterway-list (vec (map #(get % \"name\") was))\n	tourism-list (vec (map #(get % \"name\") tos))\n	time ?tim2)\n  (doseq [x pls]\n    (asser NamedObject title (get x \"name\") coord [(get x \"lat\") (get x \"lon\")]\n	place (get x \"place\") time ?tim2))\n  (doseq [x nls]\n    (asser NamedObject title (get x \"name\") coord [(get x \"lat\") (get x \"lon\")]\n	natural (get x \"natural\") time ?tim2))\n  (doseq [x ams]\n    (asser NamedObject title (get x \"name\") coord [(get x \"lat\") (get x \"lon\")]\n	amenity (get x \"amenity\") time ?tim2)))\n  (doseq [x aes]\n    (asser NamedObject title (get x \"name\") coord [(get x \"lat\") (get x \"lon\")]\n	aeroway (get x \"aeroway\") time ?tim2)))\n  (doseq [x his]\n    (asser NamedObject title (get x \"name\") coord [(get x \"lat\") (get x \"lon\")]\n	highway (get x \"highway\") time ?tim2)))\n  (doseq [x was]\n    (asser NamedObject title (get x \"name\") coord [(get x \"lat\") (get x \"lon\")]\n	waterway (get x \"waterway\") time ?tim2)))\n  (doseq [x tos]\n    (asser NamedObject title (get x \"name\") coord [(get x \"lat\") (get x \"lon\")]\n	tourism (get x \"tourism\") time ?tim2)))")
+	(rhs "(let [nos (osm.data/filter-k \"name\" @osm.data/DATA)\n       nos (osm.data/filter-kv-not \"place\" \"island\" nos)\n       pls (osm.data/filter-k \"place\" nos)\n       nls (osm.data/filter-k \"natural\" nos)\n       ams (osm.data/filter-k \"amenity\" nos)\n       aes (osm.data/filter-k \"aeroway\" nos)\n       his (osm.data/filter-k \"highway\" nos)\n       was (osm.data/filter-k \"waterway\" nos)\n       tos (osm.data/filter-k \"tourism\" nos)]\n  (modify ?no place-list (vec (map #(get % \"name\") pls))\n	natural-list (vec (map #(get % \"name\") nls))\n	amenity-list (vec (map #(get % \"name\") ams))\n	aeroway-list (vec (map #(get % \"name\") aes))\n	highway-list (vec (map #(get % \"name\") his))\n	waterway-list (vec (map #(get % \"name\") was))\n	tourism-list (vec (map #(get % \"name\") tos))\n	time ?tim2)\n  (doseq [x pls]\n    (asser NamedObject title (get x \"name\") coord [(get x \"lat\") (get x \"lon\")]\n	place (get x \"place\") time ?tim2))\n  (doseq [x nls]\n    (asser NamedObject title (get x \"name\") coord [(get x \"lat\") (get x \"lon\")]\n	natural (get x \"natural\") time ?tim2))\n  (doseq [x ams]\n    (asser NamedObject title (get x \"name\") coord [(get x \"lat\") (get x \"lon\")]\n	amenity (get x \"amenity\") time ?tim2))\n  (doseq [x aes]\n    (asser NamedObject title (get x \"name\") coord [(get x \"lat\") (get x \"lon\")]\n	aeroway (get x \"aeroway\") time ?tim2))\n  (doseq [x his]\n    (asser NamedObject title (get x \"name\") coord [(get x \"lat\") (get x \"lon\")]\n	highway (get x \"highway\") time ?tim2))\n  (doseq [x was]\n    (asser NamedObject title (get x \"name\") coord [(get x \"lat\") (get x \"lon\")]\n	waterway (get x \"waterway\") time ?tim2))\n  (doseq [x tos]\n    (asser NamedObject title (get x \"name\") coord [(get x \"lat\") (get x \"lon\")]\n	tourism (get x \"tourism\") time ?tim2)))")
 	(salience 1)
 	(title "as:AssertNearbyObjects"))
 
@@ -691,9 +692,38 @@
 
 ([ProServer_Class280000] of  %3AINSTANCE-ANNOTATION
 
-	(%3AANNOTATED-INSTANCE [ProServer_Class230002])
-	(%3ACREATION-TIMESTAMP "2016.05.11 21:55:25.838 MSK")
+	(%3AANNOTATED-INSTANCE [ProServer_Class110000])
+	(%3ACREATION-TIMESTAMP "2016.05.14 12:20:43.780 MSK")
 	(%3ACREATOR "ru"))
+
+([ProServer_Class280001] of  CloFuncall
+
+	(source "(map println (rete.core/facts-with-slot-value 'NamedObject 'place not= :?))"))
+
+([ProServer_Class280002] of  CloFuncall
+
+	(source "(map println (rete.core/facts-with-slot-value 'NamedObject 'natural not= :?))"))
+
+([ProServer_Class280003] of  CloFuncall
+
+	(source "(map println (rete.core/facts-with-slot-value 'NamedObject 'amenity not= :?))"))
+
+([ProServer_Class280004] of  CloFuncall
+
+	(source "(map println (rete.core/facts-with-slot-value 'NamedObject 'aeroway not= :?))"))
+
+([ProServer_Class280005] of  CloFunction
+
+	(source "(let [sta (for [t (tags @DATA)]\n	(let [fl (filter-k t @DATA)]\n	  [t (count fl)]))\n        sta  (filter #(> (second %) 0) sta)]\n  (sort second sta))")
+	(title "tag-stat []"))
+
+([ProServer_Class280006] of  CloFuncall
+
+	(source "osm.data/tag-stat)"))
+
+([ProServer_Class280007] of  CloFuncall
+
+	(source "(osm.data/tag-stat)"))
 
 ([ProServer_Class290000] of  CloFuncall
 
@@ -817,6 +847,50 @@
 
 	(source "(let [ca (course-angle crs crd1 crd2)]\n    (or (> ca 90) (< ca -90)))")
 	(title "abaft [crs crd1 crd2]"))
+
+([ProServer_Class310000] of  CloFuncall
+
+	(source "(ru.rules/dr)"))
+
+([ProServer_Class310001] of  CloFuncall
+
+	(source "(ru.rules/pp 'NaturalObjects)"))
+
+([ProServer_Class310002] of  CloFuncall
+
+	(source "(rete.core/facts-with-slot-value 'NamedObject 'amenity = :?)"))
+
+([ProServer_Class310003] of  CloFuncall
+
+	(source "(rete.core/facts-with-slot-value 'NamedObject 'amenity not= :?)"))
+
+([ProServer_Class310004] of  CloFuncall
+
+	(source "(rete.core/facts-with-slot-value 'NamedObject 'aeroway not= :?)"))
+
+([ProServer_Class310005] of  CloFuncall
+
+	(source "(count (rete.core/facts-with-slot-value 'NamedObject 'aeroway not= :?))"))
+
+([ProServer_Class310006] of  CloFuncall
+
+	(source "(count (rete.core/facts-with-slot-value 'NamedObject 'highway not= :?))"))
+
+([ProServer_Class310007] of  CloFuncall
+
+	(source "(count (rete.core/facts-with-slot-value 'NamedObject 'waterway not= :?))"))
+
+([ProServer_Class310008] of  CloFuncall
+
+	(source "(count (rete.core/facts-with-slot-value 'NamedObject 'tourism not= :?))"))
+
+([ProServer_Class310009] of  CloFuncall
+
+	(source "(map println (rete.core/facts-with-slot-value 'NamedObject 'tourism not= :?))"))
+
+([ProServer_Class310010] of  CloFuncall
+
+	(source "(map println (rete.core/facts-with-slot-value 'NamedObject 'waterway not= :?))"))
 
 ([ProServer_Class40000] of  ShareOnto
 
