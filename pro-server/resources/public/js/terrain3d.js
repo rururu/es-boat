@@ -35563,6 +35563,11 @@ view3d.core.ask_server = function(a, b, c, d) {
   a = [cljs.core.str(view3d.core.BSE_URL), cljs.core.str(a)].join("");
   return ajax.core.GET.call(null, a, new cljs.core.PersistentArrayMap(null, 4, [new cljs.core.Keyword(null, "params", "params", 710516235), b, new cljs.core.Keyword(null, "handler", "handler", -195596612), d, new cljs.core.Keyword(null, "error-handler", "error-handler", -484945776), view3d.core.error_handler, new cljs.core.Keyword(null, "response-format", "response-format", 1664465322), c], null));
 };
+view3d.core.get_answer = function(a) {
+  return function() {
+    return view3d.core.ask_server.call(null, view3d.core.ANS_PTH, null, new cljs.core.Keyword(null, "transit", "transit", 359458387), a);
+  };
+};
 view3d.core.terprov = new Cesium.CesiumTerrainProvider({url:"//assets.agi.com/stk-terrain/world", requestWaterMask:!1, requestVertexNormals:!1});
 view3d.core.viewer = new Cesium.Viewer("cesiumContainer");
 view3d.core.viewer.terrainProvider = view3d.core.terprov;
@@ -35851,17 +35856,30 @@ view3d.core.function3 = null;
 view3d.core.handler3 = function(a) {
   return view3d.core.function3.call(null, a);
 };
+view3d.core.selector4 = function(a, b, c) {
+  a = [cljs.core.str("\x3cselect onchange\x3d'javascript:view3d.core.handler4(this.value)'\x3e"), cljs.core.str("\x3coption value\x3d'-1'\x3e"), cljs.core.str(a), cljs.core.str("\x3c/option\x3e"), cljs.core.str(view3d.core.options.call(null, b, c)), cljs.core.str("\x3c/select\x3e")].join("");
+  return view3d.core.set_html_BANG_.call(null, "element4", a);
+};
+view3d.core.function4 = null;
+view3d.core.handler4 = function(a) {
+  return view3d.core.function4.call(null, a);
+};
 view3d.core.display_answer = function(a) {
-  view3d.core.set_html_BANG_.call(null, "display2", view3d.core.get_html.call(null, "display"));
   return view3d.core.set_html_BANG_.call(null, "display", a);
 };
 view3d.core.retrieve_answer = function() {
-  view3d.core.display_answer.call(null, "");
   return view3d.core.ask_server.call(null, view3d.core.ANS_PTH, null, new cljs.core.Keyword(null, "transit", "transit", 359458387), view3d.core.display_answer);
 };
+view3d.core.FST_ANS = "";
+view3d.core.display_both_answers = function(a) {
+  return view3d.core.set_html_BANG_.call(null, "display", [cljs.core.str(view3d.core.FST_ANS), cljs.core.str("\x3cbr\x3e\x3cbr\x3e"), cljs.core.str(a)].join(""));
+};
+view3d.core.retrieve_second = function(a) {
+  view3d.core.FST_ANS = a;
+  return view3d.core.ask_server.call(null, view3d.core.ANS_PTH, null, new cljs.core.Keyword(null, "transit", "transit", 359458387), view3d.core.display_both_answers);
+};
 view3d.core.retrieve_2_answers = function() {
-  view3d.core.ask_server.call(null, view3d.core.ANS_PTH, null, new cljs.core.Keyword(null, "transit", "transit", 359458387), view3d.core.display_answer);
-  return view3d.core.ask_server.call(null, view3d.core.ANS_PTH, null, new cljs.core.Keyword(null, "transit", "transit", 359458387), view3d.core.display_answer);
+  return view3d.core.ask_server.call(null, view3d.core.ANS_PTH, null, new cljs.core.Keyword(null, "transit", "transit", 359458387), view3d.core.retrieve_second);
 };
 view3d.core.behind_island = function(a) {
   view3d.core.selector3.call(null, "island", a, new cljs.core.Keyword(null, "itself", "itself", 1264932322));
@@ -35879,6 +35897,20 @@ view3d.core.where_island = function(a) {
   view3d.core.selector3.call(null, "island", a, new cljs.core.Keyword(null, "itself", "itself", 1264932322));
   view3d.core.function3 = function(a) {
     return view3d.core.ask_server.call(null, view3d.core.QST_PTH, cljs.core.merge.call(null, cljs.core.deref.call(null, view3d.core.boat), new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null, "predicate", "predicate", -1742501860), "where-is", new cljs.core.Keyword(null, "subject", "subject", -1411880451), "island", new cljs.core.Keyword(null, "object", "object", 1474613949), a], null)), new cljs.core.Keyword(null, "transit", "transit", 359458387), view3d.core.retrieve_answer);
+  };
+};
+view3d.core.SBJECT = "";
+view3d.core.where_object = function(a) {
+  view3d.core.selector4.call(null, "object", a, new cljs.core.Keyword(null, "itself", "itself", 1264932322));
+  view3d.core.function4 = function(a) {
+    return view3d.core.ask_server.call(null, view3d.core.QST_PTH, cljs.core.merge.call(null, cljs.core.deref.call(null, view3d.core.boat), new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null, "predicate", "predicate", -1742501860), "where-is", new cljs.core.Keyword(null, "subject", "subject", -1411880451), view3d.core.SBJECT, new cljs.core.Keyword(null, "subject-value", "subject-value", -1557312678), a], null)), new cljs.core.Keyword(null, "transit", "transit", 359458387), view3d.core.retrieve_answer);
+  };
+};
+view3d.core.where_type = function(a) {
+  view3d.core.selector3.call(null, "type", a, new cljs.core.Keyword(null, "itself", "itself", 1264932322));
+  view3d.core.function3 = function(a) {
+    view3d.core.SBJECT = a;
+    return view3d.core.ask_server.call(null, view3d.core.QST_PTH, cljs.core.merge.call(null, cljs.core.deref.call(null, view3d.core.boat), new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "predicate", "predicate", -1742501860), "nearby-objects", new cljs.core.Keyword(null, "subject", "subject", -1411880451), a], null)), new cljs.core.Keyword(null, "transit", "transit", 359458387), view3d.core.get_answer.call(null, view3d.core.where_object));
   };
 };
 view3d.core.nearby_islands_behind = function() {
@@ -35902,13 +35934,15 @@ view3d.core.what_is = function() {
     view3d.core.lst1, a)], null));
   };
 };
-view3d.core.lst2 = new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, ["island"], null);
+view3d.core.lst2 = new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, ["island", "object"], null);
 view3d.core.where_is = function() {
   view3d.core.selector2.call(null, "?", view3d.core.lst2, new cljs.core.Keyword(null, "count", "count", 2139924085));
   view3d.core.function2 = function(a) {
     a = cljs.reader.read_string.call(null, a);
-    return cljs.core.truth_(cljs.core._GT__EQ_.call(null, 0, a)) ? view3d.core.ask_server.call(null, view3d.core.QST_PTH, cljs.core.merge.call(null, cljs.core.deref.call(null, view3d.core.boat), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "predicate", "predicate", -1742501860), "nearby-islands"], null)), new cljs.core.Keyword(null, "transit", "transit", 359458387), view3d.core.nearby_islands_where) : cljs.core.println.call(null, new cljs.core.PersistentVector(null, 2, 5, 
-    cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "WHERE-IS", "WHERE-IS", 859140682), cljs.core.nth.call(null, view3d.core.lst1, a)], null));
+    var b = cljs.core._GT__EQ_;
+    return cljs.core.truth_(b.call(null, 1, a)) ? view3d.core.ask_server.call(null, view3d.core.QST_PTH, cljs.core.merge.call(null, cljs.core.deref.call(null, view3d.core.boat), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "predicate", "predicate", -1742501860), "nearby-types"], null)), new cljs.core.Keyword(null, "transit", "transit", 359458387), view3d.core.get_answer.call(null, view3d.core.where_type)) : cljs.core.truth_(b.call(null, 0, a)) ? view3d.core.ask_server.call(null, 
+    view3d.core.QST_PTH, cljs.core.merge.call(null, cljs.core.deref.call(null, view3d.core.boat), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "predicate", "predicate", -1742501860), "nearby-islands"], null)), new cljs.core.Keyword(null, "transit", "transit", 359458387), view3d.core.nearby_islands_where) : cljs.core.println.call(null, new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "WHERE-IS", "WHERE-IS", 859140682), 
+    cljs.core.nth.call(null, view3d.core.lst1, a)], null));
   };
 };
 view3d.core.questionnaire = function() {

@@ -1,4 +1,4 @@
-; Sat May 14 12:47:49 MSK 2016
+; Sun May 15 22:53:38 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -7,30 +7,39 @@
 (defclass %3ACLIPS_TOP_LEVEL_SLOT_CLASS "Fake class to save top-level slot information"
 	(is-a USER)
 	(role abstract)
+	(multislot accum
+		(type STRING)
+		(create-accessor read-write))
 	(single-slot course
 		(type INTEGER)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
-	(single-slot aeroway
+	(single-slot amenity
 		(type STRING)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
-	(multislot tourism-list
+	(multislot place-list
 		(type STRING)
 		(create-accessor read-write))
-	(single-slot amenity
+	(single-slot radius
+		(type FLOAT)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot side
 		(type STRING)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(multislot polar
 		(type FLOAT)
 		(create-accessor read-write))
-	(single-slot tourism
-		(type STRING)
-;+		(cardinality 0 1)
+	(multislot coord
+		(type FLOAT)
 		(create-accessor read-write))
-	(single-slot waterway
+	(multislot amenity-list
 		(type STRING)
+		(create-accessor read-write))
+	(single-slot time
+		(type INTEGER)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot predicate
@@ -53,6 +62,10 @@
 		(type STRING)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
+	(single-slot natural-list
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
 	(single-slot sector
 		(type INTEGER)
 ;+		(cardinality 0 1)
@@ -60,47 +73,6 @@
 	(single-slot place
 		(type STRING)
 ;+		(cardinality 0 1)
-		(create-accessor read-write))
-	(multislot accum
-		(type STRING)
-		(create-accessor read-write))
-	(single-slot highway
-		(type STRING)
-;+		(cardinality 0 1)
-		(create-accessor read-write))
-	(multislot waterway-list
-		(type STRING)
-		(create-accessor read-write))
-	(multislot place-list
-		(type STRING)
-		(create-accessor read-write))
-	(single-slot radius
-		(type FLOAT)
-;+		(cardinality 0 1)
-		(create-accessor read-write))
-	(single-slot side
-		(type STRING)
-;+		(cardinality 0 1)
-		(create-accessor read-write))
-	(multislot coord
-		(type FLOAT)
-		(create-accessor read-write))
-	(multislot amenity-list
-		(type STRING)
-		(create-accessor read-write))
-	(multislot aeroway-list
-		(type STRING)
-		(create-accessor read-write))
-	(single-slot time
-		(type INTEGER)
-;+		(cardinality 0 1)
-		(create-accessor read-write))
-	(single-slot natural-list
-		(type STRING)
-;+		(cardinality 0 1)
-		(create-accessor read-write))
-	(multislot highway-list
-		(type STRING)
 		(create-accessor read-write))
 	(single-slot volume
 		(type INTEGER)
@@ -155,23 +127,11 @@
 		(type INTEGER)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
-	(multislot waterway-list
-		(type STRING)
-		(create-accessor read-write))
 	(single-slot natural-list
 		(type STRING)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
-	(multislot highway-list
-		(type STRING)
-		(create-accessor read-write))
 	(multislot amenity-list
-		(type STRING)
-		(create-accessor read-write))
-	(multislot aeroway-list
-		(type STRING)
-		(create-accessor read-write))
-	(multislot tourism-list
 		(type STRING)
 		(create-accessor read-write))
 	(multislot place-list
@@ -185,18 +145,6 @@
 		(type INTEGER)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
-	(single-slot highway
-		(type STRING)
-;+		(cardinality 0 1)
-		(create-accessor read-write))
-	(single-slot aeroway
-		(type STRING)
-;+		(cardinality 0 1)
-		(create-accessor read-write))
-	(single-slot place
-		(type STRING)
-;+		(cardinality 0 1)
-		(create-accessor read-write))
 	(single-slot side
 		(type STRING)
 ;+		(cardinality 0 1)
@@ -208,10 +156,6 @@
 	(multislot polar
 		(type FLOAT)
 		(create-accessor read-write))
-	(single-slot tourism
-		(type STRING)
-;+		(cardinality 0 1)
-		(create-accessor read-write))
 	(multislot coord
 		(type FLOAT)
 		(create-accessor read-write))
@@ -219,7 +163,7 @@
 		(type STRING)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
-	(single-slot waterway
+	(single-slot place
 		(type STRING)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
@@ -346,23 +290,11 @@
 		(type INTEGER)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
-	(multislot waterway-list
-		(type STRING)
-		(create-accessor read-write))
 	(single-slot natural-list
 		(type STRING)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
-	(multislot highway-list
-		(type STRING)
-		(create-accessor read-write))
 	(multislot amenity-list
-		(type STRING)
-		(create-accessor read-write))
-	(multislot aeroway-list
-		(type STRING)
-		(create-accessor read-write))
-	(multislot tourism-list
 		(type STRING)
 		(create-accessor read-write))
 	(multislot place-list

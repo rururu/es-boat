@@ -68,12 +68,12 @@
 
 (defn answer []
   (let [ans (deref (future (<!! ANS-CHN)))]
-  ;;(println [:ANS ans])
+  (println [:ANS ans])
   (-> (r/response (write-transit ans))
         (r/header "Access-Control-Allow-Origin" "*"))))
 
 (defn question [pp]
-  ;;(println [:QUESTION pp])
+  (println [:QUESTION pp])
 (let [frm ['Question
 	'predicate (:predicate pp)
 	'subject (:subject pp)

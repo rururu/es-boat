@@ -86,6 +86,9 @@
               :error-handler error-handler
               :response-format resp-format})))
 
+(defn get-answer [handler]
+  (fn [] (ask-server ANS-PTH nil :transit handler)))
+
 ;; -------------------------- Cesium ---------------------------------
 
 (def terprov (js/Cesium.CesiumTerrainProvider.
@@ -285,6 +288,8 @@
     :count  (apply str (for [i (range (count lst))]
                             (str "<option value='" i "'>" (nth lst i) "</option>")))))
 
+;; ----- Selector1 ------
+
 (defn selector1 [header lst typ]
   (let [sel (str "<select onchange='javascript:view3d.core.handler1(this.value)'>"
                  "<option value='-1'>" header "</option>"
@@ -299,6 +304,8 @@
 (defn handler1 [selected]
   (function1 selected))
 
+;; ----- Selector2 ------
+
 (defn selector2 [header lst typ]
   (let [sel (str "<select onchange='javascript:view3d.core.handler2(this.value)'>"
                  "<option value='-1'>" header "</option>"
@@ -312,6 +319,8 @@
 (defn handler2 [selected]
   (function2 selected))
 
+;; ----- Selector3 ------
+
 (defn selector3 [header lst typ]
   (let [sel (str "<select onchange='javascript:view3d.core.handler3(this.value)'>"
                  "<option value='-1'>" header "</option>"
@@ -324,19 +333,39 @@
 (defn handler3 [selected]
   (function3 selected))
 
+;; ----- Selector4 ------
+
+(defn selector4 [header lst typ]
+  (let [sel (str "<select onchange='javascript:view3d.core.handler4(this.value)'>"
+                 "<option value='-1'>" header "</option>"
+                 (options lst typ)
+                 "</select>")]
+    (set-html! "element4" sel)))
+
+(def function4 nil)
+
+(defn handler4 [selected]
+  (function4 selected))
+
 ;; ------------------------ Questionnaire -----------------------------
 
 (defn display-answer [answer]
-  (set-html! "display2" (get-html "display"))
   (set-html! "display" answer))
 
 (defn retrieve-answer []
-  (display-answer "")
   (ask-server ANS-PTH nil :transit display-answer))
 
+(def FST-ANS "")
+
+(defn display-both-answers [second-ans]
+  (set-html! "display" (str FST-ANS "<br><br>" second-ans)))
+
+(defn retrieve-second [first-ans]
+  (def FST-ANS first-ans)
+  (ask-server ANS-PTH nil :transit display-both-answers))
+
 (defn retrieve-2-answers []
-  (ask-server ANS-PTH nil :transit display-answer)
-  (ask-server ANS-PTH nil :transit display-answer))
+  (ask-server ANS-PTH nil :transit retrieve-second))
 
 (defn behind-island [islands]
   (selector3 "island" islands :itself)
@@ -363,6 +392,26 @@
                                         :object a})
                   :transit retrieve-answer))))
 
+(def SBJECT "")
+
+(defn where-object [objects]
+  (selector4 "object" objects :itself)
+  (def function4
+    (fn [a]
+      (ask-server QST-PTH (merge @boat {:predicate "where-is"
+                                        :subject SBJECT
+                                        :subject-value a})
+                  :transit retrieve-answer))))
+
+(defn where-type [types]
+  (selector3 "type" types :itself)
+  (def function3
+    (fn [a]
+      (def SBJECT a)
+      (ask-server QST-PTH (merge @boat {:predicate "nearby-objects"
+                                        :subject a})
+                  :transit (get-answer where-object)))))
+
 (defn nearby-islands-behind []
   (ask-server ANS-PTH nil :transit behind-island))
 
@@ -371,6 +420,9 @@
 
 (defn nearby-islands-where []
   (ask-server ANS-PTH nil :transit where-island))
+
+;(defn nearby-types-where []
+ ; (ask-server ANS-PTH nil :transit where-type))
 
 (def lst1 ["ahead"
            "on the starboard bow"
@@ -398,7 +450,8 @@
                         :transit nearby-islands-before)
           (println [:WHAT-IS (nth lst1 n)]))))))
 
-(def lst2 ["island"])
+(def lst2 ["island"
+           "object"])
 
 (defn where-is []
   (selector2 "?" lst2 :count)
@@ -406,6 +459,8 @@
     (fn [a]
       (let [n (r/read-string a)]
         (condp >= n
+          1 (ask-server QST-PTH (merge @boat {:predicate "nearby-types"})
+                        :transit (get-answer where-type))
           0 (ask-server QST-PTH (merge @boat {:predicate "nearby-islands"})
                         :transit nearby-islands-where)
           (println [:WHERE-IS (nth lst1 n)]))))))

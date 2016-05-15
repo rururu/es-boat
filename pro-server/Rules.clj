@@ -165,6 +165,13 @@
 =>
 (retract ?b))
 
+(as:AnswerNearbyObjects -1
+(Answer accum ?acc)
+?q (Question predicate "nearby-objects")
+=>
+(pro.server/pump-in-ans (sort @?acc))
+(retract ?q))
+
 (as:AnswerNearbyIslands -1
 (Answer accum ?acc)
 ?q (Question predicate "nearby-islands")
@@ -216,20 +223,12 @@
 	polar ?pol
 	place ?pla
 	natural ?nat
-	amenity ?ame
-	aeroway ?aer
-	highway ?hig
-	waterway ?wat
-	tourism ?tou)
+	amenity ?ame)
 =>
 (cond
   (some? ?pla) (vswap! ?pll conj [?pla ?tit (second ?pol)])
   (some? ?nat) (vswap! ?nal conj [?nat ?tit (second ?pol)])
-  (some? ?ame) (vswap! ?aml conj [?ame ?tit (second ?pol)])
-  (some? ?aer) (vswap! ?aml conj [?aer ?tit (second ?pol)])
-  (some? ?hig) (vswap! ?aml conj [?hig ?tit (second ?pol)])
-  (some? ?wat) (vswap! ?aml conj [?wat ?tit (second ?pol)])
-  (some? ?tou) (vswap! ?aml conj [?tou ?tit (second ?pol)])))
+  (some? ?ame) (vswap! ?aml conj [?ame ?tit (second ?pol)])))
 
 (as:WhatIsAstern_Obj 0
 (Answer2 place-list ?pll
@@ -247,11 +246,7 @@
 (cond
   (some? ?pla) (vswap! ?pll conj [?pla ?tit (second ?pol)])
   (some? ?nat) (vswap! ?nal conj [?nat ?tit (second ?pol)])
-  (some? ?ame) (vswap! ?aml conj [?ame ?tit (second ?pol)])
-  (some? ?aer) (vswap! ?aml conj [?aer ?tit (second ?pol)])
-  (some? ?hig) (vswap! ?aml conj [?hig ?tit (second ?pol)])
-  (some? ?wat) (vswap! ?aml conj [?wat ?tit (second ?pol)])
-  (some? ?tou) (vswap! ?aml conj [?tou ?tit (second ?pol)])))
+  (some? ?ame) (vswap! ?aml conj [?ame ?tit (second ?pol)])))
 
 (as:WhatIsPortAbaft_Isl 0
 (Answer accum ?acc)
@@ -278,11 +273,7 @@
 (cond
   (some? ?pla) (vswap! ?pll conj [?pla ?tit (second ?pol)])
   (some? ?nat) (vswap! ?nal conj [?nat ?tit (second ?pol)])
-  (some? ?ame) (vswap! ?aml conj [?ame ?tit (second ?pol)])
-  (some? ?aer) (vswap! ?aml conj [?aer ?tit (second ?pol)])
-  (some? ?hig) (vswap! ?aml conj [?hig ?tit (second ?pol)])
-  (some? ?wat) (vswap! ?aml conj [?wat ?tit (second ?pol)])
-  (some? ?tou) (vswap! ?aml conj [?tou ?tit (second ?pol)])))
+  (some? ?ame) (vswap! ?aml conj [?ame ?tit (second ?pol)])))
 
 (as:WhatIsPortBow_Obj 0
 (Answer2 place-list ?pll
@@ -300,11 +291,7 @@
 (cond
   (some? ?pla) (vswap! ?pll conj [?pla ?tit (second ?pol)])
   (some? ?nat) (vswap! ?nal conj [?nat ?tit (second ?pol)])
-  (some? ?ame) (vswap! ?aml conj [?ame ?tit (second ?pol)])
-  (some? ?aer) (vswap! ?aml conj [?aer ?tit (second ?pol)])
-  (some? ?hig) (vswap! ?aml conj [?hig ?tit (second ?pol)])
-  (some? ?wat) (vswap! ?aml conj [?wat ?tit (second ?pol)])
-  (some? ?tou) (vswap! ?aml conj [?tou ?tit (second ?pol)])))
+  (some? ?ame) (vswap! ?aml conj [?ame ?tit (second ?pol)])))
 
 (as:WhatIsStarAbaft_Obj 0
 (Answer2 place-list ?pll
@@ -322,11 +309,7 @@
 (cond
   (some? ?pla) (vswap! ?pll conj [?pla ?tit (second ?pol)])
   (some? ?nat) (vswap! ?nal conj [?nat ?tit (second ?pol)])
-  (some? ?ame) (vswap! ?aml conj [?ame ?tit (second ?pol)])
-  (some? ?aer) (vswap! ?aml conj [?aer ?tit (second ?pol)])
-  (some? ?hig) (vswap! ?aml conj [?hig ?tit (second ?pol)])
-  (some? ?wat) (vswap! ?aml conj [?wat ?tit (second ?pol)])
-  (some? ?tou) (vswap! ?aml conj [?tou ?tit (second ?pol)])))
+  (some? ?ame) (vswap! ?aml conj [?ame ?tit (second ?pol)])))
 
 (as:WhatIsStarBeam_Obj 0
 (Answer2 place-list ?pll
@@ -344,11 +327,7 @@
 (cond
   (some? ?pla) (vswap! ?pll conj [?pla ?tit (second ?pol)])
   (some? ?nat) (vswap! ?nal conj [?nat ?tit (second ?pol)])
-  (some? ?ame) (vswap! ?aml conj [?ame ?tit (second ?pol)])
-  (some? ?aer) (vswap! ?aml conj [?aer ?tit (second ?pol)])
-  (some? ?hig) (vswap! ?aml conj [?hig ?tit (second ?pol)])
-  (some? ?wat) (vswap! ?aml conj [?wat ?tit (second ?pol)])
-  (some? ?tou) (vswap! ?aml conj [?tou ?tit (second ?pol)])))
+  (some? ?ame) (vswap! ?aml conj [?ame ?tit (second ?pol)])))
 
 (as:WhatIsStarBow_Obj 0
 (Answer2 place-list ?pll
@@ -366,11 +345,7 @@
 (cond
   (some? ?pla) (vswap! ?pll conj [?pla ?tit (second ?pol)])
   (some? ?nat) (vswap! ?nal conj [?nat ?tit (second ?pol)])
-  (some? ?ame) (vswap! ?aml conj [?ame ?tit (second ?pol)])
-  (some? ?aer) (vswap! ?aml conj [?aer ?tit (second ?pol)])
-  (some? ?hig) (vswap! ?aml conj [?hig ?tit (second ?pol)])
-  (some? ?wat) (vswap! ?aml conj [?wat ?tit (second ?pol)])
-  (some? ?tou) (vswap! ?aml conj [?tou ?tit (second ?pol)])))
+  (some? ?ame) (vswap! ?aml conj [?ame ?tit (second ?pol)])))
 
 (as:InitAnswer 1
 ?a (Answer time ?tim1)
@@ -380,40 +355,28 @@
 (modify ?a accum (volatile! [])
 	time ?tim2))
 
-(as:AnswerNearbyObjects -1
+(as:AnswerNearbyTypes -1
 (Answer2 place-list ?pll
 	natural-list ?nal
-	amenity-list ?aml
-	aeroway-list ?ael
-	highway-list ?hil
-	waterway-list ?wal
-	tourism-list ?tol)
-?q (Question predicate "nearby-objects"
-	subject ?sub)
+	amenity-list ?aml)
+?q (Question predicate "nearby-types")
 =>
-(condp = ?sub
-  "place" (pro.server/pump-in-ans (sort @?pll))
-  "natural" (pro.server/pump-in-ans (sort @?nal))
-  "amenity" (pro.server/pump-in-ans (sort @?aml)))
-  "aeroway" (pro.server/pump-in-ans (sort @?ael)))
-  "highway" (pro.server/pump-in-ans (sort @?hil)))
-  "waterway" (pro.server/pump-in-ans (sort @?wal)))
-  "tourism" (pro.server/pump-in-ans (sort @?tol)))
+(let [pts (map first @?pll)
+       nts (map first @?nal)
+       ats (map first @?aml)
+       all (set (concat pts nts ats))]
+  (pro.server/pump-in-ans (sort all)))
 (retract ?q))
 
 (as:AnswerObjectsOnSide -2
 (Answer2 place-list ?pll
 	natural-list ?nal
-	amenity-list ?aml
-	aeroway-list ?ael
-	highway-list ?hil
-	waterway-list ?wal
-	tourism-list ?tol)
+	amenity-list ?aml)
 ?q (Question predicate "what-is"
 	subject ?sub)
 =>
 (pro.server/pump-in-ans 
-  (as/ans-objects @?pll @?nal @?aml @?ael @?hil @?wal @?tol ?sub))
+  (as/ans-objects @?pll @?nal @?aml ?sub))
 (retract ?q))
 
 (as:RetractObsoleteObjects 2
@@ -437,18 +400,10 @@
        nos (osm.data/filter-kv-not "place" "island" nos)
        pls (osm.data/filter-k "place" nos)
        nls (osm.data/filter-k "natural" nos)
-       ams (osm.data/filter-k "amenity" nos)
-       aes (osm.data/filter-k "aeroway" nos)
-       his (osm.data/filter-k "highway" nos)
-       was (osm.data/filter-k "waterway" nos)
-       tos (osm.data/filter-k "tourism" nos)]
+       ams (osm.data/filter-k "amenity" nos)]
   (modify ?no place-list (vec (map #(get % "name") pls))
 	natural-list (vec (map #(get % "name") nls))
 	amenity-list (vec (map #(get % "name") ams))
-	aeroway-list (vec (map #(get % "name") aes))
-	highway-list (vec (map #(get % "name") his))
-	waterway-list (vec (map #(get % "name") was))
-	tourism-list (vec (map #(get % "name") tos))
 	time ?tim2)
   (doseq [x pls]
     (asser NamedObject title (get x "name") coord [(get x "lat") (get x "lon")]
@@ -458,19 +413,7 @@
 	natural (get x "natural") time ?tim2))
   (doseq [x ams]
     (asser NamedObject title (get x "name") coord [(get x "lat") (get x "lon")]
-	amenity (get x "amenity") time ?tim2)))
-  (doseq [x aes]
-    (asser NamedObject title (get x "name") coord [(get x "lat") (get x "lon")]
-	aeroway (get x "aeroway") time ?tim2)))
-  (doseq [x his]
-    (asser NamedObject title (get x "name") coord [(get x "lat") (get x "lon")]
-	highway (get x "highway") time ?tim2)))
-  (doseq [x was]
-    (asser NamedObject title (get x "name") coord [(get x "lat") (get x "lon")]
-	waterway (get x "waterway") time ?tim2)))
-  (doseq [x tos]
-    (asser NamedObject title (get x "name") coord [(get x "lat") (get x "lon")]
-	tourism (get x "tourism") time ?tim2))))
+	amenity (get x "amenity") time ?tim2))))
 
 (as:WhatIsPortAbaft_Obj 0
 (Answer2 place-list ?pll
@@ -488,11 +431,36 @@
 (cond
   (some? ?pla) (vswap! ?pll conj [?pla ?tit (second ?pol)])
   (some? ?nat) (vswap! ?nal conj [?nat ?tit (second ?pol)])
-  (some? ?ame) (vswap! ?aml conj [?ame ?tit (second ?pol)])
-  (some? ?aer) (vswap! ?aml conj [?aer ?tit (second ?pol)])
-  (some? ?hig) (vswap! ?aml conj [?hig ?tit (second ?pol)])
-  (some? ?wat) (vswap! ?aml conj [?wat ?tit (second ?pol)])
-  (some? ?tou) (vswap! ?aml conj [?tou ?tit (second ?pol)])))
+  (some? ?ame) (vswap! ?aml conj [?ame ?tit (second ?pol)])))
+
+(as:NearbyTypes 0
+?a (Answer2 place-list ?pll
+	natural-list ?nal
+	amenity-list ?aml)
+(Question predicate "nearby-types")
+(NamedObject title ?tit
+	place ?pla
+	natural ?nat
+	amenity ?ame)
+=>
+(cond
+  (string? ?nat) (vswap! ?nal conj [?nat ?tit])
+  (string? ?pla) (vswap! ?pll conj [?pla ?tit])
+  (string? ?ame) (vswap! ?aml conj [?ame ?tit])))
+
+(as:NearbyObjects 0
+?a (Answer accum ?acc)
+(Question predicate "nearby-objects"
+	subject ?sub)
+(NamedObject title ?tit
+	place ?pla
+	natural ?nat
+	amenity ?ame)
+=>
+(if (or (= ?sub ?pla)
+         (= ?sub ?nat)
+         (= ?sub ?ame))
+  (vswap! ?acc conj ?tit)))
 
 (as:IslandsBehind 0
 ?a (Answer accum ?acc)
@@ -518,11 +486,7 @@
 (modify ?a2 time ?tim2
 	place-list (volatile! [])
 	natural-list (volatile! [])
-	amenity-list (volatile! [])
-	aeroway-list (volatile! [])
-	highway-list (volatile! [])
-	waterway-list (volatile! [])
-	tourism-list (volatile! [])))
+	amenity-list (volatile! [])))
 
 (as:CheckOSMData 2
 ?od (OSMData coord ?crd1
