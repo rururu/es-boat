@@ -168,4 +168,13 @@
   z-index:100;
   color:yellow
 }
+#display2 {
+  position:fixed;
+  bottom:260px;
+  left:60px;
+  padding:5px;
+  z-index:100;
+  color:yellow;
+  opacity: 0.25;
+}
 

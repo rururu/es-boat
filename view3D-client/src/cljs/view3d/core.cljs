@@ -86,7 +86,7 @@
               :error-handler error-handler
               :response-format resp-format})))
 
-(defn get-answer [handler]
+(defn get-answer-and-ask [handler]
   (fn [] (ask-server ANS-PTH nil :transit handler)))
 
 ;; -------------------------- Cesium ---------------------------------
@@ -288,6 +288,11 @@
     :count  (apply str (for [i (range (count lst))]
                             (str "<option value='" i "'>" (nth lst i) "</option>")))))
 
+(defn clear-selectors []
+  (set-html! "element2" "")
+  (set-html! "element3" "")
+  (set-html! "element4" ""))
+
 ;; ----- Selector1 ------
 
 (defn selector1 [header lst typ]
@@ -295,9 +300,7 @@
                  "<option value='-1'>" header "</option>"
                  (options lst typ)
                  "</select>")]
-    (set-html! "element1" sel)
-    (set-html! "element2" "")
-    (set-html! "element3" "")))
+    (set-html! "element1" sel)))
 
 (def function1 nil)
 
@@ -311,8 +314,7 @@
                  "<option value='-1'>" header "</option>"
                  (options lst typ)
                  "</select>")]
-    (set-html! "element2" sel)
-    (set-html! "element3" "")))
+    (set-html! "element2" sel)))
 
 (def function2 nil)
 
@@ -350,6 +352,7 @@
 ;; ------------------------ Questionnaire -----------------------------
 
 (defn display-answer [answer]
+  (set-html! "display2" (get-html "display"))
   (set-html! "display" answer))
 
 (defn retrieve-answer []
@@ -358,6 +361,7 @@
 (def FST-ANS "")
 
 (defn display-both-answers [second-ans]
+  (set-html! "display2" (get-html "display"))
   (set-html! "display" (str FST-ANS "<br><br>" second-ans)))
 
 (defn retrieve-second [first-ans]
@@ -410,19 +414,7 @@
       (def SBJECT a)
       (ask-server QST-PTH (merge @boat {:predicate "nearby-objects"
                                         :subject a})
-                  :transit (get-answer where-object)))))
-
-(defn nearby-islands-behind []
-  (ask-server ANS-PTH nil :transit behind-island))
-
-(defn nearby-islands-before []
-  (ask-server ANS-PTH nil :transit before-island))
-
-(defn nearby-islands-where []
-  (ask-server ANS-PTH nil :transit where-island))
-
-;(defn nearby-types-where []
- ; (ask-server ANS-PTH nil :transit where-type))
+                  :transit (get-answer-and-ask where-object)))))
 
 (def lst1 ["ahead"
            "on the starboard bow"
@@ -445,9 +437,9 @@
                                               :subject (nth lst1 n)})
                         :transit retrieve-2-answers)
           8 (ask-server QST-PTH (merge @boat {:predicate "nearby-islands"})
-                        :transit nearby-islands-behind)
+                        :transit (get-answer-and-ask behind-island))
           9 (ask-server QST-PTH (merge @boat {:predicate "nearby-islands"})
-                        :transit nearby-islands-before)
+                        :transit (get-answer-and-ask before-island))
           (println [:WHAT-IS (nth lst1 n)]))))))
 
 (def lst2 ["island"
@@ -459,10 +451,10 @@
     (fn [a]
       (let [n (r/read-string a)]
         (condp >= n
-          1 (ask-server QST-PTH (merge @boat {:predicate "nearby-types"})
-                        :transit (get-answer where-type))
           0 (ask-server QST-PTH (merge @boat {:predicate "nearby-islands"})
-                        :transit nearby-islands-where)
+                        :transit (get-answer-and-ask where-island))
+          1 (ask-server QST-PTH (merge @boat {:predicate "nearby-types"})
+                        :transit (get-answer-and-ask where-type))
           (println [:WHERE-IS (nth lst1 n)]))))))
 
 (defn questionnaire []
@@ -471,15 +463,20 @@
                   "Where is"
                   "Tell me about"
                   "What is the weather"
-                  "How far is "] :count)
+                  "Clear HUD"] :count)
   (def function1
     (fn [a]
+      (clear-selectors)
       (condp = (r/read-string a)
         0 (what-is)
         1 (where-is)
         2 (tell-about)
         3 (weather)
-        4 (how-far-is)))))
+        4 (clear-hud)))))
+
+(defn clear-hud []
+  (set-html! "display" "")
+  (set-html! "display2" ""))
 
 ;; ----------------------------- Init ---------------------------------
 

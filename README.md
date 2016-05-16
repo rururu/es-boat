@@ -20,7 +20,9 @@ This starts a script that loads needed programs, starts expert system and opens 
 
 You can open a nautical chart in another browser window on the address http://localhost:4444/chart.html.
 
-For now expert system answer questions only about nearby islands and shows them on the HUD. Stay tuned.
+For now expert system answers questions about nearby islands and other geographical objects and shows them on the HUD. More features will come soon. Stay tuned.
+
+Honestly, this is not only the boat, but also a vehicle that can go upon the ground along the roads and off roads. More then this, it is a flying apparatus that can fly above the ground and the sea. Just set the desired altitude and speed. Top secret! This is also a spacecraft, just set the altitude more then 120000. Happy flying!
 
 Copyright and license
 ----
