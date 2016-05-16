@@ -20,6 +20,8 @@ This starts a script that loads needed programs, starts expert system and opens 
 
 You can open a nautical chart in another browser window on the address http://localhost:4444/chart.html.
 
+To change a region of sailing in Protege GUI go to "Instances" tab, in "CLASS BROWSER" select a "StartPoint" class and create a new instance with a "shining diamond" button. Fill the "title" and "coord" fields with corresponding information and "glue yellow sticker" to this new instance with a "shining heart" button. Attention! Don't forget to remove the yellow sticker from the any other instance of the StartPoint class, only one can have such sticker and just it will be used as the starting point when you save a project and restart system.
+
 For now expert system answers questions about nearby islands and other geographical objects and shows them on the HUD. More features will come soon. Stay tuned.
 
 Honestly, this is not only the boat, but also a vehicle that can go upon the ground along the roads and off roads. More then this, it is a flying apparatus that can fly above the ground and the sea. Just set the desired altitude and speed. Top secret! This is also a spacecraft, just set the altitude more then 120000. Happy flying!
