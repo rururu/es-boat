@@ -296,7 +296,7 @@
 ;; ----- Selector1 ------
 
 (defn selector1 [header lst typ]
-  (let [sel (str "<select onchange='javascript:view3d.core.handler1(this.value)'>"
+  (let [sel (str "<select onchange='javascript:view3d.core.handler1(this.value)' style='width:130px'>"
                  "<option value='-1'>" header "</option>"
                  (options lst typ)
                  "</select>")]
@@ -310,7 +310,7 @@
 ;; ----- Selector2 ------
 
 (defn selector2 [header lst typ]
-  (let [sel (str "<select onchange='javascript:view3d.core.handler2(this.value)'>"
+  (let [sel (str "<select onchange='javascript:view3d.core.handler2(this.value)' style='width:150px'>"
                  "<option value='-1'>" header "</option>"
                  (options lst typ)
                  "</select>")]
@@ -324,7 +324,7 @@
 ;; ----- Selector3 ------
 
 (defn selector3 [header lst typ]
-  (let [sel (str "<select onchange='javascript:view3d.core.handler3(this.value)'>"
+  (let [sel (str "<select onchange='javascript:view3d.core.handler3(this.value)' style='width:150px'>"
                  "<option value='-1'>" header "</option>"
                  (options lst typ)
                  "</select>")]
@@ -338,7 +338,7 @@
 ;; ----- Selector4 ------
 
 (defn selector4 [header lst typ]
-  (let [sel (str "<select onchange='javascript:view3d.core.handler4(this.value)'>"
+  (let [sel (str "<select onchange='javascript:view3d.core.handler4(this.value)' style='width:150px'>"
                  "<option value='-1'>" header "</option>"
                  (options lst typ)
                  "</select>")]

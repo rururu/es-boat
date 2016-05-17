@@ -35821,7 +35821,7 @@ view3d.core.clear_selectors = function() {
   return view3d.core.set_html_BANG_.call(null, "element4", "");
 };
 view3d.core.selector1 = function(a, b, c) {
-  a = [cljs.core.str("\x3cselect onchange\x3d'javascript:view3d.core.handler1(this.value)'\x3e"), cljs.core.str("\x3coption value\x3d'-1'\x3e"), cljs.core.str(a), cljs.core.str("\x3c/option\x3e"), cljs.core.str(view3d.core.options.call(null, b, c)), cljs.core.str("\x3c/select\x3e")].join("");
+  a = [cljs.core.str("\x3cselect onchange\x3d'javascript:view3d.core.handler1(this.value)' style\x3d'width:130px'\x3e"), cljs.core.str("\x3coption value\x3d'-1'\x3e"), cljs.core.str(a), cljs.core.str("\x3c/option\x3e"), cljs.core.str(view3d.core.options.call(null, b, c)), cljs.core.str("\x3c/select\x3e")].join("");
   return view3d.core.set_html_BANG_.call(null, "element1", a);
 };
 view3d.core.function1 = null;
@@ -35829,7 +35829,7 @@ view3d.core.handler1 = function(a) {
   return view3d.core.function1.call(null, a);
 };
 view3d.core.selector2 = function(a, b, c) {
-  a = [cljs.core.str("\x3cselect onchange\x3d'javascript:view3d.core.handler2(this.value)'\x3e"), cljs.core.str("\x3coption value\x3d'-1'\x3e"), cljs.core.str(a), cljs.core.str("\x3c/option\x3e"), cljs.core.str(view3d.core.options.call(null, b, c)), cljs.core.str("\x3c/select\x3e")].join("");
+  a = [cljs.core.str("\x3cselect onchange\x3d'javascript:view3d.core.handler2(this.value)' style\x3d'width:150px'\x3e"), cljs.core.str("\x3coption value\x3d'-1'\x3e"), cljs.core.str(a), cljs.core.str("\x3c/option\x3e"), cljs.core.str(view3d.core.options.call(null, b, c)), cljs.core.str("\x3c/select\x3e")].join("");
   return view3d.core.set_html_BANG_.call(null, "element2", a);
 };
 view3d.core.function2 = null;
@@ -35837,7 +35837,7 @@ view3d.core.handler2 = function(a) {
   return view3d.core.function2.call(null, a);
 };
 view3d.core.selector3 = function(a, b, c) {
-  a = [cljs.core.str("\x3cselect onchange\x3d'javascript:view3d.core.handler3(this.value)'\x3e"), cljs.core.str("\x3coption value\x3d'-1'\x3e"), cljs.core.str(a), cljs.core.str("\x3c/option\x3e"), cljs.core.str(view3d.core.options.call(null, b, c)), cljs.core.str("\x3c/select\x3e")].join("");
+  a = [cljs.core.str("\x3cselect onchange\x3d'javascript:view3d.core.handler3(this.value)' style\x3d'width:150px'\x3e"), cljs.core.str("\x3coption value\x3d'-1'\x3e"), cljs.core.str(a), cljs.core.str("\x3c/option\x3e"), cljs.core.str(view3d.core.options.call(null, b, c)), cljs.core.str("\x3c/select\x3e")].join("");
   return view3d.core.set_html_BANG_.call(null, "element3", a);
 };
 view3d.core.function3 = null;
@@ -35845,7 +35845,7 @@ view3d.core.handler3 = function(a) {
   return view3d.core.function3.call(null, a);
 };
 view3d.core.selector4 = function(a, b, c) {
-  a = [cljs.core.str("\x3cselect onchange\x3d'javascript:view3d.core.handler4(this.value)'\x3e"), cljs.core.str("\x3coption value\x3d'-1'\x3e"), cljs.core.str(a), cljs.core.str("\x3c/option\x3e"), cljs.core.str(view3d.core.options.call(null, b, c)), cljs.core.str("\x3c/select\x3e")].join("");
+  a = [cljs.core.str("\x3cselect onchange\x3d'javascript:view3d.core.handler4(this.value)' style\x3d'width:150px'\x3e"), cljs.core.str("\x3coption value\x3d'-1'\x3e"), cljs.core.str(a), cljs.core.str("\x3c/option\x3e"), cljs.core.str(view3d.core.options.call(null, b, c)), cljs.core.str("\x3c/select\x3e")].join("");
   return view3d.core.set_html_BANG_.call(null, "element4", a);
 };
 view3d.core.function4 = null;

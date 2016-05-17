@@ -752,7 +752,7 @@ view3d.core.set_html_BANG_.call(null,"element3","");
 return view3d.core.set_html_BANG_.call(null,"element4","");
 });
 view3d.core.selector1 = (function view3d$core$selector1(header,lst,typ){
-var sel = [cljs.core.str("<select onchange='javascript:view3d.core.handler1(this.value)'>"),cljs.core.str("<option value='-1'>"),cljs.core.str(header),cljs.core.str("</option>"),cljs.core.str(view3d.core.options.call(null,lst,typ)),cljs.core.str("</select>")].join('');
+var sel = [cljs.core.str("<select onchange='javascript:view3d.core.handler1(this.value)' style='width:130px'>"),cljs.core.str("<option value='-1'>"),cljs.core.str(header),cljs.core.str("</option>"),cljs.core.str(view3d.core.options.call(null,lst,typ)),cljs.core.str("</select>")].join('');
 return view3d.core.set_html_BANG_.call(null,"element1",sel);
 });
 view3d.core.function1 = null;
@@ -760,7 +760,7 @@ view3d.core.handler1 = (function view3d$core$handler1(selected){
 return view3d.core.function1.call(null,selected);
 });
 view3d.core.selector2 = (function view3d$core$selector2(header,lst,typ){
-var sel = [cljs.core.str("<select onchange='javascript:view3d.core.handler2(this.value)'>"),cljs.core.str("<option value='-1'>"),cljs.core.str(header),cljs.core.str("</option>"),cljs.core.str(view3d.core.options.call(null,lst,typ)),cljs.core.str("</select>")].join('');
+var sel = [cljs.core.str("<select onchange='javascript:view3d.core.handler2(this.value)' style='width:150px'>"),cljs.core.str("<option value='-1'>"),cljs.core.str(header),cljs.core.str("</option>"),cljs.core.str(view3d.core.options.call(null,lst,typ)),cljs.core.str("</select>")].join('');
 return view3d.core.set_html_BANG_.call(null,"element2",sel);
 });
 view3d.core.function2 = null;
@@ -768,7 +768,7 @@ view3d.core.handler2 = (function view3d$core$handler2(selected){
 return view3d.core.function2.call(null,selected);
 });
 view3d.core.selector3 = (function view3d$core$selector3(header,lst,typ){
-var sel = [cljs.core.str("<select onchange='javascript:view3d.core.handler3(this.value)'>"),cljs.core.str("<option value='-1'>"),cljs.core.str(header),cljs.core.str("</option>"),cljs.core.str(view3d.core.options.call(null,lst,typ)),cljs.core.str("</select>")].join('');
+var sel = [cljs.core.str("<select onchange='javascript:view3d.core.handler3(this.value)' style='width:150px'>"),cljs.core.str("<option value='-1'>"),cljs.core.str(header),cljs.core.str("</option>"),cljs.core.str(view3d.core.options.call(null,lst,typ)),cljs.core.str("</select>")].join('');
 return view3d.core.set_html_BANG_.call(null,"element3",sel);
 });
 view3d.core.function3 = null;
@@ -776,7 +776,7 @@ view3d.core.handler3 = (function view3d$core$handler3(selected){
 return view3d.core.function3.call(null,selected);
 });
 view3d.core.selector4 = (function view3d$core$selector4(header,lst,typ){
-var sel = [cljs.core.str("<select onchange='javascript:view3d.core.handler4(this.value)'>"),cljs.core.str("<option value='-1'>"),cljs.core.str(header),cljs.core.str("</option>"),cljs.core.str(view3d.core.options.call(null,lst,typ)),cljs.core.str("</select>")].join('');
+var sel = [cljs.core.str("<select onchange='javascript:view3d.core.handler4(this.value)' style='width:150px'>"),cljs.core.str("<option value='-1'>"),cljs.core.str(header),cljs.core.str("</option>"),cljs.core.str(view3d.core.options.call(null,lst,typ)),cljs.core.str("</select>")].join('');
 return view3d.core.set_html_BANG_.call(null,"element4",sel);
 });
 view3d.core.function4 = null;
