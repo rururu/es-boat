@@ -95,7 +95,7 @@
                #js{:url "//assets.agi.com/stk-terrain/world"
                    :requestWaterMask false
                    :requestVertexNormals false}))
-(def viewer (js/Cesium.Viewer. "cesiumContainer"))
+(def viewer (js/Cesium.Viewer. "cesiumContainer" #js{:animation false}))
 
 (set! (.-terrainProvider viewer) terprov)
 
@@ -293,6 +293,10 @@
   (set-html! "element3" "")
   (set-html! "element4" ""))
 
+(defn clear-selectors34 []
+  (set-html! "element3" "")
+  (set-html! "element4" ""))
+
 ;; ----- Selector1 ------
 
 (defn selector1 [header lst typ]
@@ -372,25 +376,28 @@
   (ask-server ANS-PTH nil :transit retrieve-second))
 
 (defn behind-island [islands]
-  (selector3 "island" islands :itself)
+  (selector3 "?" islands :itself)
   (def function3
     (fn [a]
+      (set-html! "element4" "")
       (ask-server QST-PTH {:predicate "what-is"
                            :subject "behind the island"
                            :object a} :transit retrieve-answer))))
 
 (defn before-island [islands]
-  (selector3 "island" islands :itself)
+  (selector3 "?" islands :itself)
   (def function3
     (fn [a]
+      (set-html! "element4" "")
       (ask-server QST-PTH {:predicate "what-is"
                            :subject "before the island"
                            :object a} :transit retrieve-answer))))
 
 (defn where-island [islands]
-  (selector3 "island" islands :itself)
+  (selector3 "?" islands :itself)
   (def function3
     (fn [a]
+      (set-html! "element4" "")
       (ask-server QST-PTH (merge @boat {:predicate "where-is"
                                         :subject "island"
                                         :object a})
@@ -399,7 +406,7 @@
 (def SBJECT "")
 
 (defn where-object [objects]
-  (selector4 "object" objects :itself)
+  (selector4 "?" objects :itself)
   (def function4
     (fn [a]
       (ask-server QST-PTH (merge @boat {:predicate "where-is"
@@ -408,9 +415,10 @@
                   :transit retrieve-answer))))
 
 (defn where-type [types]
-  (selector3 "type" types :itself)
+  (selector3 "?" types :itself)
   (def function3
     (fn [a]
+      (set-html! "element4" "")
       (def SBJECT a)
       (ask-server QST-PTH (merge @boat {:predicate "nearby-objects"
                                         :subject a})
@@ -431,6 +439,7 @@
   (selector2 "?" lst1 :count)
   (def function2
     (fn [a]
+      (clear-selectors34)
       (let [n (r/read-string a)]
         (condp >= n
           7 (ask-server QST-PTH (merge @boat {:predicate "what-is"
@@ -449,6 +458,7 @@
   (selector2 "?" lst2 :count)
   (def function2
     (fn [a]
+      (clear-selectors34)
       (let [n (r/read-string a)]
         (condp >= n
           0 (ask-server QST-PTH (merge @boat {:predicate "nearby-islands"})
@@ -456,6 +466,11 @@
           1 (ask-server QST-PTH (merge @boat {:predicate "nearby-types"})
                         :transit (get-answer-and-ask where-type))
           (println [:WHERE-IS (nth lst1 n)]))))))
+
+(defn weather []
+  (ask-server QST-PTH (merge @boat {:predicate "what-is"
+                                    :subject "weather"})
+              :transit retrieve-answer))
 
 (defn questionnaire []
   (set-html! "ask" "Ask a question:")

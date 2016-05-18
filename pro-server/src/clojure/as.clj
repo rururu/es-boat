@@ -37,3 +37,43 @@
               (anso aml cal "Amenity")))
       "are " subject))))
 
+(defn rough-distance [lat1 lon1 lat2 lon2]
+  (letfn [(smround [n]
+	(/ (float (Math/round (* n 10))) 10))]
+(let [dlat (- lat1 lat2)
+        dlon (- lon1 lon2)
+        lad (* (if (>= dlat 0) dlat (- 0 dlat)) 60)
+        lod (* (if (>= dlon 0) dlon (- 0 dlon)) 60)
+        dia (Math/sqrt (+ (* lad lad) (* lod lod)))]
+   (if (< dia 1) (smround dia) (Math/round dia)))
+))
+
+(defn weather [[lat lon]]
+  (if-let [rsp (geo.names/call-geonames-weather lat lon)]
+  (let [lat2 (read-string (rsp "lat"))
+          lon2 (read-string (rsp "lng"))
+          bear (geo.names/bearing lat lon lat2 lon2)
+          dir (geo.names/direction bear)
+          dis (rough-distance lat lon lat2 lon2)
+          name (rsp "stationName")
+          wcd (rsp "weatherCondition")
+          hym (rsp "hymidity")
+          tmp (rsp "temperature")
+          wind (rsp "windDirection")
+          bwnd (if (some? wind)
+	(let [b (+ (read-string wind) 180)] (if (> b 360) (- b 360) b)))
+          win (if (some? bwnd)
+	(geo.names/direction bwnd)
+	"n/a")
+          wins (rsp "windSpeed")
+          tim (rsp "observationTime")
+          loc (str dis " miles to " dir " from here")]
+    (str name " Weather Station<br>"
+	"location: " loc "<br>"
+	"observation time: " tim "<br>"
+	"weather conditions: " wcd "<br>"
+	"temperature: " tmp " Celsius<br>"
+	"hymidity: " hym "<br>"
+	"wind: " win ", " wins " Knots"))
+  "I can not get a weather information"))
+

@@ -1,4 +1,4 @@
-; Mon May 16 14:18:41 MSK 2016
+; Wed May 18 16:42:49 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -429,6 +429,7 @@
 		[ProServer_Class110002]
 		[ProServer_Class210000]
 		[ProServer_Class280001]
+		[ProServer_Class310007]
 		[ProServer_Class100005]
 		[ProServer_Class250000]
 		[ProServer_Class200019]
@@ -460,10 +461,6 @@
 	(salience -1)
 	(title "as:AnswerIslandsBehind"))
 
-([ProServer_Class190000] of  CloFuncall
-
-	(source "(ru.rules/f 197)"))
-
 ([ProServer_Class190001] of  Rule
 
 	(lhs "?b (Behind time ?tim1)\n(OSMData time ?tim2\n	(> ?tim2 ?tim1))")
@@ -480,10 +477,6 @@
 
 	(source "(get-in @BOATS [id :speed])")
 	(title "speed [id]"))
-
-([ProServer_Class200000] of  CloFuncall
-
-	(source "(rete.core/frames-by-id 197)"))
 
 ([ProServer_Class200001] of  Rule
 
@@ -603,30 +596,6 @@
 	(source "(let [min-scl 0.25\n       scl (+ min-scl (* (- 1 min-scl) (- 1 (/ dist max-dist))))]\n  (location txt scl \"img/arrdn.png\" lat lon 100 40))")
 	(title "point-out [txt [lat lon] dist max-dist]"))
 
-([ProServer_Class220001] of  CloFuncall
-
-	(source "(rete.core/frame-by-id 197)"))
-
-([ProServer_Class220002] of  CloFuncall
-
-	(source "(ru.rules/dr)"))
-
-([ProServer_Class220003] of  CloFuncall
-
-	(source "(pro.server/answer)"))
-
-([ProServer_Class220004] of  CloFuncall
-
-	(source "(ru.rules/f 1512)"))
-
-([ProServer_Class220005] of  CloFuncall
-
-	(source "(rete.core/frame-by-id 1513)"))
-
-([ProServer_Class220006] of  CloFuncall
-
-	(source "(rete.core/frame-by-id 1514)"))
-
 ([ProServer_Class230000] of  CloFunction
 
 	(source "(if (:chart @BOAT)\n    (pump-in-evt \n      {:event :boat-maneuver\n       :id (:id @BOAT) \n       :data @BOAT}))")
@@ -677,17 +646,9 @@
 	(source "(filter #(not= (get % k) v) data)")
 	(title "filter-kv-not [k v data]"))
 
-([ProServer_Class260005] of  CloFuncall
-
-	(source "(rete.core/log-lst \"beta-net-plan.txt\" rete.core/BPLAN) "))
-
 ([ProServer_Class260006] of  CloFuncall
 
 	(source "(ru.rules/sp :all)"))
-
-([ProServer_Class270000] of  CloFuncall
-
-	(source "(ru.rules/f 1136)"))
 
 ([ProServer_Class270001] of  Answer2
 
@@ -706,18 +667,10 @@
 	(salience 0)
 	(title "as:WhereIsObject"))
 
-([ProServer_Class280002] of  CloFuncall
-
-	(source "(ru.rules/f 1229)"))
-
 ([ProServer_Class280005] of  CloFunction
 
 	(source "(let [sta (for [t (tags @DATA)]\n	(let [fl (filter-k t @DATA)]\n	  [t (count fl)]))\n        sta  (filter #(> (second %) 0) sta)]\n  (sort second sta))")
 	(title "tag-stat []"))
-
-([ProServer_Class290000] of  CloFuncall
-
-	(source "cesium.core/DOC-SND"))
 
 ([ProServer_Class290001] of  CloFunction
 
@@ -735,6 +688,7 @@
 		[ProServer_Class10000]
 		[ProServer_Class160041]
 		[ProServer_Class120000]
+		[Example_Class10000]
 		[ProServer_Class90007]
 		[ProServer_Class80003])
 	(title "ProServer Working Programs"))
@@ -746,13 +700,10 @@
 	(salience 0)
 	(title "as:WhatIsPortAbaft_Obj"))
 
-([ProServer_Class300001] of  CloFuncall
+([ProServer_Class300000] of  CloFunction
 
-	(source "(in-ns 'cesium.core)"))
-
-([ProServer_Class300002] of  CloFuncall
-
-	(source "(def DOC-SND true)"))
+	(source "(if-let [rsp (geo.names/call-geonames-weather lat lon)]\n  (let [lat2 (read-string (rsp \"lat\"))\n          lon2 (read-string (rsp \"lng\"))\n          bear (geo.names/bearing lat lon lat2 lon2)\n          dir (geo.names/direction bear)\n          dis (rough-distance lat lon lat2 lon2)\n          name (rsp \"stationName\")\n          wcd (rsp \"weatherCondition\")\n          hym (rsp \"hymidity\")\n          tmp (rsp \"temperature\")\n          wind (rsp \"windDirection\")\n          bwnd (if (some? wind)\n	(let [b (+ (read-string wind) 180)] (if (> b 360) (- b 360) b)))\n          win (if (some? bwnd)\n	(geo.names/direction bwnd)\n	\"n/a\")\n          wins (rsp \"windSpeed\")\n          tim (rsp \"observationTime\")\n          loc (str dis \" miles to \" dir \" from here\")]\n    (str name \" Weather Station<br>\"\n	\"location: \" loc \"<br>\"\n	\"observation time: \" tim \"<br>\"\n	\"weather conditions: \" wcd \"<br>\"\n	\"temperature: \" tmp \" Celsius<br>\"\n	\"hymidity: \" hym \"<br>\"\n	\"wind: \" win \", \" wins \" Knots\"))\n  \"I can not get a weather information\")")
+	(title "weather [[lat lon]]"))
 
 ([ProServer_Class30001] of  CloProgram
 
@@ -825,6 +776,18 @@
 
 	(source "(let [ca (course-angle crs crd1 crd2)]\n    (or (> ca 90) (< ca -90)))")
 	(title "abaft [crs crd1 crd2]"))
+
+([ProServer_Class310000] of  CloFunction
+
+	(source "(letfn [(smround [n]\n	(/ (float (Math/round (* n 10))) 10))]\n(let [dlat (- lat1 lat2)\n        dlon (- lon1 lon2)\n        lad (* (if (>= dlat 0) dlat (- 0 dlat)) 60)\n        lod (* (if (>= dlon 0) dlon (- 0 dlon)) 60)\n        dia (Math/sqrt (+ (* lad lad) (* lod lod)))]\n   (if (< dia 1) (smround dia) (Math/round dia)))\n)")
+	(title "rough-distance [lat1 lon1 lat2 lon2]"))
+
+([ProServer_Class310007] of  Rule
+
+	(lhs "?q (Question coord ?crd\n	predicate \"what-is\"\n	subject \"weather\")")
+	(rhs "(pro.server/pump-in-ans (as/weather ?crd))\n(retract ?q)")
+	(salience 0)
+	(title "as:Weather"))
 
 ([ProServer_Class320000] of  Rule
 
@@ -1097,7 +1060,9 @@
 		[ProServer_Class170000]
 		[ProServer_Class200018]
 		[ProServer_Class290001]
-		[ProServer_Class250001])
+		[ProServer_Class250001]
+		[ProServer_Class310000]
+		[ProServer_Class300000])
 	(cloNamespace [ProServer_Class100008])
 	(title "Advisor Skipper"))
 
