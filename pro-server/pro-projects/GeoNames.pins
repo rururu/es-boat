@@ -1,4 +1,4 @@
-; Wed May 18 15:06:37 MSK 2016
+; Mon May 23 12:36:21 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -50,12 +50,12 @@
 
 ([Example_Class10001] of  CloNamespace
 
-	(source "(:use \n  protege.core\n  clojure.xml)\n(:import java.net.URL)")
+	(source "(:use \n  protege.core\n  clojure.xml)\n(:import java.net.URL)\n(:gen-class :load-impl-ns false)")
 	(title "geo.names"))
 
 ([Example_Class10002] of  CloVar
 
-	(source "\"http://ws.geonames.org/ocean\"")
+	(source "\"http://api.geonames.org/ocean\"")
 	(title "^:dynamic *ocean-url*"))
 
 ([Example_Class10003] of  CloFunction
@@ -65,12 +65,12 @@
 
 ([Example_Class20000] of  CloFunction
 
-	(source "; Get country code from Geonames Web Service\n(let [url (str *country-code-url* \"?type=xml&lat=\" lat \"&lng=\" lng)]\n (try\n  (if-let [xml (clojure.xml/parse url)]\n    (if-let [mes (:message (:attrs (first (:content xml))))]\n       \"Not a country\"\n       (first (:content (first (:content (first (:content xml)))))) ))\n  (catch Exception e\n   (ctpl e)\n   ())))")
+	(source "; Get country code from Geonames Web Service\n(let [url (str *country-code-url* \"?type=xml&lat=\" lat \"&lng=\" lng \"&username=\" *username*)]\n (try\n  (if-let [xml (clojure.xml/parse url)]\n    (if-let [mes (:message (:attrs (first (:content xml))))]\n       \"Not a country\"\n       (first (:content (first (:content (first (:content xml)))))) ))\n  (catch Exception e\n   (ctpl e)\n   ())))")
 	(title "call-geonames-country-code [lat lng]"))
 
 ([Example_Class20001] of  CloVar
 
-	(source "\"http://ws.geonames.org/countryCode\"")
+	(source "\"http://api.geonames.org/countryCodeXML\"")
 	(title "^:dynamic *country-code-url*"))
 
 ([Example_Class20002] of  CloVar
@@ -80,17 +80,17 @@
 
 ([Example_Class20005] of  CloFunction
 
-	(source "; Get country info from Geonames Web Service\n(let [url (str *country-info-url* \"?lang=\" lang \"&country=\" code)]\n (try\n  (if-let [xml (clojure.xml/parse url)]\n    (xml-to-map (first (:content xml))) )\n  (catch Exception e\n   (ctpl e)\n   ())))")
+	(source "; Get country info from Geonames Web Service\n(let [url (str *country-info-url* \"?lang=\" lang \"&country=\" code \"&username=\" *username*)]\n (try\n  (if-let [xml (clojure.xml/parse url)]\n    (xml-to-map (first (:content xml))) )\n  (catch Exception e\n   (ctpl e)\n   ())))")
 	(title "call-geonames-country-info [code lang]"))
 
 ([Example_Class20020] of  CloVar
 
-	(source "\"http://ws.geonames.org/findNearby\"")
+	(source "\"http://api.geonames.org/findNearby\"")
 	(title "^:dynamic *nearby-url*"))
 
 ([Example_Class20021] of  CloFunction
 
-	(source "; Get near by place from Geonames Web Service\n(let [url (str *nearby-url* \"?lat=\" lat \"&lng=\" lng \"&style=FULL\")]\n (try\n   (if-let [xml (clojure.xml/parse url)]\n      (xml-to-map (first (:content xml))) )\n (catch Exception e\n   (ctpl e)\n   nil)))")
+	(source "; Get near by place from Geonames Web Service\n(let [url (str *nearby-url* \"?lat=\" lat \"&lng=\" lng \"&username=\" *username* \"&style=full\")]\n (try\n   (if-let [xml (clojure.xml/parse url)]\n      (xml-to-map (first (:content xml))) )\n (catch Exception e\n   (ctpl e)\n   nil)))")
 	(title "call-geonames-nearby [lat lng]"))
 
 ([Example_Class20050] of  CloFunction
@@ -110,22 +110,22 @@
 
 ([GeoNames_Class0] of  CloVar
 
-	(source "\"http://ws.geonames.org/rssToGeoRSS\"")
+	(source "\"http://api.geonames.org/rssToGeoRSS\"")
 	(title "^:dynamic *rss-georss*"))
 
 ([GeoNames_Class1] of  CloFunction
 
-	(source "; Get GeoRSS for RSS feed <item>s from Geonames Web Service\n(let [url (str *rss-georss* \"?feedUrl=\" feed)]\n  (seq (rss-item-map-list url)))")
+	(source "; Get GeoRSS for RSS feed <item>s from Geonames Web Service\n(let [url (str *rss-georss* \"?feedUrl=\" feed \"&username=\" *username*)]\n  (seq (rss-item-map-list url)))")
 	(title "call-geonames-rss [feed]"))
 
 ([GeoNames_Class10000] of  CloVar
 
-	(source "\"http://ws.geonames.org/astergdemXML\"")
+	(source "\"http://api.geonames.org/astergdemXML\"")
 	(title "^:dynamic *elev30-url*"))
 
 ([GeoNames_Class10001] of  CloFunction
 
-	(source ";; Get elevation (step 30m) from Geonames Web Service\n;; Arguments can be vectors (length <= 20 on free server)\n(let [url (if (vector? lat)\n	(let [lats (apply str (interpose \",\" lat))\n	       lngs (apply str (interpose \",\" lng))]\n	   (str *elev30-url* \"?lats=\" lats \"&lngs=\" lngs))\n	(str *elev30-url* \"?lat=\" lat \"&lng=\" lng))]\n (try\n  (if-let [xml (clojure.xml/parse url)]\n    (if (vector? lat)\n        (map #(first (:content %)) (filter #(some #{:astergdem} (vals %)) (:content xml)))\n        (first (:content (first (:content xml)) )) ))\n  (catch Exception e\n   (ctpl e)\n   ())))")
+	(source ";; Get elevation (step 30m) from Geonames Web Service\n;; Arguments can be vectors (length <= 20 on free server)\n(let [url (if (vector? lat)\n	(let [lats (apply str (interpose \",\" lat))\n	       lngs (apply str (interpose \",\" lng))]\n	   (str *elev30-url* \"?lats=\" lats \"&lngs=\" lngs))\n	(str *elev30-url* \"?lat=\" lat \"&lng=\" lng))\n       url (str url \"&type=XML&username=\" *username*)]\n (try\n  (if-let [xml (clojure.xml/parse url)]\n    (if (vector? lat)\n        (map #(first (:content %)) (filter #(some #{:astergdem} (vals %)) (:content xml)))\n        (first (:content (first (:content xml)) )) ))\n  (catch Exception e\n   (ctpl e)\n   ())))")
 	(title "call-geonames-elev30 [lat lng]"))
 
 ([GeoNames_Class10006] of  CloFunction
@@ -140,7 +140,7 @@
 
 ([GeoNames_Class2] of  CloVar
 
-	(source "\"http://ws.geonames.org/wikipediaBoundingBox\"")
+	(source "\"http://api.geonames.org/wikipediaBoundingBox\"")
 	(title "^:dynamic *wiki-bbx*"))
 
 ([GeoNames_Class20000] of  CloFunction
@@ -165,7 +165,7 @@
 
 ([GeoNames_Class25] of  CloFunction
 
-	(source "; Get Wikipedia articles for given bounding box\n(let [url (str *wiki-bbx* \"?north=\" north \"&south=\" south \"&west=\" west \"&east=\" east \"&lang=\" lang \"&maxRows=\" max)]\n  (seq (ws-map-list url)))")
+	(source "; Get Wikipedia articles for given bounding box\n(let [url (str *wiki-bbx* \"?north=\" north \"&south=\" south \"&west=\" west \"&east=\" east \"&lang=\" lang \"&maxRows=\" max \"&username=\" *username*)]\n  (seq (ws-map-list url)))")
 	(title "call-wiki-bbx [north west south east max lang]"))
 
 ([GeoNames_Class28] of  CloFunction
@@ -175,12 +175,12 @@
 
 ([GeoNames_Class3] of  CloVar
 
-	(source "\"http://ws.geonames.org/wikipediaSearch\"")
+	(source "\"http://api.geonames.org/wikipediaSearch\"")
 	(title "^:dynamic *wiki-search*"))
 
 ([GeoNames_Class30] of  CloFunction
 
-	(source "; Get Wikipedia articles near some point\n(let [url (str *wiki-nearby* \"?lat=\" lat \"&lng=\" lon \"&radius=\" radius-km \"&maxRows=\" max)]\n  (seq (ws-map-list url)))")
+	(source "; Get Wikipedia articles near some point\n(let [url (str *wiki-nearby* \"?lat=\" lat \"&lng=\" lon \"&radius=\" radius-km \"&maxRows=\" max \"&username=\" *username*)]\n  (seq (ws-map-list url)))")
 	(title "call-wiki-nearby [lat lon radius-km max lang]"))
 
 ([GeoNames_Class30000] of  CloVar
@@ -205,8 +205,12 @@
 
 ([GeoNames_Class4] of  CloVar
 
-	(source "\"http://ws.geonames.org/findNearbyWikipedia\"")
+	(source "\"http://api.geonames.org/findNearbyWikipedia\"")
 	(title "^:dynamic *wiki-nearby*"))
+
+([GeoNames_Class40000] of  CloFuncall
+
+	(source "(geo.names/call-geonames-ocean 60.0 30.0)"))
 
 ([GeoNames_Class40001] of  CloFunction
 
@@ -228,17 +232,101 @@
 	(source ";; Get Wikipedia articles of title\n(let [url (str *wiki-search* \"?title=\" (java.net.URLEncoder/encode title \"utf-8\") \"&lang=\" lang \"&maxRows=\" max)]\n  (seq (ws-map-list url)))")
 	(title "gn-wiki-title [title max lang]"))
 
+([GeoNames_Class60001] of  CloFuncall
+
+	(source "(geo.names/call-geonames-country-code 60.0 30.0)"))
+
+([GeoNames_Class60002] of  CloFuncall
+
+	(source "(geo.names/call-geonames-country-code 60.0 31.0)"))
+
+([GeoNames_Class60003] of  CloFuncall
+
+	(source "(geo.names/call-geonames-nearby 60.0 31.0)"))
+
+([GeoNames_Class60004] of  CloFuncall
+
+	(source "(geo.names/call-geonames-nearby 60.0 30.0)"))
+
+([GeoNames_Class60005] of  CloFuncall
+
+	(source "(geo.names/call-geonames-nearby-ext 60.0 30.0)"))
+
+([GeoNames_Class60006] of  CloFuncall
+
+	(source "(geo.names/call-geonames-nearby 48.865618158309374 2.344207763671875)"))
+
+([GeoNames_Class60007] of  CloFuncall
+
+	(source "(geo.names/call-geonames-country-code 47.03 10.2)"))
+
+([GeoNames_Class60008] of  CloFuncall
+
+	(source "(geo.names/call-geonames-country-info \"AT\" \"en\")"))
+
+([GeoNames_Class60009] of  CloFuncall
+
+	(source "(geo.names/call-geonames-nearby-ext 46.2022156980098 6.14569187164307)"))
+
+([GeoNames_Class60010] of  CloFuncall
+
+	(source "(geo.names/call-geonames-rss \"http://feeds.reuters.com/reuters/worldNews\")"))
+
+([GeoNames_Class60011] of  CloFuncall
+
+	(source "(geo.names/call-geonames-elev30 60.0 30.0)"))
+
+([GeoNames_Class60012] of  CloFuncall
+
+	(source "(geo.names/call-geonames-elev30 50.01 10.2)"))
+
+([GeoNames_Class60013] of  CloFuncall
+
+	(source "(geo.names/call-geonames-weather 50.01 10.2)"))
+
+([GeoNames_Class60014] of  CloFuncall
+
+	(source "(geo.names/call-wiki-search \"london\""))
+
+([GeoNames_Class60015] of  CloFuncall
+
+	(source "(geo.names/call-wiki-search \"london\" 10 \"en\")"))
+
+([GeoNames_Class60016] of  CloFuncall
+
+	(source "(geo.names/call-wiki-bbx 44.5 -69.0 43."))
+
+([GeoNames_Class60017] of  CloFuncall
+
+	(source "(geo.names/call-wiki-bbx 44.5 -69.0 43.9 -68.6 "))
+
+([GeoNames_Class60018] of  CloFuncall
+
+	(source "(geo.names/call-wiki-bbx 44.5 -69.0 43.9 -68.6 10 \"en\")"))
+
+([GeoNames_Class60019] of  CloFuncall
+
+	(source "(geo.names/call-wiki-nearby 60.0 30.0 6.0 \"ru\")"))
+
+([GeoNames_Class60020] of  CloFuncall
+
+	(source "(geo.names/call-wiki-nearby 60.0 30.0 6.0 10 \"ru\")"))
+
+([GeoNames_Class60021] of  CloFuncall
+
+	(source "(geo.names/call-geonames-elev30 58.0 30.0)"))
+
 ([GeoNames_Class60030] of  CloFunction
 
-	(source "; Get  the most detailed information available for the lat/lng from Geonames Web Service\n(let [url (str *ext-nearby-url* \"?lat=\" lat \"&lng=\" lng)]\n (try\n   (if-let [xml (clojure.xml/parse url)]\n      (map xml-to-map (:content xml)) )\n (catch Exception e\n   (ctpl e)\n   nil)))")
+	(source "; Get  the most detailed information available for the lat/lng from Geonames Web Service\n(let [url (str *ext-nearby-url* \"?lat=\" lat \"&lng=\" lng \"&username=\" *username*)]\n (try\n   (if-let [xml (clojure.xml/parse url)]\n      (map xml-to-map (:content xml)) )\n (catch Exception e\n   (ctpl e)\n   nil)))")
 	(title "call-geonames-nearby-ext [lat lng]"))
 
 ([GeoNames_Class60031] of  CloVar
 
-	(source "\"http://ws.geonames.org/extendedFindNearby\"")
+	(source "\"http://api.geonames.org/extendedFindNearby\"")
 	(title "^:dynamic *ext-nearby-url*"))
 
 ([GeoNames_Class7] of  CloFunction
 
-	(source "; Get Wikipedia articles containing text\n(let [url (str *wiki-search* \"?q=\" (java.net.URLEncoder/encode text \"utf-8\") \"&lang=\" lang \"&maxRows=\" max)]\n  (seq (ws-map-list url)))")
+	(source "; Get Wikipedia articles containing text\n(let [url (str *wiki-search* \"?q=\" (java.net.URLEncoder/encode text \"utf-8\") \"&lang=\" lang \"&maxRows=\" max \"&username=\" *username*)]\n  (seq (ws-map-list url)))")
 	(title "call-wiki-search [text max lang]"))

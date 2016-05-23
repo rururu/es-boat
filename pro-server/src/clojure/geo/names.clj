@@ -2,18 +2,19 @@
 (:use 
   protege.core
   clojure.xml)
-(:import java.net.URL))
+(:import java.net.URL)
+(:gen-class :load-impl-ns false))
 
-(def ^:dynamic *ocean-url* "http://ws.geonames.org/ocean")
-(def ^:dynamic *country-code-url* "http://ws.geonames.org/countryCode")
+(def ^:dynamic *ocean-url* "http://api.geonames.org/ocean")
+(def ^:dynamic *country-code-url* "http://api.geonames.org/countryCodeXML")
 (def ^:dynamic *country-info-url* "http://ws.geonames.org/countryInfo")
-(def ^:dynamic *nearby-url* "http://ws.geonames.org/findNearby")
-(def ^:dynamic *ext-nearby-url* "http://ws.geonames.org/extendedFindNearby")
-(def ^:dynamic *wiki-bbx* "http://ws.geonames.org/wikipediaBoundingBox")
-(def ^:dynamic *wiki-nearby* "http://ws.geonames.org/findNearbyWikipedia")
-(def ^:dynamic *wiki-search* "http://ws.geonames.org/wikipediaSearch")
-(def ^:dynamic *rss-georss* "http://ws.geonames.org/rssToGeoRSS")
-(def ^:dynamic *elev30-url* "http://ws.geonames.org/astergdemXML")
+(def ^:dynamic *nearby-url* "http://api.geonames.org/findNearby")
+(def ^:dynamic *ext-nearby-url* "http://api.geonames.org/extendedFindNearby")
+(def ^:dynamic *wiki-bbx* "http://api.geonames.org/wikipediaBoundingBox")
+(def ^:dynamic *wiki-nearby* "http://api.geonames.org/findNearbyWikipedia")
+(def ^:dynamic *wiki-search* "http://api.geonames.org/wikipediaSearch")
+(def ^:dynamic *rss-georss* "http://api.geonames.org/rssToGeoRSS")
+(def ^:dynamic *elev30-url* "http://api.geonames.org/astergdemXML")
 (def ^:dynamic *nearby-pois-osm* "http://api.geonames.org/findNearbyPOIsOSM")
 (def ^:dynamic *weather-url* "http://api.geonames.org/findNearByWeather")
 (def ^:dynamic *username* "liikalanjoki")
@@ -95,7 +96,7 @@ inst)
 
 (defn call-geonames-country-code [lat lng]
   ; Get country code from Geonames Web Service
-(let [url (str *country-code-url* "?type=xml&lat=" lat "&lng=" lng)]
+(let [url (str *country-code-url* "?type=xml&lat=" lat "&lng=" lng "&username=" *username*)]
  (try
   (if-let [xml (clojure.xml/parse url)]
     (if-let [mes (:message (:attrs (first (:content xml))))]
@@ -107,7 +108,7 @@ inst)
 
 (defn call-geonames-country-info [code lang]
   ; Get country info from Geonames Web Service
-(let [url (str *country-info-url* "?lang=" lang "&country=" code)]
+(let [url (str *country-info-url* "?lang=" lang "&country=" code "&username=" *username*)]
  (try
   (if-let [xml (clojure.xml/parse url)]
     (xml-to-map (first (:content xml))) )
@@ -117,7 +118,7 @@ inst)
 
 (defn call-geonames-nearby [lat lng]
   ; Get near by place from Geonames Web Service
-(let [url (str *nearby-url* "?lat=" lat "&lng=" lng "&style=FULL")]
+(let [url (str *nearby-url* "?lat=" lat "&lng=" lng "&username=" *username* "&style=full")]
  (try
    (if-let [xml (clojure.xml/parse url)]
       (xml-to-map (first (:content xml))) )
@@ -127,7 +128,7 @@ inst)
 
 (defn call-geonames-nearby-ext [lat lng]
   ; Get  the most detailed information available for the lat/lng from Geonames Web Service
-(let [url (str *ext-nearby-url* "?lat=" lat "&lng=" lng)]
+(let [url (str *ext-nearby-url* "?lat=" lat "&lng=" lng "&username=" *username*)]
  (try
    (if-let [xml (clojure.xml/parse url)]
       (map xml-to-map (:content xml)) )
@@ -137,7 +138,7 @@ inst)
 
 (defn call-geonames-rss [feed]
   ; Get GeoRSS for RSS feed <item>s from Geonames Web Service
-(let [url (str *rss-georss* "?feedUrl=" feed)]
+(let [url (str *rss-georss* "?feedUrl=" feed "&username=" *username*)]
   (seq (rss-item-map-list url))))
 
 (defn call-geonames-elev30 [lat lng]
@@ -147,7 +148,8 @@ inst)
 	(let [lats (apply str (interpose "," lat))
 	       lngs (apply str (interpose "," lng))]
 	   (str *elev30-url* "?lats=" lats "&lngs=" lngs))
-	(str *elev30-url* "?lat=" lat "&lng=" lng))]
+	(str *elev30-url* "?lat=" lat "&lng=" lng))
+       url (str url "&type=XML&username=" *username*)]
  (try
   (if-let [xml (clojure.xml/parse url)]
     (if (vector? lat)
@@ -169,17 +171,17 @@ inst)
 
 (defn call-wiki-search [text max lang]
   ; Get Wikipedia articles containing text
-(let [url (str *wiki-search* "?q=" (java.net.URLEncoder/encode text "utf-8") "&lang=" lang "&maxRows=" max)]
+(let [url (str *wiki-search* "?q=" (java.net.URLEncoder/encode text "utf-8") "&lang=" lang "&maxRows=" max "&username=" *username*)]
   (seq (ws-map-list url))))
 
 (defn call-wiki-bbx [north west south east max lang]
   ; Get Wikipedia articles for given bounding box
-(let [url (str *wiki-bbx* "?north=" north "&south=" south "&west=" west "&east=" east "&lang=" lang "&maxRows=" max)]
+(let [url (str *wiki-bbx* "?north=" north "&south=" south "&west=" west "&east=" east "&lang=" lang "&maxRows=" max "&username=" *username*)]
   (seq (ws-map-list url))))
 
 (defn call-wiki-nearby [lat lon radius-km max lang]
   ; Get Wikipedia articles near some point
-(let [url (str *wiki-nearby* "?lat=" lat "&lng=" lon "&radius=" radius-km "&maxRows=" max)]
+(let [url (str *wiki-nearby* "?lat=" lat "&lng=" lon "&radius=" radius-km "&maxRows=" max "&username=" *username*)]
   (seq (ws-map-list url))))
 
 (defn tag-con-map [lst]
