@@ -43,11 +43,7 @@
   (if-let [resp (call-wiki-nearby lat lon radius-km max lang)]
      (ssvs inst "responses" (map article-from-map resp)) )))
 
-(defn filter-coords-exist [inss slat slon]
-  ;; filter instances with nonempty coords
-(filter #(and (sv % slat) (sv % slon)) list))
-
-(defn coords-from-instances [cins slat slon]
+(defn coords-from-instances [list slat slon]
   ;; Collect coords from list of instances for given slot names
 (map #(vector (sv % slat) (sv % slon)) list))
 
@@ -57,15 +53,17 @@
   ;; return instance of BBX class
   (if-let [wsen (bbx-of-list  crds)]
     (let [ins (crin "BBX")]
-       (ssvs ins "wsen" wsen))))
+       (ssv ins "title" title)
+       (ssvs ins "wsen" wsen)
+       ins)))
 ([crds]
   ;; return [west south east north] or nil
   (try
-    (letfn [(apl [max first]
-	(apply max (map read-string (map first list))))]
+    (letfn [(apl [mx fst]
+	(float (apply mx (map read-string (map fst crds)))))]
       [(apl min second) (apl min first) (apl max second) (apl max first)])
   (catch Exception e
-     (println [:bbx-of-list list :exception e])
+     (println [:bbx-of-list crds :exception e])
      nil))))
 
 (defn submit-rss [hm inst]
@@ -73,12 +71,12 @@
        sel (selection mp "feedURL")]
   (if (seq sel)
       (if-let [resp (call-geonames-rss (str (first sel)))]
-          (let [inss (map #(map-into-inst % (crin "GeoRSSItem")) resp)
-                 cins (filter-coords-exist inss "geo:lat" "geo:long")
-                 crds (coords-from-instances cins "geo:lat" "geo:long")
-                 bbx (if (seq crds) (bbx-of-list crds))]
+          (let [geos (filter #(and (get % "geo:lat") (get %"geo:long")) resp)
+                 inss (map #(map-into-inst % (crin "GeoRSSItem")) geos)
+                 crds (coords-from-instances inss "geo:lat" "geo:long")
+                 bbx (if (seq crds) (bbx-of-list crds (str (first sel))))]
              (ssvs inst "georss_items" inss)
-             (ssvs inst "bbx" inss)) ))))
+             (ssv inst "bbx" bbx)) ))))
 
 (defn open-site [hm inst]
   (let [mp (into {} hm)

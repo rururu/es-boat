@@ -1,4 +1,4 @@
-; Mon May 23 17:03:19 MSK 2016
+; Tue May 24 17:18:05 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -12,7 +12,6 @@
 		[WikipediaGIS_Class17]
 		[WikipediaGIS_Class20005]
 		[WikipediaGIS_Class40028]
-		[WikipediaGIS_Class20006]
 		[WikipediaGIS_Class20007]
 		[WikipediaGIS_Class20008]
 		[WikipediaGIS_Class20000]
@@ -54,7 +53,7 @@
 
 ([WikipediaGIS_Class20000] of  CloFunction
 
-	(source "(let [mp (into {} hm)\n       sel (selection mp \"feedURL\")]\n  (if (seq sel)\n      (if-let [resp (call-geonames-rss (str (first sel)))]\n          (let [inss (map #(map-into-inst % (crin \"GeoRSSItem\")) resp)\n                 cins (filter-coords-exist inss \"geo:lat\" \"geo:long\")\n                 crds (coords-from-instances cins \"geo:lat\" \"geo:long\")\n                 bbx (if (seq crds) (bbx-of-list crds))]\n             (ssvs inst \"georss_items\" inss)\n             (ssvs inst \"bbx\" inss)) )))")
+	(source "(let [mp (into {} hm)\n       sel (selection mp \"feedURL\")]\n  (if (seq sel)\n      (if-let [resp (call-geonames-rss (str (first sel)))]\n          (let [geos (filter #(and (get % \"geo:lat\") (get %\"geo:long\")) resp)\n                 inss (map #(map-into-inst % (crin \"GeoRSSItem\")) geos)\n                 crds (coords-from-instances inss \"geo:lat\" \"geo:long\")\n                 bbx (if (seq crds) (bbx-of-list crds (str (first sel))))]\n             (ssvs inst \"georss_items\" inss)\n             (ssv inst \"bbx\" bbx)) )))")
 	(title "submit-rss [hm inst]"))
 
 ([WikipediaGIS_Class20005] of  CloFunction
@@ -62,19 +61,14 @@
 	(source ";; returns [lat lon]\n(let [[w s e n] (seq (svs bbx-ins \"wsen\"))]\n  [(float (/ (+ s n) 2)) (float (/ (+ w e) 2))])")
 	(title "get-bbx-center [bbx-ins]"))
 
-([WikipediaGIS_Class20006] of  CloFunction
-
-	(source ";; filter instances with nonempty coords\n(filter #(and (sv % slat) (sv % slon)) list)")
-	(title "filter-coords-exist [inss slat slon]"))
-
 ([WikipediaGIS_Class20007] of  CloFunction
 
 	(source ";; Collect coords from list of instances for given slot names\n(map #(vector (sv % slat) (sv % slon)) list)")
-	(title "coords-from-instances [cins slat slon]"))
+	(title "coords-from-instances [list slat slon]"))
 
 ([WikipediaGIS_Class20008] of  CloFunction
 
-	(source ";; crds = ([lat lon]..)\n([crds title]\n  ;; return instance of BBX class\n  (if-let [wsen (bbx-of-list  crds)]\n    (let [ins (crin \"BBX\")]\n       (ssvs ins \"wsen\" wsen))))\n([crds]\n  ;; return [west south east north] or nil\n  (try\n    (letfn [(apl [max first]\n	(apply max (map read-string (map first list))))]\n      [(apl min second) (apl min first) (apl max second) (apl max first)])\n  (catch Exception e\n     (println [:bbx-of-list list :exception e])\n     nil)))")
+	(source ";; crds = ([lat lon]..)\n([crds title]\n  ;; return instance of BBX class\n  (if-let [wsen (bbx-of-list  crds)]\n    (let [ins (crin \"BBX\")]\n       (ssv ins \"title\" title)\n       (ssvs ins \"wsen\" wsen)\n       ins)))\n([crds]\n  ;; return [west south east north] or nil\n  (try\n    (letfn [(apl [mx fst]\n	(float (apply mx (map read-string (map fst crds)))))]\n      [(apl min second) (apl min first) (apl max second) (apl max first)])\n  (catch Exception e\n     (println [:bbx-of-list crds :exception e])\n     nil)))")
 	(title "bbx-of-list"))
 
 ([WikipediaGIS_Class20014] of  BBX
@@ -105,7 +99,8 @@
 	(button-clear-articles "Clear Articles/wiki.gis/clear-articles")
 	(button-search "submit/wiki.gis/submit-search")
 	(language English-en)
-	(max-responses 5))
+	(max-responses 5)
+	(text "Ruoholahti"))
 
 ([WikipediaGIS_Class50003] of  NearbySearch
 
@@ -132,5 +127,145 @@
 	(button-rss "submit/wiki.gis/submit-rss")
 	(feedURL
 		"http://feeds.reuters.com/reuters/worldNews"
-		"http://news.nationalgeographic.com/index.rss"
-		"http://company.yandex.ru/news/news.rss"))
+		"http://news.nationalgeographic.com/index.rss")
+	(georss_items
+		[WikipediaGIS_Class70323]
+		[WikipediaGIS_Class70324]
+		[WikipediaGIS_Class70325]
+		[WikipediaGIS_Class70326]
+		[WikipediaGIS_Class70327]
+		[WikipediaGIS_Class70328]
+		[WikipediaGIS_Class70329]
+		[WikipediaGIS_Class70330]
+		[WikipediaGIS_Class70331]
+		[WikipediaGIS_Class70332]))
+
+([WikipediaGIS_Class70323] of  GeoRSSItem
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(category "worldNews")
+	(dc%3Adate "2016-05-24T13:54:40Z")
+	(description "HO CHI MINH CITY, Vietnam (Reuters) - U.S. President Barack Obama chided Vietnam on political freedoms on Tuesday after critics of the communist-run government were prevented from meeting him in Hanoi, a discordant note on a trip otherwise steeped in words of amity between the former foes.<div class=\"feedflare\">\n<a href=\"http://feeds.reuters.com/~ff/Reuters/worldNews?a=nWM17V0DBqU:Jmq0F9LT4eU:yIl2AUoC8zA\"><img src=\"http://feeds.feedburner.com/~ff/Reuters/worldNews?d=yIl2AUoC8zA\" border=\"0\"></img></a> <a href=\"http://feeds.reuters.com/~ff/Reuters/worldNews?a=nWM17V0DBqU:Jmq0F9LT4eU:F7zBnMyn0Lo\"><img src=\"http://feeds.feedburner.com/~ff/Reuters/worldNews?i=nWM17V0DBqU:Jmq0F9LT4eU:F7zBnMyn0Lo\" border=\"0\"></img></a> <a href=\"http://feeds.reuters.com/~ff/Reuters/worldNews?a=nWM17V0DBqU:Jmq0F9LT4eU:V_sGLiPBpWU\"><img src=\"http://feeds.feedburner.com/~ff/Reuters/worldNews?i=nWM17V0DBqU:Jmq0F9LT4eU:V_sGLiPBpWU\" border=\"0\"></img></a>\n</div><img src=\"http://feeds.feedburner.com/~r/Reuters/worldNews/~4/nWM17V0DBqU\" height=\"1\" width=\"1\" alt=\"\"/>")
+	(geo%3Alat "10.82302")
+	(geo%3Along "106.62965")
+	(guid "http://www.reuters.com/article/us-vietnam-obama-idUSKCN0YE2RX?feedType=RSS&feedName=worldNews")
+	(link "http://feeds.reuters.com/~r/Reuters/worldNews/~3/nWM17V0DBqU/us-vietnam-obama-idUSKCN0YE2RX")
+	(pubDate "Tue, 24 May 2016 13:54:40 GMT")
+	(title "Obama prods Vietnam on rights after activists stopped from meeting him"))
+
+([WikipediaGIS_Class70324] of  GeoRSSItem
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(category "worldNews")
+	(dc%3Adate "2016-05-24T13:26:16Z")
+	(description "CAIRO (Reuters) - The head of Egypt's forensics authority dismissed a suggestion on Tuesday that the small size of the body parts retrieved since an EgyptAir plane crashed last week indicated there was an explosion on board.<div class=\"feedflare\">\n<a href=\"http://feeds.reuters.com/~ff/Reuters/worldNews?a=MGyBxFkPx4c:MCmI8dEgJps:yIl2AUoC8zA\"><img src=\"http://feeds.feedburner.com/~ff/Reuters/worldNews?d=yIl2AUoC8zA\" border=\"0\"></img></a> <a href=\"http://feeds.reuters.com/~ff/Reuters/worldNews?a=MGyBxFkPx4c:MCmI8dEgJps:F7zBnMyn0Lo\"><img src=\"http://feeds.feedburner.com/~ff/Reuters/worldNews?i=MGyBxFkPx4c:MCmI8dEgJps:F7zBnMyn0Lo\" border=\"0\"></img></a> <a href=\"http://feeds.reuters.com/~ff/Reuters/worldNews?a=MGyBxFkPx4c:MCmI8dEgJps:V_sGLiPBpWU\"><img src=\"http://feeds.feedburner.com/~ff/Reuters/worldNews?i=MGyBxFkPx4c:MCmI8dEgJps:V_sGLiPBpWU\" border=\"0\"></img></a>\n</div><img src=\"http://feeds.feedburner.com/~r/Reuters/worldNews/~4/MGyBxFkPx4c\" height=\"1\" width=\"1\" alt=\"\"/>")
+	(geo%3Alat "30.06263141517916")
+	(geo%3Along "31.249666213989258")
+	(guid "http://www.reuters.com/article/us-egyptair-airplane-forensics-idUSKCN0YF12H?feedType=RSS&feedName=worldNews")
+	(link "http://feeds.reuters.com/~r/Reuters/worldNews/~3/MGyBxFkPx4c/us-egyptair-airplane-forensics-idUSKCN0YF12H")
+	(pubDate "Tue, 24 May 2016 13:26:16 GMT")
+	(title "Investigators play down explosion theory in EgyptAir crash"))
+
+([WikipediaGIS_Class70325] of  GeoRSSItem
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(category "worldNews")
+	(dc%3Adate "2016-05-24T13:09:01Z")
+	(description "BAGHDAD (Reuters) - Iraqi forces shelled Islamic State targets in Falluja on Tuesday, the second day of an assault to retake the militant stronghold just west of Baghdad, as international concern mounted for the security of civilians.<div class=\"feedflare\">\n<a href=\"http://feeds.reuters.com/~ff/Reuters/worldNews?a=gF5C7oug0BA:YCmwGVYtMx0:yIl2AUoC8zA\"><img src=\"http://feeds.feedburner.com/~ff/Reuters/worldNews?d=yIl2AUoC8zA\" border=\"0\"></img></a> <a href=\"http://feeds.reuters.com/~ff/Reuters/worldNews?a=gF5C7oug0BA:YCmwGVYtMx0:F7zBnMyn0Lo\"><img src=\"http://feeds.feedburner.com/~ff/Reuters/worldNews?i=gF5C7oug0BA:YCmwGVYtMx0:F7zBnMyn0Lo\" border=\"0\"></img></a> <a href=\"http://feeds.reuters.com/~ff/Reuters/worldNews?a=gF5C7oug0BA:YCmwGVYtMx0:V_sGLiPBpWU\"><img src=\"http://feeds.feedburner.com/~ff/Reuters/worldNews?i=gF5C7oug0BA:YCmwGVYtMx0:V_sGLiPBpWU\" border=\"0\"></img></a>\n</div><img src=\"http://feeds.feedburner.com/~r/Reuters/worldNews/~4/gF5C7oug0BA\" height=\"1\" width=\"1\" alt=\"\"/>")
+	(geo%3Alat "33.340582")
+	(geo%3Along "44.400876")
+	(guid "http://www.reuters.com/article/us-mideast-crisis-iraq-falluja-idUSKCN0YF14M?feedType=RSS&feedName=worldNews")
+	(link "http://feeds.reuters.com/~r/Reuters/worldNews/~3/gF5C7oug0BA/us-mideast-crisis-iraq-falluja-idUSKCN0YF14M")
+	(pubDate "Tue, 24 May 2016 13:09:01 GMT")
+	(title "Iraq forces keep up shelling of Falluja, U.N. concern mounts for civilians"))
+
+([WikipediaGIS_Class70326] of  GeoRSSItem
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(category "worldNews")
+	(dc%3Adate "2016-05-24T14:07:02Z")
+	(description "ISLAMABAD (Reuters) - Pakistan's interior minister said on Tuesday he could not confirm that Afghan Taliban leader Mullah Akhtar Mansour had been killed in a U.S. drone strike, saying that the body recovered from near the Afghan border was charred beyond recognition.<div class=\"feedflare\">\n<a href=\"http://feeds.reuters.com/~ff/Reuters/worldNews?a=lckZ89pj0yI:I7AhIlaNHSI:yIl2AUoC8zA\"><img src=\"http://feeds.feedburner.com/~ff/Reuters/worldNews?d=yIl2AUoC8zA\" border=\"0\"></img></a> <a href=\"http://feeds.reuters.com/~ff/Reuters/worldNews?a=lckZ89pj0yI:I7AhIlaNHSI:F7zBnMyn0Lo\"><img src=\"http://feeds.feedburner.com/~ff/Reuters/worldNews?i=lckZ89pj0yI:I7AhIlaNHSI:F7zBnMyn0Lo\" border=\"0\"></img></a> <a href=\"http://feeds.reuters.com/~ff/Reuters/worldNews?a=lckZ89pj0yI:I7AhIlaNHSI:V_sGLiPBpWU\"><img src=\"http://feeds.feedburner.com/~ff/Reuters/worldNews?i=lckZ89pj0yI:I7AhIlaNHSI:V_sGLiPBpWU\" border=\"0\"></img></a>\n</div><img src=\"http://feeds.feedburner.com/~r/Reuters/worldNews/~4/lckZ89pj0yI\" height=\"1\" width=\"1\" alt=\"\"/>")
+	(geo%3Alat "33.7214841359228")
+	(geo%3Along "73.0432891845703")
+	(guid "http://www.reuters.com/article/us-afghanistan-taliban-identity-idUSKCN0YF1T4?feedType=RSS&feedName=worldNews")
+	(link "http://feeds.reuters.com/~r/Reuters/worldNews/~3/lckZ89pj0yI/us-afghanistan-taliban-identity-idUSKCN0YF1T4")
+	(pubDate "Tue, 24 May 2016 14:07:02 GMT")
+	(title "Pakistan says can't confirm Taliban leader killed in U.S. drone strike"))
+
+([WikipediaGIS_Class70327] of  GeoRSSItem
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(category "worldNews")
+	(dc%3Adate "2016-05-24T14:06:20Z")
+	(description "LASHKAR GAH, Afghanistan (Reuters) - A senior Taliban leader identified by Afghan authorities as a shadow governor of the southern province of Helmand has been killed by security forces, officials said on Tuesday, although the Taliban immediately denied the report.<div class=\"feedflare\">\n<a href=\"http://feeds.reuters.com/~ff/Reuters/worldNews?a=t0SALA4Jp7o:HWM47FhlmH8:yIl2AUoC8zA\"><img src=\"http://feeds.feedburner.com/~ff/Reuters/worldNews?d=yIl2AUoC8zA\" border=\"0\"></img></a> <a href=\"http://feeds.reuters.com/~ff/Reuters/worldNews?a=t0SALA4Jp7o:HWM47FhlmH8:F7zBnMyn0Lo\"><img src=\"http://feeds.feedburner.com/~ff/Reuters/worldNews?i=t0SALA4Jp7o:HWM47FhlmH8:F7zBnMyn0Lo\" border=\"0\"></img></a> <a href=\"http://feeds.reuters.com/~ff/Reuters/worldNews?a=t0SALA4Jp7o:HWM47FhlmH8:V_sGLiPBpWU\"><img src=\"http://feeds.feedburner.com/~ff/Reuters/worldNews?i=t0SALA4Jp7o:HWM47FhlmH8:V_sGLiPBpWU\" border=\"0\"></img></a>\n</div><img src=\"http://feeds.feedburner.com/~r/Reuters/worldNews/~4/t0SALA4Jp7o\" height=\"1\" width=\"1\" alt=\"\"/>")
+	(geo%3Alat "31.593817")
+	(geo%3Along "64.371614")
+	(guid "http://www.reuters.com/article/us-afghanistan-taliban-helmand-idUSKCN0YF1VC?feedType=RSS&feedName=worldNews")
+	(link "http://feeds.reuters.com/~r/Reuters/worldNews/~3/t0SALA4Jp7o/us-afghanistan-taliban-helmand-idUSKCN0YF1VC")
+	(pubDate "Tue, 24 May 2016 14:06:20 GMT")
+	(title "Afghanistan says Taliban shadow governor in Helmand killed"))
+
+([WikipediaGIS_Class70328] of  GeoRSSItem
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(category "worldNews")
+	(dc%3Adate "2016-05-24T14:02:47Z")
+	(description "BEN GUERDANE, Tunisia (Reuters) - After a U.S. air strike killed a Tunisian jihadist commander in western Libya in late February, dozens of Islamic State fighters sneaked across the border into Tunisia and attacked an army barracks and police bases in the town of Ben Guerdane.<div class=\"feedflare\">\n<a href=\"http://feeds.reuters.com/~ff/Reuters/worldNews?a=6ejL_SOK-HU:1AlPg4OTi-s:yIl2AUoC8zA\"><img src=\"http://feeds.feedburner.com/~ff/Reuters/worldNews?d=yIl2AUoC8zA\" border=\"0\"></img></a> <a href=\"http://feeds.reuters.com/~ff/Reuters/worldNews?a=6ejL_SOK-HU:1AlPg4OTi-s:F7zBnMyn0Lo\"><img src=\"http://feeds.feedburner.com/~ff/Reuters/worldNews?i=6ejL_SOK-HU:1AlPg4OTi-s:F7zBnMyn0Lo\" border=\"0\"></img></a> <a href=\"http://feeds.reuters.com/~ff/Reuters/worldNews?a=6ejL_SOK-HU:1AlPg4OTi-s:V_sGLiPBpWU\"><img src=\"http://feeds.feedburner.com/~ff/Reuters/worldNews?i=6ejL_SOK-HU:1AlPg4OTi-s:V_sGLiPBpWU\" border=\"0\"></img></a>\n</div><img src=\"http://feeds.feedburner.com/~r/Reuters/worldNews/~4/6ejL_SOK-HU\" height=\"1\" width=\"1\" alt=\"\"/>")
+	(geo%3Alat "32.899376")
+	(geo%3Along "11.207432")
+	(guid "http://www.reuters.com/article/us-tunisia-security-libya-insight-idUSKCN0YF1HO?feedType=RSS&feedName=worldNews")
+	(link "http://feeds.reuters.com/~r/Reuters/worldNews/~3/6ejL_SOK-HU/us-tunisia-security-libya-insight-idUSKCN0YF1HO")
+	(pubDate "Tue, 24 May 2016 14:02:47 GMT")
+	(title "As fighters return from Libya, Tunisia faces growing challenge"))
+
+([WikipediaGIS_Class70329] of  GeoRSSItem
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(category "worldNews")
+	(dc%3Adate "2016-05-24T13:12:57Z")
+	(description "IDOMENI, Greece (Reuters) - Greek police on Tuesday started moving some of the 8,000 migrants and refugees stranded in a makeshift camp on the sealed northern border with Macedonia to state-run facilities further south.<div class=\"feedflare\">\n<a href=\"http://feeds.reuters.com/~ff/Reuters/worldNews?a=qiBVH3iAZww:y0oqp_JbZtM:yIl2AUoC8zA\"><img src=\"http://feeds.feedburner.com/~ff/Reuters/worldNews?d=yIl2AUoC8zA\" border=\"0\"></img></a> <a href=\"http://feeds.reuters.com/~ff/Reuters/worldNews?a=qiBVH3iAZww:y0oqp_JbZtM:F7zBnMyn0Lo\"><img src=\"http://feeds.feedburner.com/~ff/Reuters/worldNews?i=qiBVH3iAZww:y0oqp_JbZtM:F7zBnMyn0Lo\" border=\"0\"></img></a> <a href=\"http://feeds.reuters.com/~ff/Reuters/worldNews?a=qiBVH3iAZww:y0oqp_JbZtM:V_sGLiPBpWU\"><img src=\"http://feeds.feedburner.com/~ff/Reuters/worldNews?i=qiBVH3iAZww:y0oqp_JbZtM:V_sGLiPBpWU\" border=\"0\"></img></a>\n</div><img src=\"http://feeds.feedburner.com/~r/Reuters/worldNews/~4/qiBVH3iAZww\" height=\"1\" width=\"1\" alt=\"\"/>")
+	(geo%3Alat "41.122089")
+	(geo%3Along "22.511021")
+	(guid "http://www.reuters.com/article/us-europe-migrants-greece-idomeni-idUSKCN0YF0NE?feedType=RSS&feedName=worldNews")
+	(link "http://feeds.reuters.com/~r/Reuters/worldNews/~3/qiBVH3iAZww/us-europe-migrants-greece-idomeni-idUSKCN0YF0NE")
+	(pubDate "Tue, 24 May 2016 13:12:57 GMT")
+	(title "Greece starts moving migrants camped at border to state facilities"))
+
+([WikipediaGIS_Class70330] of  GeoRSSItem
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(category "worldNews")
+	(dc%3Adate "2016-05-24T10:39:23Z")
+	(description "KIEV (Reuters) - Ukraine said on Tuesday seven of its servicemen had been killed in the past 24 hours as a result of increased attacks by pro-Russian rebels, the highest reported daily casualty figure since August.<div class=\"feedflare\">\n<a href=\"http://feeds.reuters.com/~ff/Reuters/worldNews?a=ptCl56q5yV8:g_KMulHK_-M:yIl2AUoC8zA\"><img src=\"http://feeds.feedburner.com/~ff/Reuters/worldNews?d=yIl2AUoC8zA\" border=\"0\"></img></a> <a href=\"http://feeds.reuters.com/~ff/Reuters/worldNews?a=ptCl56q5yV8:g_KMulHK_-M:F7zBnMyn0Lo\"><img src=\"http://feeds.feedburner.com/~ff/Reuters/worldNews?i=ptCl56q5yV8:g_KMulHK_-M:F7zBnMyn0Lo\" border=\"0\"></img></a> <a href=\"http://feeds.reuters.com/~ff/Reuters/worldNews?a=ptCl56q5yV8:g_KMulHK_-M:V_sGLiPBpWU\"><img src=\"http://feeds.feedburner.com/~ff/Reuters/worldNews?i=ptCl56q5yV8:g_KMulHK_-M:V_sGLiPBpWU\" border=\"0\"></img></a>\n</div><img src=\"http://feeds.feedburner.com/~r/Reuters/worldNews/~4/ptCl56q5yV8\" height=\"1\" width=\"1\" alt=\"\"/>")
+	(geo%3Alat "50.4546624398828")
+	(geo%3Along "30.523796081543")
+	(guid "http://www.reuters.com/article/us-ukraine-crisis-casualties-idUSKCN0YF17W?feedType=RSS&feedName=worldNews")
+	(link "http://feeds.reuters.com/~r/Reuters/worldNews/~3/ptCl56q5yV8/us-ukraine-crisis-casualties-idUSKCN0YF17W")
+	(pubDate "Tue, 24 May 2016 10:39:23 GMT")
+	(title "Surge in eastern fighting kills seven Ukrainian soldiers: official"))
+
+([WikipediaGIS_Class70331] of  GeoRSSItem
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(category "worldNews")
+	(dc%3Adate "2016-05-24T13:39:33Z")
+	(description "ANKARA (Reuters) - Turkey's new prime minister vowed on Tuesday to start work immediately on forging the stronger presidency wanted by Tayyip Erdogan, and announced a cabinet that signaled policy continuity but left little doubt as to who was in charge.<div class=\"feedflare\">\n<a href=\"http://feeds.reuters.com/~ff/Reuters/worldNews?a=bxzyrfWb0pY:X-9SHZIf5LY:yIl2AUoC8zA\"><img src=\"http://feeds.feedburner.com/~ff/Reuters/worldNews?d=yIl2AUoC8zA\" border=\"0\"></img></a> <a href=\"http://feeds.reuters.com/~ff/Reuters/worldNews?a=bxzyrfWb0pY:X-9SHZIf5LY:F7zBnMyn0Lo\"><img src=\"http://feeds.feedburner.com/~ff/Reuters/worldNews?i=bxzyrfWb0pY:X-9SHZIf5LY:F7zBnMyn0Lo\" border=\"0\"></img></a> <a href=\"http://feeds.reuters.com/~ff/Reuters/worldNews?a=bxzyrfWb0pY:X-9SHZIf5LY:V_sGLiPBpWU\"><img src=\"http://feeds.feedburner.com/~ff/Reuters/worldNews?i=bxzyrfWb0pY:X-9SHZIf5LY:V_sGLiPBpWU\" border=\"0\"></img></a>\n</div><img src=\"http://feeds.feedburner.com/~r/Reuters/worldNews/~4/bxzyrfWb0pY\" height=\"1\" width=\"1\" alt=\"\"/>")
+	(geo%3Alat "39.9198743755027")
+	(geo%3Along "32.8542709350586")
+	(guid "http://www.reuters.com/article/us-turkey-politics-cabinet-idUSKCN0YF0W4?feedType=RSS&feedName=worldNews")
+	(link "http://feeds.reuters.com/~r/Reuters/worldNews/~3/bxzyrfWb0pY/us-turkey-politics-cabinet-idUSKCN0YF0W4")
+	(pubDate "Tue, 24 May 2016 13:39:33 GMT")
+	(title "New Turkish cabinet reflects Erdogan's growing power"))
+
+([WikipediaGIS_Class70332] of  GeoRSSItem
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(category "worldNews")
+	(dc%3Adate "2016-05-24T13:25:29Z")
+	(description "VIENNA (Reuters) - Austria's centrist government, shaken by a far-right near-victory in an election for president, pledged on Tuesday to take measures on asylum for migrants and to boost security in an effort to win back voters.<div class=\"feedflare\">\n<a href=\"http://feeds.reuters.com/~ff/Reuters/worldNews?a=vhoY4USbTbE:lkm9C2Q5lBc:yIl2AUoC8zA\"><img src=\"http://feeds.feedburner.com/~ff/Reuters/worldNews?d=yIl2AUoC8zA\" border=\"0\"></img></a> <a href=\"http://feeds.reuters.com/~ff/Reuters/worldNews?a=vhoY4USbTbE:lkm9C2Q5lBc:F7zBnMyn0Lo\"><img src=\"http://feeds.feedburner.com/~ff/Reuters/worldNews?i=vhoY4USbTbE:lkm9C2Q5lBc:F7zBnMyn0Lo\" border=\"0\"></img></a> <a href=\"http://feeds.reuters.com/~ff/Reuters/worldNews?a=vhoY4USbTbE:lkm9C2Q5lBc:V_sGLiPBpWU\"><img src=\"http://feeds.feedburner.com/~ff/Reuters/worldNews?i=vhoY4USbTbE:lkm9C2Q5lBc:V_sGLiPBpWU\" border=\"0\"></img></a>\n</div><img src=\"http://feeds.feedburner.com/~r/Reuters/worldNews/~4/vhoY4USbTbE\" height=\"1\" width=\"1\" alt=\"\"/>")
+	(geo%3Alat "48.2084877601653")
+	(geo%3Along "16.3720750808716")
+	(guid "http://www.reuters.com/article/us-austria-election-idUSKCN0YF1FP?feedType=RSS&feedName=worldNews")
+	(link "http://feeds.reuters.com/~r/Reuters/worldNews/~3/vhoY4USbTbE/us-austria-election-idUSKCN0YF1FP")
+	(pubDate "Tue, 24 May 2016 13:25:29 GMT")
+	(title "Shaken Austrian government pledges action on asylum after far-right surge"))
