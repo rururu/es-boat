@@ -1,4 +1,4 @@
-; Tue May 24 17:18:05 MSK 2016
+; Sat May 28 22:12:04 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -222,11 +222,6 @@
 		(default "Clear Articles/wiki.gis/clear-articles")
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
-	(single-slot bbx
-		(type INSTANCE)
-;+		(allowed-classes BBX)
-;+		(cardinality 0 1)
-		(create-accessor read-write))
 	(multislot responses
 		(type INSTANCE)
 ;+		(allowed-classes WikiArticle)
@@ -248,6 +243,11 @@
 (defclass BBXWiki
 	(is-a Request)
 	(role concrete)
+	(single-slot bbx
+		(type INSTANCE)
+;+		(allowed-classes BBX)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
 	(single-slot button-bbx
 		(type STRING)
 		(default "submit/wiki.gis/submit-bbx")
@@ -257,6 +257,10 @@
 (defclass NearbySearch
 	(is-a Request)
 	(role concrete)
+	(single-slot lat
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
 	(single-slot radius-km
 		(type INTEGER)
 		(range 1 20)
@@ -266,6 +270,10 @@
 	(single-slot button-nearby
 		(type STRING)
 		(default "submit/wiki.gis/submit-nearby")
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot lng
+		(type STRING)
 ;+		(cardinality 0 1)
 		(create-accessor read-write)))
 

@@ -156,7 +156,7 @@ s)
   (if (instance? Instance val)
   (let [typ (.getDirectType val)
          sls (.getTemplateSlots typ)
-         mp (apply hash-map (mapcat #(list (keyword (.getName %))
+         mp (apply hash-map (mapcat #(list (.getName %)
 		(if (.getAllowsMultipleValues %)
 		  (if (= dep 0)
 		    (vec (.getOwnSlotValues val %))
@@ -175,7 +175,7 @@ s)
   (if (< dep 0)
     mp
     (if-let [clz (cls (:DIRTYP mp))]
-      (reduce-kv #(mti %1 (name %2) %3 dep) 
+      (reduce-kv #(mti %1 %2 %3 dep) 
 	(crin (:DIRTYP mp)) 
 	(dissoc mp :DIRTYP :DEPTH)))))
 ([ins slt vmis dep]

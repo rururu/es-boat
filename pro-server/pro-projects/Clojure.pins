@@ -1,4 +1,4 @@
-; Sun Nov 22 16:46:36 MSK 2015
+; Sat May 28 20:01:29 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -145,7 +145,7 @@
 
 ([Clojure_Class210000] of  CloFunction
 
-	(source "(if (instance? Instance val)\n  (let [typ (.getDirectType val)\n         sls (.getTemplateSlots typ)\n         mp (apply hash-map (mapcat #(list (keyword (.getName %))\n		(if (.getAllowsMultipleValues %)\n		  (if (= dep 0)\n		    (vec (.getOwnSlotValues val %))\n		    (vec (map (fn [x] (itm x (dec dep))) (.getOwnSlotValues val %))))\n		  (if (= dep 0)\n		    (.getOwnSlotValue val %)\n		    (itm (.getOwnSlotValue val %) (dec dep))))) sls))]\n    (assoc mp :DIRTYP (.getName typ) :DEPTH dep))\n  val)")
+	(source "(if (instance? Instance val)\n  (let [typ (.getDirectType val)\n         sls (.getTemplateSlots typ)\n         mp (apply hash-map (mapcat #(list (.getName %)\n		(if (.getAllowsMultipleValues %)\n		  (if (= dep 0)\n		    (vec (.getOwnSlotValues val %))\n		    (vec (map (fn [x] (itm x (dec dep))) (.getOwnSlotValues val %))))\n		  (if (= dep 0)\n		    (.getOwnSlotValue val %)\n		    (itm (.getOwnSlotValue val %) (dec dep))))) sls))]\n    (assoc mp :DIRTYP (.getName typ) :DEPTH dep))\n  val)")
 	(title "itm [val dep]"))
 
 ([Clojure_Class220000] of  CloFunction
@@ -170,7 +170,7 @@
 
 ([Clojure_Class260000] of  CloFunction
 
-	(source "([mp]\n  (if (and (map? mp) (>= (:DEPTH mp) 0))\n    (mti mp (:DEPTH mp))))\n([mp dep]\n  (if (< dep 0)\n    mp\n    (if-let [clz (cls (:DIRTYP mp))]\n      (reduce-kv #(mti %1 (name %2) %3 dep) \n	(crin (:DIRTYP mp)) \n	(dissoc mp :DIRTYP :DEPTH)))))\n([ins slt vmis dep]\n  (cond\n    (vector? vmis) (ssvs ins slt (map #(mti % (dec dep)) vmis))\n    (map? vmis) (ssv ins slt (mti vmis (dec dep)))\n    true (ssv ins slt vmis))\n  ins)")
+	(source "([mp]\n  (if (and (map? mp) (>= (:DEPTH mp) 0))\n    (mti mp (:DEPTH mp))))\n([mp dep]\n  (if (< dep 0)\n    mp\n    (if-let [clz (cls (:DIRTYP mp))]\n      (reduce-kv #(mti %1 %2 %3 dep) \n	(crin (:DIRTYP mp)) \n	(dissoc mp :DIRTYP :DEPTH)))))\n([ins slt vmis dep]\n  (cond\n    (vector? vmis) (ssvs ins slt (map #(mti % (dec dep)) vmis))\n    (map? vmis) (ssv ins slt (mti vmis (dec dep)))\n    true (ssv ins slt vmis))\n  ins)")
 	(title "mti"))
 
 ([Clojure_Class270000] of  CloFunction
