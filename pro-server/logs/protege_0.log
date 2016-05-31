@@ -790,3 +790,13 @@
 2016.05.28 21:31:07.799 MSK INFO: Load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
 2016.05.28 21:31:16.267 MSK INFO: Project load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/WikipediaGIS.pprj: 0 sec -- ProjectChooser.loadProject()
 2016.05.28 21:31:16.447 MSK INFO: UI display time = 0 sec -- ProjectManager$2.run()
+2016.05.31 11:31:07.892 MSK INFO: *** SYSTEM START ***
+2016.05.31 11:31:07.898 MSK WARNING: Look and feel not found: com.apple.laf.AquaLookAndFeel -- SystemUtilities.setLookAndFeel()
+2016.05.31 11:31:08.190 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.05.31 11:31:09.139 MSK INFO: Load time for file:/home/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.05.31 11:31:42.163 MSK INFO: Project load time for file:/home/ru/clojure/es-boat/pro-server/pro-projects/WikipediaGIS.pprj: 0 sec -- ProjectChooser.loadProject()
+2016.05.31 11:31:42.397 MSK INFO: UI display time = 0 sec -- ProjectManager$2.run()
+2016.05.31 11:42:58.651 MSK INFO: Project load time for file:/home/ru/clojure/es-boat/pro-server/pro-projects/GeoNames.pprj: 0 sec -- ProjectChooser.loadProject()
+2016.05.31 11:42:58.802 MSK INFO: UI display time = 0 sec -- ProjectManager$2.run()
+2016.05.31 11:43:19.394 MSK INFO: Project load time for file:/home/ru/clojure/es-boat/pro-server/pro-projects/WikipediaGIS.pprj: 0 sec -- ProjectChooser.loadProject()
+2016.05.31 11:43:19.836 MSK INFO: UI display time = 0 sec -- ProjectManager$2.run()

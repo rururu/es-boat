@@ -1,4 +1,4 @@
-; Sat May 28 22:12:04 MSK 2016
+; Tue May 31 16:14:55 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -14,6 +14,7 @@
 		[WikipediaGIS_Class20005]
 		[WikipediaGIS_Class40028]
 		[WikipediaGIS_Class20007]
+		[WikipediaGIS_Class50049]
 		[WikipediaGIS_Class20000]
 		[WikipediaGIS_Class30023]
 		[WikipediaGIS_Class50068]
@@ -38,8 +39,8 @@
 
 ([WikipediaGIS_Class17] of  CloFunction
 
-	(source "(let [mp (into {} hm)\n       max (mp \"max-responses\")\n       lang (request-lang (mp \"language\"))\n       text (mp \"text\")]\n  (if-let [resp (call-wiki-search text max lang)]\n     (ssvs inst \"responses\" (map article-from-map resp)) ))")
-	(title "submit-search [hm inst]"))
+	(source "([hm inst]\n  (let [mp (into {} hm)\n         max (mp \"max-responses\")\n         lang (request-lang (mp \"language\"))\n         text (mp \"text\")]\n    (if-let [resp (call-wiki-search text max lang)]\n       (ssvs inst \"responses\" (map article-from-map resp)) ) ))\n([inst any txt]\n  (ssv inst \"text\" txt)\n  (submit-search (itm inst 0) inst)\n  inst)")
+	(title "submit-search"))
 
 ([WikipediaGIS_Class18] of  CloFunction
 
@@ -53,8 +54,8 @@
 
 ([WikipediaGIS_Class20000] of  CloFunction
 
-	(source "(let [mp (into {} hm)\n       sel (selection mp \"feedURL\")]\n  (if (seq sel)\n      (if-let [resp (call-geonames-rss (str (first sel)))]\n          (let [geos (filter #(and (get % \"geo:lat\") (get %\"geo:long\")) resp)\n                 inss (map #(map-into-inst % (crin \"GeoRSSItem\")) geos)\n                 crds (coords-from-instances inss \"geo:lat\" \"geo:long\")\n                 bbx (if (seq crds) (bbx-of-list crds (str (first sel))))]\n             (ssvs inst \"georss_items\" inss)\n             (ssv inst \"bbx\" bbx)) )))")
-	(title "submit-rss [hm inst]"))
+	(source "([hm inst]\n  (let [mp (into {} hm)\n         url (first (selection mp \"feedURL\"))]\n    (if url\n      (if-let [resp (call-geonames-rss url)]\n          (let [[inss bbx] (irss-bbx url resp)]\n             (ssvs inst \"georss_items\" inss)\n             (ssv inst \"bbx\" bbx))) )))")
+	(title "submit-rss"))
 
 ([WikipediaGIS_Class20005] of  CloFunction
 
@@ -76,22 +77,68 @@
 	(title "Helsinki")
 	(wsen 24.5 59.9 25.5 60.5))
 
-([WikipediaGIS_Class30015] of  CloFuncall
+([WikipediaGIS_Class30005] of  CloFuncall
 
-	(source "(submit-bbx (first (cls-instances \"BBXWiki\")) \"Grey Horse\" [29.0 59.0 30.0 60.0])"))
+	(source "(in-ns 'wiki.gis)"))
+
+([WikipediaGIS_Class30006] of  CloFuncall
+
+	(source "("))
+
+([WikipediaGIS_Class30007] of  CloFuncall
+
+	(source "(submit-search (first (cls-instances \"FulltextSearch\")) :text \"hollywood\")"))
+
+([WikipediaGIS_Class30012] of  WebSite
+
+	(webpage "http://news.nationalgeographic.com/2016/05/national-geographic-geography-bee-winner-rishi-nair/"))
+
+([WikipediaGIS_Class30013] of  BBX
+
+	(title "Grey Horse")
+	(wsen 29.0 59.0 30.0 60.0))
 
 ([WikipediaGIS_Class30023] of  CloFunction
 
-	(source "(let [mp (into {} hm)\n       url (mp \"link\")\n       wss (cls-instances \"WebSite\")]\n  (if url\n    (let [ws (if (seq wss)\n                  (first wss)\n                  (crin \"WebSite\"))]\n      (ssv ws \"webpage\" url)\n      (doto (.show *prj* ws)\n         (.pack)\n         (.show)) ) ))")
+	(source "(let [mp (into {} hm)\n       url (or (mp \"wikipediaUrl\") (mp \"link\"))\n       wss (cls-instances \"WebSite\")]\n  (if url\n    (let [ws (if (seq wss)\n                  (first wss)\n                  (crin \"WebSite\"))]\n      (ssv ws \"webpage\" url)\n      (doto (.show *prj* ws)\n         (.pack)\n         (.show)) ) ))")
 	(title "open-site [hm inst]"))
+
+([WikipediaGIS_Class40019] of  CloFuncall
+
+	(source "(submit-nearby (first (cls-instances \"FulltextSearch\")) :text \"hollywood\")"))
+
+([WikipediaGIS_Class40020] of  CloFuncall
+
+	(source "(submit-nearby (first (cls-instances \"NearbySearch\")) 62.0 33.0 20)"))
+
+([WikipediaGIS_Class40021] of  CloFuncall
+
+	(source "(submit-nearby (first (cls-instances \"NearbySearch\")) [62.0 33.0] 20)"))
+
+([WikipediaGIS_Class40023] of  CloFuncall
+
+	(source "(submit-nearby (first (cls-instances \"NearbySearch\")) [62.0 33.0] 40)"))
+
+([WikipediaGIS_Class40024] of  CloFuncall
+
+	(source "(submit-nearby (first (cls-instances \"NearbySearch\")) [62.0 33.0] 80)"))
+
+([WikipediaGIS_Class40025] of  CloFuncall
+
+	(source "(submit-nearby (first (cls-instances \"NearbySearch\")) [62.0 33.0] 100)"))
+
+([WikipediaGIS_Class40026] of  CloFuncall
+
+	(source "(submit-nearby (first (cls-instances \"NearbySearch\")) [62.0 33.0] 30)"))
 
 ([WikipediaGIS_Class40028] of  CloFunction
 
-	(source "(let [mp (into {} hm)\n       max (mp \"max-responses\")\n       lang (request-lang (mp \"language\"))\n       radius-km (mp \"radius-km\")\n       [lat lon] (get-bbx-center (mp \"bbx\"))]\n  (if-let [resp (call-wiki-nearby lat lon radius-km max lang)]\n     (ssvs inst \"responses\" (map article-from-map resp)) ))")
-	(title "submit-nearby [hm inst]"))
+	(source "([hm inst]\n  (let [mp (into {} hm)\n         max (mp \"max-responses\")\n         lang (request-lang (mp \"language\"))\n         radius-km (mp \"radius-km\")\n         lat (mp \"lat\")\n         lon (mp \"lng\")]\n    (if-let [resp (call-wiki-nearby lat lon radius-km max lang)]\n      (ssvs inst \"responses\" (map article-from-map resp)) ) ))\n([inst lat lon]\n  (ssv inst \"lat\" (str lat))\n  (ssv inst \"lng\" (str lon))\n  (submit-nearby (itm inst 0) inst)\n  inst)")
+	(title "submit-nearby"))
 
 ([WikipediaGIS_Class50001] of  BBXWiki
 
+	(bbx [WikipediaGIS_Class30013])
 	(button-bbx "submit/wiki.gis/submit-bbx")
 	(button-clear-articles "Clear Articles/wiki.gis/clear-articles")
 	(language English-en)
@@ -103,52 +150,49 @@
 	(button-search "submit/wiki.gis/submit-search")
 	(language English-en)
 	(max-responses 5)
-	(text "Ruoholahti"))
+	(text "hollywood"))
 
 ([WikipediaGIS_Class50003] of  NearbySearch
 
 	(button-clear-articles "Clear Articles/wiki.gis/clear-articles")
 	(button-nearby "submit/wiki.gis/submit-nearby")
 	(language English-en)
+	(lat "62.0")
+	(lng "34.0")
 	(max-responses 12)
 	(radius-km 20))
 
-([WikipediaGIS_Class50029] of  CloFuncall
+([WikipediaGIS_Class50028] of  CloFuncall
 
-	(source "(submit-bbx (first (cls-instances \"BBXWiki\")) \"Grey Horse\" nil)"))
+	(source "(submit-nearby (first (cls-instances \"NearbySearch\")) [62.0 33.0] 21)"))
 
-([WikipediaGIS_Class50040] of  CloFuncall
+([WikipediaGIS_Class50031] of  CloFuncall
 
-	(source "(in-ns 'wiki.gis)"))
+	(source "(submit-nearby (first (cls-instances \"NearbySearch\")) 62.0 33.0)"))
 
-([WikipediaGIS_Class50041] of  CloFuncall
+([WikipediaGIS_Class50033] of  CloFuncall
 
-	(source "(cls-instances \"BBXWiki\")"))
+	(source "(submit-nearby (first (cls-instances \"NearbySearch\")) 62.0 34.0)"))
 
-([WikipediaGIS_Class50042] of  CloFuncall
+([WikipediaGIS_Class50048] of  BBX
 
-	(source "(first (cls-instances \"BBXWiki\"))"))
+	(title "http://feeds.reuters.com/reuters/worldNews")
+	(wsen 13.41053 19.0 126.9784 55.752224))
 
-([WikipediaGIS_Class50043] of  CloFuncall
+([WikipediaGIS_Class50049] of  CloFunction
 
-	(source "(submit-bbx (first (cls-instances \"BBXWiki\"))  [29.0 59.0 30.0 60.0] \"Loshad\")"))
+	(source "(let [geos (filter #(and (get % \"geo:lat\") (get %\"geo:long\")) resp)\n       inss (map #(map-into-inst % (crin \"GeoRSSItem\")) geos)\n       crds (coords-from-instances inss \"geo:lat\" \"geo:long\")\n       bbx (if (seq crds) (bbx-of-list crds url))]\n  [inss bbx])")
+	(title "irss-bbx [url resp]"))
 
-([WikipediaGIS_Class50057] of  CloFuncall
+([WikipediaGIS_Class50060] of  BBX
 
-	(source "(bbx-of-list  [29.0 59.0 30.0 60.0] \"Loshad\")"))
-
-([WikipediaGIS_Class50058] of  CloFuncall
-
-	(source "(bbx-of-list  [29.0 59.0 30.0 60.0])"))
+	(title "http://news.nationalgeographic.com/index.rss")
+	(wsen -82.2085 10.416667 132.45 60.0))
 
 ([WikipediaGIS_Class50068] of  CloFunction
 
 	(source "(let [ans (JOptionPane/showConfirmDialog nil \"Are you shure?\")]\n  (if (= ans (JOptionPane/YES_OPTION))\n      (doall (map delin (cls-instances \"WikiArticle\"))) ))")
 	(title "clear-articles [hm inst]"))
-
-([WikipediaGIS_Class60081] of  CloFuncall
-
-	(source "(submit-bbx (first (cls-instances \"BBXWiki\")) [29.0 59.0 30.0 60.0] \"Grey Horse\")"))
 
 ([WikipediaGIS_Class60088] of  CloFunction
 
@@ -157,6 +201,7 @@
 
 ([WikipediaGIS_Class60090] of  RSSRequest
 
+	(bbx [WikipediaGIS_Class50060])
 	(button-clear-rss "Clear RSS/wiki.gis/clear-rss")
 	(button-rss "submit/wiki.gis/submit-rss")
 	(feedURL

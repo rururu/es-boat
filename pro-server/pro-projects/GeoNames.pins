@@ -1,4 +1,4 @@
-; Mon May 23 12:36:21 MSK 2016
+; Tue May 31 11:43:14 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -208,10 +208,6 @@
 	(source "\"http://api.geonames.org/findNearbyWikipedia\"")
 	(title "^:dynamic *wiki-nearby*"))
 
-([GeoNames_Class40000] of  CloFuncall
-
-	(source "(geo.names/call-geonames-ocean 60.0 30.0)"))
-
 ([GeoNames_Class40001] of  CloFunction
 
 	(source "(letfn [(tac? [x] (let [cnt (:content x)]\n	(not (or (nil? (:tag x)) (not (or (nil? cnt) (seq cnt))) ) )))\n           (every-tac? [y] (every? #(tac? %) y))]\n   (cond\n      (nil? lst) lst\n      (every-tac? lst) (reduce #(assoc %1 (:tag %2) (tag-con-map (:content %2))) {} lst)\n      (> (count lst) 1) lst\n      true (first lst)))")
@@ -231,90 +227,6 @@
 
 	(source ";; Get Wikipedia articles of title\n(let [url (str *wiki-search* \"?title=\" (java.net.URLEncoder/encode title \"utf-8\") \"&lang=\" lang \"&maxRows=\" max)]\n  (seq (ws-map-list url)))")
 	(title "gn-wiki-title [title max lang]"))
-
-([GeoNames_Class60001] of  CloFuncall
-
-	(source "(geo.names/call-geonames-country-code 60.0 30.0)"))
-
-([GeoNames_Class60002] of  CloFuncall
-
-	(source "(geo.names/call-geonames-country-code 60.0 31.0)"))
-
-([GeoNames_Class60003] of  CloFuncall
-
-	(source "(geo.names/call-geonames-nearby 60.0 31.0)"))
-
-([GeoNames_Class60004] of  CloFuncall
-
-	(source "(geo.names/call-geonames-nearby 60.0 30.0)"))
-
-([GeoNames_Class60005] of  CloFuncall
-
-	(source "(geo.names/call-geonames-nearby-ext 60.0 30.0)"))
-
-([GeoNames_Class60006] of  CloFuncall
-
-	(source "(geo.names/call-geonames-nearby 48.865618158309374 2.344207763671875)"))
-
-([GeoNames_Class60007] of  CloFuncall
-
-	(source "(geo.names/call-geonames-country-code 47.03 10.2)"))
-
-([GeoNames_Class60008] of  CloFuncall
-
-	(source "(geo.names/call-geonames-country-info \"AT\" \"en\")"))
-
-([GeoNames_Class60009] of  CloFuncall
-
-	(source "(geo.names/call-geonames-nearby-ext 46.2022156980098 6.14569187164307)"))
-
-([GeoNames_Class60010] of  CloFuncall
-
-	(source "(geo.names/call-geonames-rss \"http://feeds.reuters.com/reuters/worldNews\")"))
-
-([GeoNames_Class60011] of  CloFuncall
-
-	(source "(geo.names/call-geonames-elev30 60.0 30.0)"))
-
-([GeoNames_Class60012] of  CloFuncall
-
-	(source "(geo.names/call-geonames-elev30 50.01 10.2)"))
-
-([GeoNames_Class60013] of  CloFuncall
-
-	(source "(geo.names/call-geonames-weather 50.01 10.2)"))
-
-([GeoNames_Class60014] of  CloFuncall
-
-	(source "(geo.names/call-wiki-search \"london\""))
-
-([GeoNames_Class60015] of  CloFuncall
-
-	(source "(geo.names/call-wiki-search \"london\" 10 \"en\")"))
-
-([GeoNames_Class60016] of  CloFuncall
-
-	(source "(geo.names/call-wiki-bbx 44.5 -69.0 43."))
-
-([GeoNames_Class60017] of  CloFuncall
-
-	(source "(geo.names/call-wiki-bbx 44.5 -69.0 43.9 -68.6 "))
-
-([GeoNames_Class60018] of  CloFuncall
-
-	(source "(geo.names/call-wiki-bbx 44.5 -69.0 43.9 -68.6 10 \"en\")"))
-
-([GeoNames_Class60019] of  CloFuncall
-
-	(source "(geo.names/call-wiki-nearby 60.0 30.0 6.0 \"ru\")"))
-
-([GeoNames_Class60020] of  CloFuncall
-
-	(source "(geo.names/call-wiki-nearby 60.0 30.0 6.0 10 \"ru\")"))
-
-([GeoNames_Class60021] of  CloFuncall
-
-	(source "(geo.names/call-geonames-elev30 58.0 30.0)"))
 
 ([GeoNames_Class60030] of  CloFunction
 

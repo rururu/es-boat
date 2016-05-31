@@ -48,47 +48,64 @@
   (submit-bbx (itm inst 0) inst)
   inst))
 
-(defn submit-search [hm inst]
+(defn submit-search
+  ([hm inst]
   (let [mp (into {} hm)
-       max (mp "max-responses")
-       lang (request-lang (mp "language"))
-       text (mp "text")]
-  (if-let [resp (call-wiki-search text max lang)]
-     (ssvs inst "responses" (map article-from-map resp)) )))
+         max (mp "max-responses")
+         lang (request-lang (mp "language"))
+         text (mp "text")]
+    (if-let [resp (call-wiki-search text max lang)]
+       (ssvs inst "responses" (map article-from-map resp)) ) ))
+([inst any txt]
+  (ssv inst "text" txt)
+  (submit-search (itm inst 0) inst)
+  inst))
 
 (defn get-bbx-center [bbx-ins]
   ;; returns [lat lon]
 (let [[w s e n] (seq (svs bbx-ins "wsen"))]
   [(float (/ (+ s n) 2)) (float (/ (+ w e) 2))]))
 
-(defn submit-nearby [hm inst]
+(defn submit-nearby
+  ([hm inst]
   (let [mp (into {} hm)
-       max (mp "max-responses")
-       lang (request-lang (mp "language"))
-       radius-km (mp "radius-km")
-       [lat lon] (get-bbx-center (mp "bbx"))]
-  (if-let [resp (call-wiki-nearby lat lon radius-km max lang)]
-     (ssvs inst "responses" (map article-from-map resp)) )))
+         max (mp "max-responses")
+         lang (request-lang (mp "language"))
+         radius-km (mp "radius-km")
+         lat (mp "lat")
+         lon (mp "lng")]
+    (if-let [resp (call-wiki-nearby lat lon radius-km max lang)]
+      (ssvs inst "responses" (map article-from-map resp)) ) ))
+([inst lat lon]
+  (ssv inst "lat" (str lat))
+  (ssv inst "lng" (str lon))
+  (submit-nearby (itm inst 0) inst)
+  inst))
 
 (defn coords-from-instances [list slat slon]
   ;; Collect coords from list of instances for given slot names
 (map #(map read-string [(sv % slat) (sv % slon)]) list))
 
-(defn submit-rss [hm inst]
+(defn irss-bbx [url resp]
+  (let [geos (filter #(and (get % "geo:lat") (get %"geo:long")) resp)
+       inss (map #(map-into-inst % (crin "GeoRSSItem")) geos)
+       crds (coords-from-instances inss "geo:lat" "geo:long")
+       bbx (if (seq crds) (bbx-of-list crds url))]
+  [inss bbx]))
+
+(defn submit-rss
+  ([hm inst]
   (let [mp (into {} hm)
-       sel (selection mp "feedURL")]
-  (if (seq sel)
-      (if-let [resp (call-geonames-rss (str (first sel)))]
-          (let [geos (filter #(and (get % "geo:lat") (get %"geo:long")) resp)
-                 inss (map #(map-into-inst % (crin "GeoRSSItem")) geos)
-                 crds (coords-from-instances inss "geo:lat" "geo:long")
-                 bbx (if (seq crds) (bbx-of-list crds (str (first sel))))]
+         url (first (selection mp "feedURL"))]
+    (if url
+      (if-let [resp (call-geonames-rss url)]
+          (let [[inss bbx] (irss-bbx url resp)]
              (ssvs inst "georss_items" inss)
-             (ssv inst "bbx" bbx)) ))))
+             (ssv inst "bbx" bbx))) ))))
 
 (defn open-site [hm inst]
   (let [mp (into {} hm)
-       url (mp "link")
+       url (or (mp "wikipediaUrl") (mp "link"))
        wss (cls-instances "WebSite")]
   (if url
     (let [ws (if (seq wss)

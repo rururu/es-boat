@@ -1,4 +1,4 @@
-; Sat May 28 22:12:04 MSK 2016
+; Tue May 31 16:14:55 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -43,7 +43,7 @@
 	(single-slot radius-km
 		(type INTEGER)
 		(range 1 20)
-		(default 5)
+		(default 10)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot category
@@ -264,7 +264,7 @@
 	(single-slot radius-km
 		(type INTEGER)
 		(range 1 20)
-		(default 5)
+		(default 10)
 ;+		(cardinality 0 1)
 		(create-accessor read-write))
 	(single-slot button-nearby
