@@ -1,4 +1,4 @@
-; Tue May 31 16:14:55 MSK 2016
+; Wed Jun 01 17:41:05 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -54,7 +54,7 @@
 
 ([WikipediaGIS_Class20000] of  CloFunction
 
-	(source "([hm inst]\n  (let [mp (into {} hm)\n         url (first (selection mp \"feedURL\"))]\n    (if url\n      (if-let [resp (call-geonames-rss url)]\n          (let [[inss bbx] (irss-bbx url resp)]\n             (ssvs inst \"georss_items\" inss)\n             (ssv inst \"bbx\" bbx))) )))")
+	(source "([hm inst]\n  (let [mp (into {} hm)\n         url (first (selection mp \"feedURL\"))]\n    (if url\n      (if-let [resp (call-geonames-rss url)]\n          (let [[inss bbx] (irss-bbx url resp)]\n             (ssvs inst \"georss_items\" inss)\n             (ssv inst \"bbx\" bbx))) )))\n([inst any url]\n  (if-let [resp (call-geonames-rss url)]\n    (let [[inss bbx] (irss-bbx url resp)]\n      (ssvs inst \"georss_items\" inss)\n      (ssv inst \"bbx\" bbx)\n      inst)))")
 	(title "submit-rss"))
 
 ([WikipediaGIS_Class20005] of  CloFunction
@@ -81,18 +81,6 @@
 
 	(source "(in-ns 'wiki.gis)"))
 
-([WikipediaGIS_Class30006] of  CloFuncall
-
-	(source "("))
-
-([WikipediaGIS_Class30007] of  CloFuncall
-
-	(source "(submit-search (first (cls-instances \"FulltextSearch\")) :text \"hollywood\")"))
-
-([WikipediaGIS_Class30012] of  WebSite
-
-	(webpage "http://news.nationalgeographic.com/2016/05/national-geographic-geography-bee-winner-rishi-nair/"))
-
 ([WikipediaGIS_Class30013] of  BBX
 
 	(title "Grey Horse")
@@ -100,36 +88,17 @@
 
 ([WikipediaGIS_Class30023] of  CloFunction
 
-	(source "(let [mp (into {} hm)\n       url (or (mp \"wikipediaUrl\") (mp \"link\"))\n       wss (cls-instances \"WebSite\")]\n  (if url\n    (let [ws (if (seq wss)\n                  (first wss)\n                  (crin \"WebSite\"))]\n      (ssv ws \"webpage\" url)\n      (doto (.show *prj* ws)\n         (.pack)\n         (.show)) ) ))")
+	(source "(let [mp (into {} hm)\n       url (or (mp \"wikipediaUrl\") (mp \"link\"))]\n  (if url\n    (.browse (java.awt.Desktop/getDesktop) (java.net.URI. url))))")
 	(title "open-site [hm inst]"))
+
+([WikipediaGIS_Class40011] of  BBX
+
+	(title "http://news.nationalgeographic.com/index.rss")
+	(wsen -77.371216 -71.25054 132.45 60.0))
 
 ([WikipediaGIS_Class40019] of  CloFuncall
 
 	(source "(submit-nearby (first (cls-instances \"FulltextSearch\")) :text \"hollywood\")"))
-
-([WikipediaGIS_Class40020] of  CloFuncall
-
-	(source "(submit-nearby (first (cls-instances \"NearbySearch\")) 62.0 33.0 20)"))
-
-([WikipediaGIS_Class40021] of  CloFuncall
-
-	(source "(submit-nearby (first (cls-instances \"NearbySearch\")) [62.0 33.0] 20)"))
-
-([WikipediaGIS_Class40023] of  CloFuncall
-
-	(source "(submit-nearby (first (cls-instances \"NearbySearch\")) [62.0 33.0] 40)"))
-
-([WikipediaGIS_Class40024] of  CloFuncall
-
-	(source "(submit-nearby (first (cls-instances \"NearbySearch\")) [62.0 33.0] 80)"))
-
-([WikipediaGIS_Class40025] of  CloFuncall
-
-	(source "(submit-nearby (first (cls-instances \"NearbySearch\")) [62.0 33.0] 100)"))
-
-([WikipediaGIS_Class40026] of  CloFuncall
-
-	(source "(submit-nearby (first (cls-instances \"NearbySearch\")) [62.0 33.0] 30)"))
 
 ([WikipediaGIS_Class40028] of  CloFunction
 
@@ -162,17 +131,10 @@
 	(max-responses 12)
 	(radius-km 20))
 
-([WikipediaGIS_Class50028] of  CloFuncall
+([WikipediaGIS_Class50022] of  BBX
 
-	(source "(submit-nearby (first (cls-instances \"NearbySearch\")) [62.0 33.0] 21)"))
-
-([WikipediaGIS_Class50031] of  CloFuncall
-
-	(source "(submit-nearby (first (cls-instances \"NearbySearch\")) 62.0 33.0)"))
-
-([WikipediaGIS_Class50033] of  CloFuncall
-
-	(source "(submit-nearby (first (cls-instances \"NearbySearch\")) 62.0 34.0)"))
+	(title "http://feeds.reuters.com/reuters/worldNews")
+	(wsen -0.12574196 14.6042 127.0 51.50853))
 
 ([WikipediaGIS_Class50048] of  BBX
 
@@ -201,7 +163,7 @@
 
 ([WikipediaGIS_Class60090] of  RSSRequest
 
-	(bbx [WikipediaGIS_Class50060])
+	(bbx [WikipediaGIS_Class50022])
 	(button-clear-rss "Clear RSS/wiki.gis/clear-rss")
 	(button-rss "submit/wiki.gis/submit-rss")
 	(feedURL

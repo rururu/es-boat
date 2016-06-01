@@ -101,20 +101,19 @@
       (if-let [resp (call-geonames-rss url)]
           (let [[inss bbx] (irss-bbx url resp)]
              (ssvs inst "georss_items" inss)
-             (ssv inst "bbx" bbx))) ))))
+             (ssv inst "bbx" bbx))) )))
+([inst any url]
+  (if-let [resp (call-geonames-rss url)]
+    (let [[inss bbx] (irss-bbx url resp)]
+      (ssvs inst "georss_items" inss)
+      (ssv inst "bbx" bbx)
+      inst))))
 
 (defn open-site [hm inst]
   (let [mp (into {} hm)
-       url (or (mp "wikipediaUrl") (mp "link"))
-       wss (cls-instances "WebSite")]
+       url (or (mp "wikipediaUrl") (mp "link"))]
   (if url
-    (let [ws (if (seq wss)
-                  (first wss)
-                  (crin "WebSite"))]
-      (ssv ws "webpage" url)
-      (doto (.show *prj* ws)
-         (.pack)
-         (.show)) ) )))
+    (.browse (java.awt.Desktop/getDesktop) (java.net.URI. url)))))
 
 (defn clear-articles [hm inst]
   (let [ans (JOptionPane/showConfirmDialog nil "Are you shure?")]
