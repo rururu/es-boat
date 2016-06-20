@@ -424,6 +424,15 @@
                                         :subject a})
                   :transit (get-answer-and-ask where-object)))))
 
+(defn about-thing [things]
+  (selector2 "?" things :itself)
+  (defn function2
+    (fn [a]
+      (ask-server QST-PTH (merge @boat {:predicate "about"
+                                        :subject "thing"
+                                        :subject-value a})
+                  :transit retrieve-answer))))
+
 (def lst1 ["ahead"
            "on the starboard bow"
            "on the port bow"
@@ -466,6 +475,11 @@
           1 (ask-server QST-PTH (merge @boat {:predicate "nearby-types"})
                         :transit (get-answer-and-ask where-type))
           (println [:WHERE-IS (nth lst1 n)]))))))
+
+(defn tell-about []
+  (ask-server QST-PTH (merge @boat {:predicate "tell"
+                                    :subject "about"})
+              :transit (get-answer-and-ask about-thing)))
 
 (defn weather []
   (ask-server QST-PTH (merge @boat {:predicate "what-is"

@@ -1,4 +1,4 @@
-; Wed May 18 16:42:49 MSK 2016
+; Mon Jun 20 19:06:35 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -461,6 +461,12 @@
 	(salience -1)
 	(title "as:AnswerIslandsBehind"))
 
+([ProServer_Class190000] of  %3AINSTANCE-ANNOTATION
+
+	(%3AANNOTATED-INSTANCE [ProServer_Class110000])
+	(%3ACREATION-TIMESTAMP "2016.06.20 19:06:29.494 MSK")
+	(%3ACREATOR "ru"))
+
 ([ProServer_Class190001] of  Rule
 
 	(lhs "?b (Behind time ?tim1)\n(OSMData time ?tim2\n	(> ?tim2 ?tim1))")
@@ -654,12 +660,6 @@
 
 	(time 0))
 
-([ProServer_Class280000] of  %3AINSTANCE-ANNOTATION
-
-	(%3AANNOTATED-INSTANCE [ProServer_Class230002])
-	(%3ACREATION-TIMESTAMP "2016.05.14 19:46:01.936 MSK")
-	(%3ACREATOR "ru"))
-
 ([ProServer_Class280001] of  Rule
 
 	(lhs "(OSMData radius ?rad)\n?q (Question predicate \"where-is\"\n	subject ?sub\n	subject-value ?suv)\n(NamedObject title ?suv\n	side ?sid\n	polar ?pol\n	coord ?crd)")
@@ -689,6 +689,7 @@
 		[ProServer_Class160041]
 		[ProServer_Class120000]
 		[Example_Class10000]
+		[GeoNamesWikipedia_Class0]
 		[ProServer_Class90007]
 		[ProServer_Class80003])
 	(title "ProServer Working Programs"))

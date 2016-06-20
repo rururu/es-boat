@@ -1,4 +1,4 @@
-; Wed Jun 01 17:41:05 MSK 2016
+; Mon Jun 20 19:00:55 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -91,11 +91,6 @@
 	(source "(let [mp (into {} hm)\n       url (or (mp \"wikipediaUrl\") (mp \"link\"))]\n  (if url\n    (.browse (java.awt.Desktop/getDesktop) (java.net.URI. url))))")
 	(title "open-site [hm inst]"))
 
-([WikipediaGIS_Class40011] of  BBX
-
-	(title "http://news.nationalgeographic.com/index.rss")
-	(wsen -77.371216 -71.25054 132.45 60.0))
-
 ([WikipediaGIS_Class40019] of  CloFuncall
 
 	(source "(submit-nearby (first (cls-instances \"FulltextSearch\")) :text \"hollywood\")"))
@@ -131,25 +126,10 @@
 	(max-responses 12)
 	(radius-km 20))
 
-([WikipediaGIS_Class50022] of  BBX
-
-	(title "http://feeds.reuters.com/reuters/worldNews")
-	(wsen -0.12574196 14.6042 127.0 51.50853))
-
-([WikipediaGIS_Class50048] of  BBX
-
-	(title "http://feeds.reuters.com/reuters/worldNews")
-	(wsen 13.41053 19.0 126.9784 55.752224))
-
 ([WikipediaGIS_Class50049] of  CloFunction
 
 	(source "(let [geos (filter #(and (get % \"geo:lat\") (get %\"geo:long\")) resp)\n       inss (map #(map-into-inst % (crin \"GeoRSSItem\")) geos)\n       crds (coords-from-instances inss \"geo:lat\" \"geo:long\")\n       bbx (if (seq crds) (bbx-of-list crds url))]\n  [inss bbx])")
 	(title "irss-bbx [url resp]"))
-
-([WikipediaGIS_Class50060] of  BBX
-
-	(title "http://news.nationalgeographic.com/index.rss")
-	(wsen -82.2085 10.416667 132.45 60.0))
 
 ([WikipediaGIS_Class50068] of  CloFunction
 
@@ -163,7 +143,6 @@
 
 ([WikipediaGIS_Class60090] of  RSSRequest
 
-	(bbx [WikipediaGIS_Class50022])
 	(button-clear-rss "Clear RSS/wiki.gis/clear-rss")
 	(button-rss "submit/wiki.gis/submit-rss")
 	(feedURL
