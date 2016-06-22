@@ -1,4 +1,4 @@
-; Tue Jun 21 22:14:47 MSK 2016
+; Wed Jun 22 17:00:14 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -614,7 +614,7 @@
 
 ([ProServer_Class220001] of  CloFunction
 
-	(source "(if-let [nss (seq (cls-instances \"NearbySearch\"))]\n  (def LAST-NEAR-SRCH (wiki.gis/submit-nearby (first nss) lat lon))\n  (let [rr (svs LAST-NEAR-SRCH \"responses\")]\n    (sort (map #(sv % \"title\") rr)))")
+	(source "(when-let [ans (fainst (cls-instances \"NearbySearch\") nil)]\n  (def LAST-NEAR-SRCH (wiki.gis/submit-nearby ans lat lon))\n  (let [rr (svs LAST-NEAR-SRCH \"responses\")]\n    (sort (map #(sv % \"title\") rr))))")
 	(title "nearby-things [[lat lon]]"))
 
 ([ProServer_Class220002] of  CloVar
@@ -631,7 +631,7 @@
 
 ([ProServer_Class220004] of  CloFunction
 
-	(source "(if-let [flt  (seq (filter #(= (sv % \"title\") val) (svs LAST-NEAR-SRCH \"responses\")))]\n  (sv (first flt) \"summary\"))")
+	(source "(if-let [flt  (seq (filter #(= (sv % \"title\") val) (svs LAST-NEAR-SRCH \"responses\")))]\n  (or (sv (first flt) \"summary\") \"No summary\")\n  \"Not found\")")
 	(title "about-thing [val]"))
 
 ([ProServer_Class230000] of  CloFunction
@@ -688,6 +688,19 @@
 
 	(source "(ru.rules/sp :all)"))
 
+([ProServer_Class270000] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "NO")
+	(feature "isle")
+	(lang "en")
+	(lat "62.4076")
+	(lng "5.9389")
+	(rank "90")
+	(summary "Hareidlandet is an island in Møre og Romsdal county, Norway. The island is divided between Hareid Municipality and Ulstein Municipality. The island has a population (2008) of 11,687. The island is mentioned by Snorri in his reports about the Battle of Hjörungavágr (today this is Hjørungavåg) in 986 (...)")
+	(title "Hareidlandet")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Hareidlandet"))
+
 ([ProServer_Class270001] of  Answer2
 
 	(time 0))
@@ -737,6 +750,75 @@
 
 	(source "(if-let [rsp (geo.names/call-geonames-weather lat lon)]\n  (let [lat2 (read-string (rsp \"lat\"))\n          lon2 (read-string (rsp \"lng\"))\n          bear (geo.names/bearing lat lon lat2 lon2)\n          dir (geo.names/direction bear)\n          dis (rough-distance lat lon lat2 lon2)\n          name (rsp \"stationName\")\n          wcd (rsp \"weatherCondition\")\n          hym (rsp \"hymidity\")\n          tmp (rsp \"temperature\")\n          wind (rsp \"windDirection\")\n          bwnd (if (some? wind)\n	(let [b (+ (read-string wind) 180)] (if (> b 360) (- b 360) b)))\n          win (if (some? bwnd)\n	(geo.names/direction bwnd)\n	\"n/a\")\n          wins (rsp \"windSpeed\")\n          tim (rsp \"observationTime\")\n          loc (str dis \" miles to \" dir \" from here\")]\n    (str name \" Weather Station<br>\"\n	\"location: \" loc \"<br>\"\n	\"observation time: \" tim \"<br>\"\n	\"weather conditions: \" wcd \"<br>\"\n	\"temperature: \" tmp \" Celsius<br>\"\n	\"hymidity: \" hym \"<br>\"\n	\"wind: \" win \", \" wins \" Knots\"))\n  \"I can not get a weather information\")")
 	(title "weather [[lat lon]]"))
+
+([ProServer_Class300001] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "NO")
+	(feature "landmark")
+	(lang "en")
+	(lat "62.4308")
+	(lng "5.7591")
+	(rank "65")
+	(summary "Grasøyane Lighthouse is a coastal lighthouse in Ulstein Municipality in Møre og Romsdal, Norway. It sits on the small island of Grasøya, about northwest of the island of Hareidlandet on which Ulstein Municipality is located and it is east of Runde Lighthouse (...)")
+	(title "Grasøyane Lighthouse")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Gras%C3%B8yane_Lighthouse"))
+
+([ProServer_Class300002] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "NO")
+	(feature "city")
+	(lang "en")
+	(lat "62.4856")
+	(lng "5.9742")
+	(rank "82")
+	(summary "Alnes is a small village in Giske Municipality in Møre og Romsdal county, Norway. It is located on the (isolated) north side of the island of Godøya, about northwest of the village of Leitebakk. The rest of the island's population is located on the southern half of the island, separated from Alnes (...)")
+	(thumbnailImg "http://www.geonames.org/img/wikipedia/81000/thumb-80763-100.jpg")
+	(title "Alnes")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Alnes"))
+
+([ProServer_Class300003] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "NO")
+	(feature "isle")
+	(lang "en")
+	(lat "62.4689")
+	(lng "5.9989")
+	(rank "84")
+	(summary "Godøy is an island in Giske Municipality in Møre og Romsdal county, Norway. The island is famous for its beautiful nature, dominated by the tall mountain Storhornet and the large lake Alnesvatnet. The name Godøy stems back to the Viking age, and is derived from the name \"Gud øy\", which translates to (...)")
+	(title "Godøy")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/God%C3%B8y"))
+
+([ProServer_Class300005] of  NearbySearch
+
+	(button-clear-articles "Clear Articles/wiki.gis/clear-articles")
+	(button-nearby "submit/wiki.gis/submit-nearby")
+	(language English-en)
+	(lat "62.4444")
+	(lng "5.88")
+	(max-responses 12)
+	(radius-km 20)
+	(responses
+		[ProServer_Class270000]
+		[ProServer_Class300001]
+		[ProServer_Class300002]
+		[ProServer_Class300003]
+		[ProServer_Class310004]
+		[ProServer_Class310005]
+		[ProServer_Class310006]
+		[ProServer_Class320007]
+		[ProServer_Class320008]
+		[ProServer_Class320009]
+		[ProServer_Class320010]
+		[ProServer_Class320011]))
+
+([ProServer_Class300006] of  %3AINSTANCE-ANNOTATION
+
+	(%3AANNOTATED-INSTANCE [ProServer_Class300005])
+	(%3ACREATION-TIMESTAMP "2016.06.22 16:05:35.111 MSK")
+	(%3ACREATOR "ru"))
 
 ([ProServer_Class30001] of  CloProgram
 
@@ -815,6 +897,45 @@
 	(source "(letfn [(smround [n]\n	(/ (float (Math/round (* n 10))) 10))]\n(let [dlat (- lat1 lat2)\n        dlon (- lon1 lon2)\n        lad (* (if (>= dlat 0) dlat (- 0 dlat)) 60)\n        lod (* (if (>= dlon 0) dlon (- 0 dlon)) 60)\n        dia (Math/sqrt (+ (* lad lad) (* lod lod)))]\n   (if (< dia 1) (smround dia) (Math/round dia)))\n)")
 	(title "rough-distance [lat1 lon1 lat2 lon2]"))
 
+([ProServer_Class310004] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "NO")
+	(feature "landmark")
+	(lang "en")
+	(lat "62.4897")
+	(lng "5.9672")
+	(rank "75")
+	(summary "Alnes lighthouse was established in 1852 to guide fishing boats safely to the harbor of the small fishing community of Alnes on Godøy island on the west coast of Norway. It is located on the north side of Godøy island in the municipality of Giske in Møre og Romsdal county, about northwest of (...)")
+	(title "Alnes Lighthouse")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Alnes_Lighthouse"))
+
+([ProServer_Class310005] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "NO")
+	(feature "landmark")
+	(lang "en")
+	(lat "62.4683")
+	(lng "6.0152")
+	(rank "37")
+	(summary "Godøy Chapel is a chapel in Giske Municipality in Møre og Romsdal county, Norway. It is located on the island of Godøy. The chapel is part of the Giske parish in the Nordre Sunnmøre deanery in the Diocese of Møre. The stone chapel was built in 1953 by the architect O.S. Solheim (...)")
+	(title "Godøy Chapel")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/God%C3%B8y_Chapel"))
+
+([ProServer_Class310006] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "NO")
+	(feature "city")
+	(lang "en")
+	(lat "62.4006")
+	(lng "6.0081")
+	(rank "82")
+	(summary "Brandal is a village in Hareid Municipality in Møre og Romsdal county, Norway. It is located on the eastern shores of the island of Hareidlandet, along the Sulafjorden. The village lies about north of the municipal centre of Hareid and about northeast of the town of Ulsteinvik on the other side of (...)")
+	(title "Brandal")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Brandal"))
+
 ([ProServer_Class310007] of  Rule
 
 	(lhs "?q (Question coord ?crd\n	predicate \"what-is\"\n	subject \"weather\")")
@@ -828,6 +949,70 @@
 	(rhs "(cond\n  (string? ?nat) (vswap! ?nal conj [?nat ?tit])\n  (string? ?pla) (vswap! ?pll conj [?pla ?tit])\n  (string? ?ame) (vswap! ?aml conj [?ame ?tit]))")
 	(salience 0)
 	(title "as:NearbyTypes"))
+
+([ProServer_Class320007] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "NO")
+	(feature "city")
+	(lang "en")
+	(lat "62.4761")
+	(lng "6.0356")
+	(rank "80")
+	(summary "Leitebakk is a small village on the island of Godøya in Giske Municipality in Møre og Romsdal county, Norway. The village is located about southeast of the isolated village of Alnes, where Alnes Lighthouse is located (...)")
+	(title "Leitebakk")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Leitebakk"))
+
+([ProServer_Class320008] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "NO")
+	(lang "en")
+	(lat "62.4931")
+	(lng "6.0467")
+	(rank "61")
+	(summary "The Godøy Tunnel is a subsea road tunnel which runs between the islands of Giske and Godøy in Giske Municipality, Møre og Romsdal county, Norway. The tunnel is long; it is part of County Road 658 and the Vigra Fixed Link. It opened in 1989 (...)")
+	(title "Godøy Tunnel")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/God%C3%B8y_Tunnel"))
+
+([ProServer_Class320009] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "NO")
+	(feature "landmark")
+	(lang "en")
+	(lat "62.4987")
+	(lng "6.0502")
+	(rank "63")
+	(summary "Giske Church is a 12th-century marble parish church in Giske Municipality in Møre og Romsdal county, Norway. It is located on the south side of the island of Giske, about northwest of the town of Ålesund. The church is part of the Giske parish in the Nordre Sunnmøre deanery in the Diocese of Møre (...)")
+	(title "Giske Church")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Giske_Church"))
+
+([ProServer_Class320010] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "NO")
+	(feature "isle")
+	(lang "en")
+	(lat "62.505")
+	(lng "6.0481")
+	(rank "81")
+	(summary "Giske is an island in Giske Municipality in Møre og Romsdal county, Norway. It covers an area of and had 717 residents in 2010. It is flat, with the highest point above mean sea level. The island is connected by the Giske Bridge to the neighboring island of Valderøya to the east and by the Godøy (...)")
+	(title "Giske (island)")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Giske_%28island%29"))
+
+([ProServer_Class320011] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "NO")
+	(feature "city")
+	(lang "en")
+	(lat "62.5056")
+	(lng "6.05")
+	(rank "96")
+	(summary "Giske is an island municipality in Møre og Romsdal county, Norway. The municipality lies north-northwest of the town of Ålesund in the traditional district of Sunnmøre. The municipal center is Valderhaugstrand. Other population centers include the villages of Roald (on Vigra island) and Alnes and (...)")
+	(title "Giske")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Giske"))
 
 ([ProServer_Class340001] of  Rule
 

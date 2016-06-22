@@ -1,6 +1,7 @@
 (ns as
-)
+(:use protege.core))
 
+(def LAST-NEAR-SRCH nil)
 (defn current-time []
   (System/currentTimeMillis))
 
@@ -76,4 +77,15 @@
 	"hymidity: " hym "<br>"
 	"wind: " win ", " wins " Knots"))
   "I can not get a weather information"))
+
+(defn nearby-things [[lat lon]]
+  (when-let [ans (fainst (cls-instances "NearbySearch") nil)]
+  (def LAST-NEAR-SRCH (wiki.gis/submit-nearby ans lat lon))
+  (let [rr (svs LAST-NEAR-SRCH "responses")]
+    (sort (map #(sv % "title") rr)))))
+
+(defn about-thing [val]
+  (if-let [flt  (seq (filter #(= (sv % "title") val) (svs LAST-NEAR-SRCH "responses")))]
+  (or (sv (first flt) "summary") "No summary")
+  "Not found"))
 

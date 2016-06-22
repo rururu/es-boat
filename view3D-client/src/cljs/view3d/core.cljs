@@ -426,7 +426,7 @@
 
 (defn about-thing [things]
   (selector2 "?" things :itself)
-  (defn function2
+  (def function2
     (fn [a]
       (ask-server QST-PTH (merge @boat {:predicate "about"
                                         :subject "thing"
@@ -493,6 +493,10 @@
                   "Tell me about"
                   "What is the weather"
                   "Clear HUD"] :count)
+(defn clear-hud []
+  (set-html! "display" "")
+  (set-html! "display2" ""))
+
   (def function1
     (fn [a]
       (clear-selectors)
@@ -502,10 +506,6 @@
         2 (tell-about)
         3 (weather)
         4 (clear-hud)))))
-
-(defn clear-hud []
-  (set-html! "display" "")
-  (set-html! "display2" ""))
 
 ;; ----------------------------- Init ---------------------------------
 
