@@ -1,4 +1,4 @@
-; Thu Jun 23 14:22:11 MSK 2016
+; Thu Jun 23 18:58:59 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -470,14 +470,15 @@
 
 	(button-open-site "Open Site/wiki.gis/open-site")
 	(countryCode "NO")
-	(feature "isle")
+	(feature "city")
 	(lang "en")
-	(lat "62.4076")
-	(lng "5.9389")
-	(rank "90")
-	(summary "Hareidlandet is an island in Møre og Romsdal county, Norway. The island is divided between Hareid Municipality and Ulstein Municipality. The island has a population (2008) of 11,687. The island is mentioned by Snorri in his reports about the Battle of Hjörungavágr (today this is Hjørungavåg) in 986 (...)")
-	(title "Hareidlandet")
-	(wikipediaUrl "http://en.wikipedia.org/wiki/Hareidlandet"))
+	(lat "62.3339")
+	(lng "5.8567")
+	(rank "89")
+	(summary "Ulsteinvik is the commercial and administrative centre of the municipality (kommune) of Ulstein in Møre og Romsdal county, Norway. The village has a population (2012) of 5,686, giving the village a population density of . As such, Ulsteinvik contains 74% of the population of Ulstein Municipality (...)")
+	(thumbnailImg "http://www.geonames.org/img/wikipedia/12000/thumb-11536-100.jpg")
+	(title "Ulsteinvik")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Ulsteinvik"))
 
 ([ProServer_Class190001] of  Rule
 
@@ -498,7 +499,7 @@
 
 ([ProServer_Class200000] of  Rule
 
-	(lhs "?q (Question coord ?crd\n	predicate \"wiki-tells-about\"\n	subject \"about\")")
+	(lhs "?q (Question coord ?crd\n	predicate \"wiki-tells\"\n	subject \"about\")")
 	(rhs "(pro.server/pump-in-ans (as/nearby-things ?crd))\n(retract ?q)")
 	(salience 0)
 	(title "as:WikiTellsAbout"))
@@ -633,7 +634,7 @@
 
 ([ProServer_Class220003] of  Rule
 
-	(lhs "?q (Question coord ?crd\n	predicate \"about\"\n	subject \"thing\"\n	subject-value ?sval)")
+	(lhs "?q (Question predicate \"about\"\n	subject \"thing\"\n	subject-value ?sval)")
 	(rhs "(pro.server/pump-in-ans (as/about-thing ?sval))\n(retract ?q)")
 	(salience 0)
 	(title "as:AboutThing"))
@@ -652,14 +653,14 @@
 
 	(button-open-site "Open Site/wiki.gis/open-site")
 	(countryCode "NO")
-	(feature "landmark")
 	(lang "en")
-	(lat "62.4308")
-	(lng "5.7591")
-	(rank "65")
-	(summary "Grasøyane Lighthouse is a coastal lighthouse in Ulstein Municipality in Møre og Romsdal, Norway. It sits on the small island of Grasøya, about northwest of the island of Hareidlandet on which Ulstein Municipality is located and it is east of Runde Lighthouse (...)")
-	(title "Grasøyane Lighthouse")
-	(wikipediaUrl "http://en.wikipedia.org/wiki/Gras%C3%B8yane_Lighthouse"))
+	(lat "62.3797")
+	(lng "5.6272")
+	(rank "69")
+	(summary "Runde Bridge is a cantilever bridge that crosses the Rundasundet between the islands Remøya and Runde in the municipality of Herøy in Møre og Romsdal county, Norway. The bridge is located about north of Fosnavåg and about northwest of Ulsteinvik (...)")
+	(thumbnailImg "http://www.geonames.org/img/wikipedia/26000/thumb-25603-100.jpg")
+	(title "Runde Bridge")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Runde_Bridge"))
 
 ([ProServer_Class230002] of  StartPoint
 
@@ -675,28 +676,26 @@
 
 	(button-open-site "Open Site/wiki.gis/open-site")
 	(countryCode "NO")
-	(feature "city")
 	(lang "en")
-	(lat "62.4856")
-	(lng "5.9742")
-	(rank "71")
-	(summary "Alnes is a small village in Giske Municipality in Møre og Romsdal county, Norway. It is located on the (isolated) north side of the island of Godøya, about northwest of the village of Leitebakk. The rest of the island's population is located on the southern half of the island, separated from Alnes (...)")
-	(thumbnailImg "http://www.geonames.org/img/wikipedia/81000/thumb-80763-100.jpg")
-	(title "Alnes")
-	(wikipediaUrl "http://en.wikipedia.org/wiki/Alnes"))
+	(lat "62.3339")
+	(lng "5.856")
+	(rank "93")
+	(summary "Ulstein is a municipality in Møre og Romsdal county, Norway. It is part of the Sunnmøre region. The commercial and administrative centre of Ulstein is the town of Ulsteinvik, with a population of almost 5,700 people (2012) (...)")
+	(title "Ulstein")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Ulstein"))
 
 ([ProServer_Class240003] of  WikiArticle
 
 	(button-open-site "Open Site/wiki.gis/open-site")
 	(countryCode "NO")
-	(feature "isle")
+	(feature "city")
 	(lang "en")
-	(lat "62.4689")
-	(lng "5.9989")
-	(rank "77")
-	(summary "Godøy is an island in Giske Municipality in Møre og Romsdal county, Norway. The island is famous for its beautiful nature, dominated by the tall mountain Storhornet and the large lake Alnesvatnet. Most of the population lives on the southeastern side of the island in Godøy and Leitebakk, although (...)")
-	(title "Godøy")
-	(wikipediaUrl "http://en.wikipedia.org/wiki/God%C3%B8y"))
+	(lat "62.2028")
+	(lng "5.5772")
+	(rank "78")
+	(summary "Larsnes is the administrative centre of the municipality of Sande in Møre og Romsdal county, Norway. It is located on the southwest side of the island of Gurskøya, about east of the island of Kvamsøya, southwest of the village of Gursken, and about southwest of the town of Ulsteinvik (...)")
+	(title "Larsnes")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Larsnes"))
 
 ([ProServer_Class240004] of  WikiArticle
 
@@ -704,120 +703,104 @@
 	(countryCode "NO")
 	(feature "landmark")
 	(lang "en")
-	(lat "62.4897")
-	(lng "5.9672")
-	(rank "66")
-	(summary "Alnes lighthouse was established in 1852 to guide fishing boats safely to the harbor of the small fishing community of Alnes on Godøy island on the west coast of Norway. It is located on the north side of Godøy island in the municipality of Giske in Møre og Romsdal county, about northwest of (...)")
-	(title "Alnes Lighthouse")
-	(wikipediaUrl "http://en.wikipedia.org/wiki/Alnes_Lighthouse"))
+	(lat "62.3445")
+	(lng "5.8465")
+	(rank "51")
+	(summary "Ulstein Church is a parish church in Ulstein Municipality in Møre og Romsdal county, Norway. It is located in the town of Ulsteinvik. The church is part of the Ulstein parish in the Søre Sunnmøre deanery in the Diocese of Møre. The white, wooden, octagonal church was built in 1849 (...)")
+	(title "Ulstein Church")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Ulstein_Church"))
 
 ([ProServer_Class240005] of  WikiArticle
 
 	(button-open-site "Open Site/wiki.gis/open-site")
-	(countryCode "NO")
-	(feature "landmark")
+	(countryCode "RU")
+	(elevation "165")
+	(feature "city")
 	(lang "en")
-	(lat "62.4683")
-	(lng "6.0152")
-	(rank "37")
-	(summary "Godøy Chapel is a chapel in Giske Municipality in Møre og Romsdal county, Norway. It is located on the island of Godøy. The chapel is part of the Giske parish in the Nordre Sunnmøre deanery in the Diocese of Møre. The stone chapel was built in 1953 by the architect O.S. Solheim (...)")
-	(title "Godøy Chapel")
-	(wikipediaUrl "http://en.wikipedia.org/wiki/God%C3%B8y_Chapel"))
+	(lat "56.3339")
+	(lng "36.7125")
+	(rank "100")
+	(summary "Klin (lit. a wedge) is a town and the administrative center of Klinsky District in Moscow Oblast, Russia, located northwest of Moscow. Population: 94,000 (1985 est.).  (...)")
+	(thumbnailImg "http://www.geonames.org/img/wikipedia/84000/thumb-83631-100.jpg")
+	(title "Klin, Klinsky District, Moscow Oblast")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Klin%2C_Klinsky_District%2C_Moscow_Oblast"))
 
 ([ProServer_Class240006] of  WikiArticle
 
 	(button-open-site "Open Site/wiki.gis/open-site")
-	(countryCode "NO")
-	(feature "city")
+	(countryCode "RU")
+	(elevation "157")
+	(feature "landmark")
 	(lang "en")
-	(lat "62.4006")
-	(lng "6.0081")
-	(rank "82")
-	(summary "Brandal is a village in Hareid Municipality in Møre og Romsdal county, Norway. It is located on the eastern shores of the island of Hareidlandet, along the Sulafjorden. The village lies about north of the municipal centre of Hareid and about northeast of the town of Ulsteinvik on the other side of (...)")
-	(title "Brandal")
-	(wikipediaUrl "http://en.wikipedia.org/wiki/Brandal"))
+	(lat "55.7928")
+	(lng "37.6325")
+	(rank "97")
+	(summary "Rizhsky station (Rizhsky vokzal, Riga station) is one of the nine main railway stations in Moscow, Russia. It was built in 1901. As well as being an active station it also houses the Moscow Railway Museum. The station is operated by the Moscow Railway (...)")
+	(thumbnailImg "http://www.geonames.org/img/wikipedia/52000/thumb-51107-100.jpg")
+	(title "Moscow Rizhskaya railway station")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Moscow_Rizhskaya_railway_station"))
 
 ([ProServer_Class240007] of  WikiArticle
 
 	(button-open-site "Open Site/wiki.gis/open-site")
-	(countryCode "NO")
+	(countryCode "RU")
+	(elevation "157")
 	(feature "city")
 	(lang "en")
-	(lat "62.4794")
-	(lng "6.0289")
-	(rank "70")
-	(summary "Leitebakk is a small village on the island of Godøya in Giske Municipality in Møre og Romsdal county, Norway. The village is located about southeast of the isolated village of Alnes, where Alnes Lighthouse is located (...)")
-	(title "Leitebakk")
-	(wikipediaUrl "http://en.wikipedia.org/wiki/Leitebakk"))
+	(lat "56.0167")
+	(lng "37.85")
+	(rank "100")
+	(summary "Pushkino is a city and the administrative center of Pushkinsky District in Moscow Oblast, Russia, located at the confluence of the Ucha and Serebryanka Rivers, northeast of Moscow. Population: 57,000 (1974); 30,000 (1959); 21,000 (1939).  (...)")
+	(thumbnailImg "http://www.geonames.org/img/wikipedia/161000/thumb-160462-100.jpg")
+	(title "Pushkino, Pushkinsky District, Moscow Oblast")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Pushkino%2C_Pushkinsky_District%2C_Moscow_Oblast"))
 
 ([ProServer_Class240008] of  WikiArticle
 
 	(button-open-site "Open Site/wiki.gis/open-site")
-	(countryCode "NO")
+	(countryCode "RU")
+	(elevation "148")
 	(lang "en")
-	(lat "62.4931")
-	(lng "6.0467")
-	(rank "61")
-	(summary "The Godøy Tunnel is a subsea road tunnel which runs between the islands of Giske and Godøy in Giske Municipality, Møre og Romsdal county, Norway. The tunnel is long; it is part of County Road 658 and the Vigra Fixed Link. It opened in 1989 (...)")
-	(title "Godøy Tunnel")
-	(wikipediaUrl "http://en.wikipedia.org/wiki/God%C3%B8y_Tunnel"))
+	(lat "55.7525")
+	(lng "37.6231")
+	(rank "100")
+	(summary "Moscow (or ;) is the capital and the largest city of Russia with 12.2 million residents within the city limits and 16.8 million within the urban area. Moscow is one of two federal cities in Russia (the other is Saint Petersburg; Sevastopol also has this status, although it is disputed due to the (...)")
+	(thumbnailImg "http://www.geonames.org/img/wikipedia/123000/thumb-122598-100.jpg")
+	(title "Moscow")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Moscow"))
 
 ([ProServer_Class240009] of  WikiArticle
 
 	(button-open-site "Open Site/wiki.gis/open-site")
-	(countryCode "NO")
-	(feature "landmark")
-	(lang "en")
-	(lat "62.4987")
-	(lng "6.0502")
-	(rank "63")
-	(summary "Giske Church is a 12th-century marble parish church in Giske Municipality in Møre og Romsdal county, Norway. It is located on the south side of the island of Giske, about northwest of the town of Ålesund. The church is part of the Giske parish in the Nordre Sunnmøre deanery in the Diocese of Møre (...)")
-	(title "Giske Church")
-	(wikipediaUrl "http://en.wikipedia.org/wiki/Giske_Church"))
-
-([ProServer_Class240010] of  WikiArticle
-
-	(button-open-site "Open Site/wiki.gis/open-site")
-	(countryCode "NO")
-	(feature "isle")
-	(lang "en")
-	(lat "62.505")
-	(lng "6.0481")
-	(rank "81")
-	(summary "Giske is an island in Giske Municipality in Møre og Romsdal county, Norway. It covers an area of and had 717 residents in 2010. It is flat, with the highest point above mean sea level. The island is connected by the Giske Bridge to the neighboring island of Valderøya to the east and by the Godøy (...)")
-	(title "Giske (island)")
-	(wikipediaUrl "http://en.wikipedia.org/wiki/Giske_%28island%29"))
-
-([ProServer_Class240011] of  WikiArticle
-
-	(button-open-site "Open Site/wiki.gis/open-site")
-	(countryCode "NO")
+	(countryCode "RU")
+	(elevation "159")
 	(feature "city")
 	(lang "en")
-	(lat "62.5056")
-	(lng "6.05")
-	(rank "94")
-	(summary "Giske is an island municipality in Møre og Romsdal county, Norway. The municipality lies north-northwest of the town of Ålesund in the traditional district of Sunnmøre. The municipal center is Valderhaugstrand, part of the village of Nordstrand on the southern coast of the island of Valderøya (...)")
-	(title "Giske")
-	(wikipediaUrl "http://en.wikipedia.org/wiki/Giske"))
+	(lat "55.9203")
+	(lng "37.8314")
+	(rank "100")
+	(summary "Korolyov or Korolev is an industrial city in Moscow Oblast, Russia, well known as the cradle of Soviet and Russian space exploration. As of the 2010 Census, its population was 183,402. It was known as Kaliningrad since 1938 and served as the leading Soviet center for production of anti-tank and (...)")
+	(thumbnailImg "http://www.geonames.org/img/wikipedia/55000/thumb-54132-100.jpg")
+	(title "Korolyov, Moscow Oblast")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Korolyov%2C_Moscow_Oblast"))
 
 ([ProServer_Class240012] of  Rule
 
 	(lhs "?q (Question predicate \"about\"\n	subject \"island\"\n	object ?tit)")
-	(rhs "(pro.server/pump-in-ans (as/text-search (str \"island \" ?tit)))\n(retract ?q)")
+	(rhs "(pro.server/pump-in-ans (as/text-search (str ?tit \" island\")))\n(retract ?q)")
 	(salience 0)
 	(title "as:AboutIsland"))
 
 ([ProServer_Class240013] of  Rule
 
-	(lhs "?q (Question predicate \"where-is\"\n	subject ?sub\n	subject-value ?suv)")
-	(rhs "(pro.server/pump-in-ans (as/text-search (str ?sub \" \" ?suv)))\n(retract ?q)")
+	(lhs "?q (Question predicate \"about\"\n	subject ?sub\n	subject-value ?suv\n	(not= ?sub \"thing\"))")
+	(rhs "(pro.server/pump-in-ans (as/text-search ?suv))\n(retract ?q)")
 	(salience 0)
 	(title "as:AboutObject"))
 
 ([ProServer_Class240014] of  CloFunction
 
-	(source "(if-let [ans (fainst (cls-instances \"FulltextSearch\") nil)]\n  (let [fts (wiki.gis/submit-search nil txt)\n         rr (svs fts \"responses\")\n         ss (map #(str (or (sv % \"summary\") \"No summary\")\n	  (if-let [img (sv % \"thumbnailImg\")]\n	    (str \"<br><img src=\\\"\" img \"\\\">\"))\n	  \"<br>\"))]\n    (apply str ss)))")
+	(source "(if-let [ans (fainst (cls-instances \"FulltextSearch\") nil)]\n  (let [fts (wiki.gis/submit-search ans nil txt)\n         rr (svs fts \"responses\")\n         ss (map #(str (or (sv % \"summary\") \"No summary\")\n	          (if-let [img (sv % \"thumbnailImg\")]\n	            (str \"<br><img src=\\\"\" img \"\\\">\"))\n	          \"<br>\")\n	rr)]\n    (apply str ss))\n    \"\")")
 	(title "text-search [txt]"))
 
 ([ProServer_Class240015] of  FulltextSearch
@@ -827,12 +810,12 @@
 	(language English-en)
 	(max-responses 5)
 	(responses
-		[ProServer_Class240002]
-		[ProServer_Class240004]
+		[ProServer_Class240005]
+		[ProServer_Class240006]
 		[ProServer_Class240007]
-		[ProServer_Class240011]
-		[ProServer_Class240003])
-	(text "Alnes"))
+		[ProServer_Class240008]
+		[ProServer_Class240009])
+	(text "Moscowzaq"))
 
 ([ProServer_Class240016] of  %3AINSTANCE-ANNOTATION
 
@@ -889,6 +872,10 @@
 
 	(time 0))
 
+([ProServer_Class280000] of  CloFuncall
+
+	(source "(ru.rules/pp 'Question)"))
+
 ([ProServer_Class280001] of  Rule
 
 	(lhs "(OSMData radius ?rad)\n?q (Question predicate \"where-is\"\n	subject ?sub\n	subject-value ?suv)\n(NamedObject title ?suv\n	side ?sid\n	polar ?pol\n	coord ?crd)")
@@ -940,23 +927,10 @@
 	(button-clear-articles "Clear Articles/wiki.gis/clear-articles")
 	(button-nearby "submit/wiki.gis/submit-nearby")
 	(language English-en)
-	(lat "62.4444")
+	(lat "62.46409444444644")
 	(lng "5.88")
 	(max-responses 12)
-	(radius-km 20)
-	(responses
-		[ProServer_Class190000]
-		[ProServer_Class230001]
-		[ProServer_Class240002]
-		[ProServer_Class240003]
-		[ProServer_Class240004]
-		[ProServer_Class240005]
-		[ProServer_Class240006]
-		[ProServer_Class240007]
-		[ProServer_Class240008]
-		[ProServer_Class240009]
-		[ProServer_Class240010]
-		[ProServer_Class240011]))
+	(radius-km 20))
 
 ([ProServer_Class300006] of  %3AINSTANCE-ANNOTATION
 

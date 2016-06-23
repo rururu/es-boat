@@ -38,8 +38,10 @@
          max (mp "max-responses")
          lang (request-lang (mp "language"))
          [west south east north] (seq (svs (mp "bbx") "wsen"))]
-    (if-let [resp (call-wiki-bbx north west south east max lang)]
-      (ssvs inst "responses" (map article-from-map resp)) ) ))
+    (ssvs inst "responses" 
+      (if-let [resp (call-wiki-bbx north west south east max lang)]
+        (map article-from-map resp)
+        [])) ))
 ([inst bbx-title bbx]
   (if-let [bbx-inst (fifos "BBX" "title" bbx-title)]
     (ssv inst "bbx" bbx-inst)
@@ -54,8 +56,10 @@
          max (mp "max-responses")
          lang (request-lang (mp "language"))
          text (mp "text")]
-    (if-let [resp (call-wiki-search text max lang)]
-       (ssvs inst "responses" (map article-from-map resp)) ) ))
+    (ssvs inst "responses" 
+      (if-let [resp (call-wiki-search text max lang)]
+        (map article-from-map resp)
+        [])) ))
 ([inst any txt]
   (ssv inst "text" txt)
   (submit-search (itm inst 0) inst)
@@ -74,8 +78,10 @@
          radius-km (mp "radius-km")
          lat (mp "lat")
          lon (mp "lng")]
-    (if-let [resp (call-wiki-nearby lat lon radius-km max lang)]
-      (ssvs inst "responses" (map article-from-map resp)) ) ))
+    (ssvs inst "responses" 
+      (if-let [resp (call-wiki-nearby lat lon radius-km max lang)]
+        (map article-from-map resp)
+        [])) ))
 ([inst lat lon]
   (ssv inst "lat" (str lat))
   (ssv inst "lng" (str lon))

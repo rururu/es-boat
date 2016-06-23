@@ -1,4 +1,4 @@
-; Mon Jun 20 19:00:55 MSK 2016
+; Thu Jun 23 19:07:25 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -21,9 +21,9 @@
 ([BROWSER_SLOT_NAMES] of  Property_List
 
 	(properties
+		[WikipediaGIS_ProjectKB_Class290]
 		[WikipediaGIS_ProjectKB_Class291]
-		[WikipediaGIS_ProjectKB_Class292]
-		[WikipediaGIS_ProjectKB_Class293]))
+		[WikipediaGIS_ProjectKB_Class292]))
 
 ([CLSES_TAB] of  Widget
 
@@ -120,8 +120,8 @@
 
 ([KB_727229_Class1] of  Map
 
-	(entries [WikipediaGIS_ProjectKB_Class296])
-	(referenced_maps [WikipediaGIS_ProjectKB_Class294]))
+	(entries [WikipediaGIS_ProjectKB_Class295])
+	(referenced_maps [WikipediaGIS_ProjectKB_Class293]))
 
 ([KB_727229_Class13] of  Property_List
 
@@ -212,28 +212,28 @@
 	(name "instances_file_name")
 	(string_value "WikipediaGIS.pins"))
 
-([KB_786496_Class278] of  Map
+([KB_971417_Class278] of  Map
 
 	(entries
-		[KB_786496_Class279]
-		[KB_786496_Class280]
-		[KB_786496_Class281]))
+		[KB_971417_Class279]
+		[KB_971417_Class280]
+		[KB_971417_Class281]))
 
-([KB_786496_Class279] of  Map_Entry
+([KB_971417_Class279] of  Map_Entry
 
 	(key "suppress_instance_counting")
 	(key_class "java.lang.String")
 	(value "false")
 	(value_class "java.lang.String"))
 
-([KB_786496_Class280] of  Map_Entry
+([KB_971417_Class280] of  Map_Entry
 
 	(key "add_name_on_instance_form")
 	(key_class "java.lang.String")
 	(value "false")
 	(value_class "java.lang.String"))
 
-([KB_786496_Class281] of  Map_Entry
+([KB_971417_Class281] of  Map_Entry
 
 	(key "change_tracking_active")
 	(key_class "java.lang.String")
@@ -1051,37 +1051,37 @@
 ([WikipediaGIS_ProjectKB_Class283] of  Property_List
 )
 
-([WikipediaGIS_ProjectKB_Class291] of  String
+([WikipediaGIS_ProjectKB_Class290] of  String
 
 	(name "BBX")
 	(string_value "title"))
 
-([WikipediaGIS_ProjectKB_Class292] of  String
+([WikipediaGIS_ProjectKB_Class291] of  String
 
 	(name "GeoRSSItem")
 	(string_value "title"))
 
-([WikipediaGIS_ProjectKB_Class293] of  String
+([WikipediaGIS_ProjectKB_Class292] of  String
 
 	(name "WikiArticle")
 	(string_value "title"))
 
-([WikipediaGIS_ProjectKB_Class294] of  Map
+([WikipediaGIS_ProjectKB_Class293] of  Map
 
-	(entries [WikipediaGIS_ProjectKB_Class295]))
+	(entries [WikipediaGIS_ProjectKB_Class294]))
 
-([WikipediaGIS_ProjectKB_Class295] of  Map_Entry
+([WikipediaGIS_ProjectKB_Class294] of  Map_Entry
 
 	(key "WikipediaGIS_Class2")
 	(key_class "edu.stanford.smi.protege.model.Frame")
 	(value "12 479 212 124")
 	(value_class "java.awt.Rectangle"))
 
-([WikipediaGIS_ProjectKB_Class296] of  Map_Entry
+([WikipediaGIS_ProjectKB_Class295] of  Map_Entry
 
 	(key "InstanceDisplay.yellow_stickies")
 	(key_class "java.lang.String")
-	(value "WikipediaGIS_ProjectKB_Class294")
+	(value "WikipediaGIS_ProjectKB_Class293")
 	(value_class "java.util.Map"))
 
 ([WikipediaGIS_ProjectKB_Class30736] of  Widget

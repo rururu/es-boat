@@ -94,11 +94,13 @@
 
 (defn text-search [txt]
   (if-let [ans (fainst (cls-instances "FulltextSearch") nil)]
-  (let [fts (wiki.gis/submit-search nil txt)
+  (let [fts (wiki.gis/submit-search ans nil txt)
          rr (svs fts "responses")
          ss (map #(str (or (sv % "summary") "No summary")
-	  (if-let [img (sv % "thumbnailImg")]
-	    (str "<br><img src=\"" img "\">"))
-	  "<br>"))]
-    (apply str ss))))
+	          (if-let [img (sv % "thumbnailImg")]
+	            (str "<br><img src=\"" img "\">"))
+	          "<br>")
+	rr)]
+    (apply str ss))
+    ""))
 
