@@ -403,6 +403,16 @@
                                         :object a})
                   :transit retrieve-answer))))
 
+(defn about-island [islands]
+  (selector3 "?" islands :itself)
+  (def function3
+    (fn [a]
+      (set-html! "element4" "")
+      (ask-server QST-PTH (merge @boat {:predicate "about"
+                                        :subject "island"
+                                        :object a})
+                  :transit retrieve-answer))))
+
 (def SBJECT "")
 
 (defn where-object [objects]
@@ -423,6 +433,25 @@
       (ask-server QST-PTH (merge @boat {:predicate "nearby-objects"
                                         :subject a})
                   :transit (get-answer-and-ask where-object)))))
+
+(defn about-object [objects]
+  (selector4 "?" objects :itself)
+  (def function4
+    (fn [a]
+      (ask-server QST-PTH (merge @boat {:predicate "about"
+                                        :subject SBJECT
+                                        :subject-value a})
+                  :transit retrieve-answer))))
+
+(defn about-type [types]
+  (selector3 "?" types :itself)
+  (def function3
+    (fn [a]
+      (set-html! "element4" "")
+      (def SBJECT a)
+      (ask-server QST-PTH (merge @boat {:predicate "nearby-objects"
+                                        :subject a})
+                  :transit (get-answer-and-ask about-object)))))
 
 (defn about-thing [things]
   (selector2 "?" things :itself)
@@ -476,8 +505,21 @@
                         :transit (get-answer-and-ask where-type))
           (println [:WHERE-IS (nth lst1 n)]))))))
 
-(defn tell-about []
-  (ask-server QST-PTH (merge @boat {:predicate "tell"
+(defn tell-more []
+  (selector2 "?" lst2 :count)
+  (def function2
+    (fn [a]
+      (clear-selectors34)
+      (let [n (r/read-string a)]
+        (condp >= n
+          0 (ask-server QST-PTH (merge @boat {:predicate "nearby-islands"})
+                        :transit (get-answer-and-ask about-island))
+          1 (ask-server QST-PTH (merge @boat {:predicate "nearby-types"})
+                        :transit (get-answer-and-ask about-type))
+          (println [:WHERE-IS (nth lst1 n)]))))))
+
+(defn wiki-tells-about []
+  (ask-server QST-PTH (merge @boat {:predicate "wiki-tells"
                                     :subject "about"})
               :transit (get-answer-and-ask about-thing)))
 
@@ -490,7 +532,8 @@
   (set-html! "ask" "Ask a question:")
   (selector1 "?" ["What is"
                   "Where is"
-                  "Tell me about"
+                  "Tell me more about"
+                  "What Wikipedia tells about"
                   "What is the weather"
                   "Clear HUD"] :count)
 (defn clear-hud []
@@ -503,9 +546,10 @@
       (condp = (r/read-string a)
         0 (what-is)
         1 (where-is)
-        2 (tell-about)
-        3 (weather)
-        4 (clear-hud)))))
+        2 (tell-more)
+        3 (wiki-tells-about)
+        4 (weather)
+        5 (clear-hud)))))
 
 ;; ----------------------------- Init ---------------------------------
 
