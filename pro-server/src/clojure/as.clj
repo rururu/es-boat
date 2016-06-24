@@ -93,14 +93,20 @@
   "Not found"))
 
 (defn text-search [txt]
-  (if-let [ans (fainst (cls-instances "FulltextSearch") nil)]
+  (println [:TEXT-SEARCH txt])
+(if-let [ans (fainst (cls-instances "FulltextSearch") nil)]
   (let [fts (wiki.gis/submit-search ans nil txt)
+         _ (println [:FTS fts])
          rr (svs fts "responses")
+         _ (println [:RR rr])
          ss (map #(str (or (sv % "summary") "No summary")
 	          (if-let [img (sv % "thumbnailImg")]
 	            (str "<br><img src=\"" img "\">"))
 	          "<br>")
-	rr)]
-    (apply str ss))
+	rr)
+        _ (println [:SS ss])
+        resp (apply str ss)]
+      (println [:RESP resp])
+      resp)
     ""))
 

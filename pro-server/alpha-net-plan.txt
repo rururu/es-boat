@@ -1,11 +1,11 @@
 Island:
- :?: {:? {:? {:? {:? {:? {:? 0}}, "AHEAD" {:? {:? 9}}, "ASTERN" {:? {:? 12}}, "PORT-ABAFT" {:? {:? 15}}, "PORT-BEAM" {:? {:? 18}}, "PORT-BOW" {:? {:? 21}}, "STAR-ABAFT" {:? {:? 24}}, "STAR-BEAM" {:? {:? 27}}, "STAR-BOW" {:? {:? 30}}}}}}
+ :?: {:? {:? {:? {:? {:? {:? 0}}, "AHEAD" {:? {:? 12}}, "ASTERN" {:? {:? 15}}, "PORT-ABAFT" {:? {:? 18}}, "PORT-BEAM" {:? {:? 21}}, "PORT-BOW" {:? {:? 24}}, "STAR-ABAFT" {:? {:? 27}}, "STAR-BEAM" {:? {:? 30}}, "STAR-BOW" {:? {:? 33}}}}}}
 OSMData:
  :?: {:? {:? {:? {:? 1}}}}
 NamedObject:
- :?: {:? {:? {:? {:? {:? {:? {:? {:? 2}}, "AHEAD" {:? {:? 10}}, "ASTERN" {:? {:? 13}}, "PORT-ABAFT" {:? {:? 16}}, "PORT-BEAM" {:? {:? 19}}, "PORT-BOW" {:? {:? 22}}, "STAR-ABAFT" {:? {:? 25}}, "STAR-BEAM" {:? {:? 28}}, "STAR-BOW" {:? {:? 31}}}}}}}}
+ :?: {:? {:? {:? {:? {:? {:? {:? {:? 2}}, "AHEAD" {:? {:? 13}}, "ASTERN" {:? {:? 16}}, "PORT-ABAFT" {:? {:? 19}}, "PORT-BEAM" {:? {:? 22}}, "PORT-BOW" {:? {:? 25}}, "STAR-ABAFT" {:? {:? 28}}, "STAR-BEAM" {:? {:? 31}}, "STAR-BOW" {:? {:? 34}}}}}}}}
 Question:
- :?: {:? {:? {:? {:? {:? {:? {:? {:? {:? 3}}}}, "what-is" {:? {"behind the island" {:? {:? 33}}, "before the island" {:? {:? 34}}, "on the port bow" {:? {:? 20}}, "on the port beam" {:? {:? 17}}, :? {:? {:? 36}}, "astern" {:? {:? 11}}, "abaft the port beam" {:? {:? 14}}, "on the starboard beam" {:? {:? 26}}, "abaft the starboard beam" {:? {:? 23}}, "on the starboard bow" {:? {:? 29}}, "ahead" {:? {:? 8}}}}, "nearby-islands" {:? {:? {:? {:? 32}}}}, "where-is" {:? {"island" {:? {:? 35}}}}, "nearby-objects" {:? {:? {:? {:? 37}}}}}}}}}
+ :?: {:? {:? {:? {:? {:? {:? {:? {:? {:? 3}}}}, "nearby-islands" {:? {:? {:? {:? 8}}}}, "nearby-types" {:? {:? {:? {:? 9}}}}, "nearby-objects" {:? {:? {:? {:? 10}}}}, "what-is" {:? {"behind the island" {:? {:? 35}}, "before the island" {:? {:? 36}}, "on the port bow" {:? {:? 23}}, "on the port beam" {:? {:? 20}}, :? {:? {:? 44}}, "astern" {:? {:? 14}}, "abaft the port beam" {:? {:? 17}}, "on the starboard beam" {:? {:? 29}}, "abaft the starboard beam" {:? {:? 26}}, "on the starboard bow" {:? {:? 32}}, "weather" {:? {:? 39}}, "ahead" {:? {:? 11}}}}, "where-is" {:? {"island" {:? {:? 37}}, :? {:? {:? 38}}}}, "wiki-tells" {:? {"about" {:? {:? 40}}}}, "about" {:? {"thing" {:? {:? 41}}, "island" {:? {:? 42}}, :? {:? {:? 43}}}}}}}}}
 NearbyObjects:
  :?: {:? {:? {:? {:? 4}}}}
 NearbyIslands:
