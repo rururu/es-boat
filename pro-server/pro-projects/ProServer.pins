@@ -1,4 +1,4 @@
-; Fri Jun 24 21:22:41 MSK 2016
+; Mon Jun 27 17:19:14 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -466,6 +466,11 @@
 	(salience -1)
 	(title "as:AnswerIslandsBehind"))
 
+([ProServer_Class190000] of  CloMacro
+
+	(source "`(let [future# (future ~@body)]\n    (try\n      (.get future# ~millis java.util.concurrent.TimeUnit/MILLISECONDS)\n      (catch java.util.concurrent.TimeoutException x# \n        (do\n          (future-cancel future#)\n          nil))))")
+	(title "with-timeout [millis & body]"))
+
 ([ProServer_Class190001] of  Rule
 
 	(lhs "?b (Behind time ?tim1)\n(OSMData time ?tim2\n	(> ?tim2 ?tim1))")
@@ -645,10 +650,15 @@
 	(source "(if-let [ins (fainst (cls-instances \"StartPoint\") nil)]\n  (vec (svs ins \"coord\"))\n  (do (println \"Annotated instance of StartPoint not found!\")\n    [44.124 -68.736]))")
 	(title "map-center []"))
 
+([ProServer_Class240006] of  CloVar
+
+	(source "15000")
+	(title "TIMEOUT"))
+
 ([ProServer_Class240012] of  Rule
 
 	(lhs "?q (Question predicate \"about\"\n	subject \"island\"\n	object ?tit)")
-	(rhs "(pro.server/pump-in-ans (as/text-search (str ?tit \" island\")))\n(retract ?q)")
+	(rhs "(pro.server/pump-in-ans (as/text-search ?tit))\n(retract ?q)")
 	(salience 0)
 	(title "as:AboutIsland"))
 
@@ -661,7 +671,7 @@
 
 ([ProServer_Class240014] of  CloFunction
 
-	(source "(println [:TEXT-SEARCH txt])\n(if-let [ans (fainst (cls-instances \"FulltextSearch\") nil)]\n  (let [_ (println [:ANS ans])\n         fts (wiki.gis/submit-search ans nil txt)\n         _ (println [:FTS fts])\n         rr (svs fts \"responses\")\n         _ (println [:RR rr])\n         ss (map #(str (or (sv % \"summary\") \"No summary\")\n	          (if-let [img (sv % \"thumbnailImg\")]\n	            (str \"<br><img src=\\\"\" img \"\\\">\"))\n	          \"<br>\")\n	rr)\n        _ (println [:SS ss])\n        resp (apply str ss)]\n      (println [:RESP resp])\n      resp)\n    \"\")")
+	(source "(if-let [ans (fainst (cls-instances \"FulltextSearch\") nil)]\n  (if-let [fts (with-timeout TIMEOUT (wiki.gis/submit-search ans nil txt))]\n    (let [rr (svs fts \"responses\")\n           ss (map #(str (or (sv % \"summary\") \"No summary\")\n	          (if-let [img (sv % \"thumbnailImg\")]\n	            (str \"<br><img src=\\\"\" img \"\\\">\"))\n	          \"<br>\")\n	rr)\n          resp (apply str ss)]\n      (if (empty? resp)\n        \"No info\"\n        resp))\n      \"Timeout\")\n    \"Not found\")")
 	(title "text-search [txt]"))
 
 ([ProServer_Class240015] of  FulltextSearch
@@ -690,6 +700,12 @@
 	(source "(letfn [(anso [acc cnt pfx]\n	(condp > cnt\n	  1 \"\"\n	  2 (str pfx \" object \" (kind-tit-dis (first acc)) \",<br>\")\n	  6 (str pfx \" objects: \" (apply str (interpose \", \" (map kind-tit-dis acc))) \",<br>\")\n	  (str pfx \" objects: \" (apply str (interpose \", \" (map kind-tit-dis (take 5 acc)))) \" and more \" (- cnt 5) \",<br>\")))]\n  (let [pll (sort-by second pll) cpl (count pll)\n          nal (sort-by second nal) cnl (count nal)\n          aml (sort-by second aml) cal (count aml)]\n    (str\n      (if (= (+ cpl cnl cal) 0)\n        \"No objects in sight \"\n        (str (anso pll cpl \"Place\")\n              (anso nal cnl \"Natural\")\n              (anso aml cal \"Amenity\")))\n      \"are \" subject)))")
 	(title "ans-objects [pll nal aml subject]"))
 
+([ProServer_Class250018] of  %3AINSTANCE-ANNOTATION
+
+	(%3AANNOTATED-INSTANCE [ProServer_Class230002])
+	(%3ACREATION-TIMESTAMP "2016.06.27 14:44:11.236 MSK")
+	(%3ACREATOR "ru"))
+
 ([ProServer_Class260000] of  Rule
 
 	(lhs "?no (NamedObject time ?tim1)\n(OSMData time ?tim2\n	(> ?tim2 ?tim1))")
@@ -717,19 +733,9 @@
 
 	(source "(ru.rules/sp :all)"))
 
-([ProServer_Class270000] of  %3AINSTANCE-ANNOTATION
-
-	(%3AANNOTATED-INSTANCE [ProServer_Class110000])
-	(%3ACREATION-TIMESTAMP "2016.06.23 12:23:20.585 MSK")
-	(%3ACREATOR "ru"))
-
 ([ProServer_Class270001] of  Answer2
 
 	(time 0))
-
-([ProServer_Class280000] of  CloFuncall
-
-	(source "(ru.rules/pp 'Question)"))
 
 ([ProServer_Class280001] of  Rule
 
@@ -782,7 +788,7 @@
 	(button-clear-articles "Clear Articles/wiki.gis/clear-articles")
 	(button-nearby "submit/wiki.gis/submit-nearby")
 	(language English-en)
-	(lat "62.46409444444644")
+	(lat "62.4569648148159")
 	(lng "5.88")
 	(max-responses 12)
 	(radius-km 20))
@@ -1144,6 +1150,7 @@
 ([ProServer_Class90007] of  CloProgram
 
 	(cloFunctions
+		[ProServer_Class190000]
 		[ProServer_Class100011]
 		[ProServer_Class170000]
 		[ProServer_Class200018]
@@ -1155,7 +1162,9 @@
 		[ProServer_Class220004]
 		[ProServer_Class240014])
 	(cloNamespace [ProServer_Class100008])
-	(cloVars [ProServer_Class220002])
+	(cloVars
+		[ProServer_Class220002]
+		[ProServer_Class240006])
 	(title "Advisor Skipper"))
 
 ([ProServer_Class90012] of  Rule

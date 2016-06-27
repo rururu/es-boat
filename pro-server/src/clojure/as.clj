@@ -2,6 +2,16 @@
 (:use protege.core))
 
 (def LAST-NEAR-SRCH nil)
+(def TIMEOUT 15000)
+(defmacro with-timeout [millis & body]
+  `(let [future# (future ~@body)]
+    (try
+      (.get future# ~millis java.util.concurrent.TimeUnit/MILLISECONDS)
+      (catch java.util.concurrent.TimeoutException x# 
+        (do
+          (future-cancel future#)
+          nil)))))
+
 (defn current-time []
   (System/currentTimeMillis))
 
@@ -93,21 +103,18 @@
   "Not found"))
 
 (defn text-search [txt]
-  (println [:TEXT-SEARCH txt])
-(if-let [ans (fainst (cls-instances "FulltextSearch") nil)]
-  (let [_ (println [:ANS ans])
-         fts (wiki.gis/submit-search ans nil txt)
-         _ (println [:FTS fts])
-         rr (svs fts "responses")
-         _ (println [:RR rr])
-         ss (map #(str (or (sv % "summary") "No summary")
+  (if-let [ans (fainst (cls-instances "FulltextSearch") nil)]
+  (if-let [fts (with-timeout TIMEOUT (wiki.gis/submit-search ans nil txt))]
+    (let [rr (svs fts "responses")
+           ss (map #(str (or (sv % "summary") "No summary")
 	          (if-let [img (sv % "thumbnailImg")]
 	            (str "<br><img src=\"" img "\">"))
 	          "<br>")
 	rr)
-        _ (println [:SS ss])
-        resp (apply str ss)]
-      (println [:RESP resp])
-      resp)
-    ""))
+          resp (apply str ss)]
+      (if (empty? resp)
+        "No info"
+        resp))
+      "Timeout")
+    "Not found"))
 

@@ -1,4 +1,4 @@
-; Fri Jun 24 21:22:41 MSK 2016
+; Mon Jun 27 17:19:14 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -73,54 +73,6 @@
 
 	(is_hidden FALSE)
 	(widget_class_name "edu.stanford.smi.protege.widget.InstancesTab"))
-
-([KB_291045_Class769] of  Map
-
-	(entries
-		[KB_291045_Class770]
-		[KB_291045_Class773]
-		[KB_291045_Class774]
-		[KB_291045_Class775])
-	(referenced_maps [KB_291045_Class771]))
-
-([KB_291045_Class770] of  Map_Entry
-
-	(key "suppress_instance_counting")
-	(key_class "java.lang.String")
-	(value "false")
-	(value_class "java.lang.String"))
-
-([KB_291045_Class771] of  Map
-
-	(entries [KB_291045_Class772]))
-
-([KB_291045_Class772] of  Map_Entry
-
-	(key "WikipediaGIS_Class2")
-	(key_class "edu.stanford.smi.protege.model.Frame")
-	(value "12 479 212 124")
-	(value_class "java.awt.Rectangle"))
-
-([KB_291045_Class773] of  Map_Entry
-
-	(key "InstanceDisplay.yellow_stickies")
-	(key_class "java.lang.String")
-	(value "KB_291045_Class771")
-	(value_class "java.util.Map"))
-
-([KB_291045_Class774] of  Map_Entry
-
-	(key "add_name_on_instance_form")
-	(key_class "java.lang.String")
-	(value "false")
-	(value_class "java.lang.String"))
-
-([KB_291045_Class775] of  Map_Entry
-
-	(key "change_tracking_active")
-	(key_class "java.lang.String")
-	(value "false")
-	(value_class "java.lang.String"))
 
 ([KB_293772_Class306] of  Widget
 
@@ -459,6 +411,54 @@
 	(name "instances_file_name")
 	(string_value "ProServer.pins"))
 
+([KB_713800_Class769] of  Map
+
+	(entries
+		[KB_713800_Class770]
+		[KB_713800_Class773]
+		[KB_713800_Class774]
+		[KB_713800_Class775])
+	(referenced_maps [KB_713800_Class771]))
+
+([KB_713800_Class770] of  Map_Entry
+
+	(key "suppress_instance_counting")
+	(key_class "java.lang.String")
+	(value "false")
+	(value_class "java.lang.String"))
+
+([KB_713800_Class771] of  Map
+
+	(entries [KB_713800_Class772]))
+
+([KB_713800_Class772] of  Map_Entry
+
+	(key "WikipediaGIS_Class2")
+	(key_class "edu.stanford.smi.protege.model.Frame")
+	(value "12 479 212 124")
+	(value_class "java.awt.Rectangle"))
+
+([KB_713800_Class773] of  Map_Entry
+
+	(key "InstanceDisplay.yellow_stickies")
+	(key_class "java.lang.String")
+	(value "KB_713800_Class771")
+	(value_class "java.util.Map"))
+
+([KB_713800_Class774] of  Map_Entry
+
+	(key "add_name_on_instance_form")
+	(key_class "java.lang.String")
+	(value "false")
+	(value_class "java.lang.String"))
+
+([KB_713800_Class775] of  Map_Entry
+
+	(key "change_tracking_active")
+	(key_class "java.lang.String")
+	(value "false")
+	(value_class "java.lang.String"))
+
 ([LAYOUT_PROPERTIES] of  Property_List
 
 	(name "layout properties")
@@ -690,9 +690,9 @@
 
 ([ProServer_ProjectKB_Class788] of  Map_Entry
 
-	(key "ProServer_Class270000")
+	(key "ProServer_Class250018")
 	(key_class "edu.stanford.smi.protege.model.Frame")
-	(value "-3 224 224 146")
+	(value "7 233 210 132")
 	(value_class "java.awt.Rectangle"))
 
 ([ProServer_ProjectKB_Class789] of  Map_Entry

@@ -1,4 +1,4 @@
-; Fri Jun 24 21:39:36 MSK 2016
+; Mon Jun 27 15:54:56 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -77,10 +77,6 @@
 	(title "Helsinki")
 	(wsen 24.5 59.9 25.5 60.5))
 
-([WikipediaGIS_Class30005] of  CloFuncall
-
-	(source "(in-ns 'wiki.gis)"))
-
 ([WikipediaGIS_Class30013] of  BBX
 
 	(title "Grey Horse")
@@ -90,10 +86,6 @@
 
 	(source "(let [mp (into {} hm)\n       url (or (mp \"wikipediaUrl\") (mp \"link\"))]\n  (if url\n    (.browse (java.awt.Desktop/getDesktop) (java.net.URI. url))))")
 	(title "open-site [hm inst]"))
-
-([WikipediaGIS_Class40019] of  CloFuncall
-
-	(source "(submit-nearby (first (cls-instances \"FulltextSearch\")) :text \"hollywood\")"))
 
 ([WikipediaGIS_Class40028] of  CloFunction
 
