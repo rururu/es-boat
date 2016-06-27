@@ -95,7 +95,8 @@
 (defn text-search [txt]
   (println [:TEXT-SEARCH txt])
 (if-let [ans (fainst (cls-instances "FulltextSearch") nil)]
-  (let [fts (wiki.gis/submit-search ans nil txt)
+  (let [_ (println [:ANS ans])
+         fts (wiki.gis/submit-search ans nil txt)
          _ (println [:FTS fts])
          rr (svs fts "responses")
          _ (println [:RR rr])

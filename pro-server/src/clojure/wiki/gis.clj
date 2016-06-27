@@ -62,7 +62,12 @@
         [])) ))
 ([inst any txt]
   (ssv inst "text" txt)
-  (submit-search (itm inst 0) inst)
+  (ssvs inst "responses" 
+    (if-let [resp (call-wiki-search txt 
+	(sv inst "max-responses") 
+	(request-lang (sv inst  "language")))]
+      (map article-from-map resp)
+      []))
   inst))
 
 (defn get-bbx-center [bbx-ins]

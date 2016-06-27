@@ -1,4 +1,4 @@
-; Fri Jun 24 16:45:30 MSK 2016
+; Fri Jun 24 21:22:41 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -661,7 +661,7 @@
 
 ([ProServer_Class240014] of  CloFunction
 
-	(source "(println [:TEXT-SEARCH txt])\n(if-let [ans (fainst (cls-instances \"FulltextSearch\") nil)]\n  (let [fts (wiki.gis/submit-search ans nil txt)\n         _ (println [:FTS fts])\n         rr (svs fts \"responses\")\n         _ (println [:RR rr])\n         ss (map #(str (or (sv % \"summary\") \"No summary\")\n	          (if-let [img (sv % \"thumbnailImg\")]\n	            (str \"<br><img src=\\\"\" img \"\\\">\"))\n	          \"<br>\")\n	rr)\n        _ (println [:SS ss])\n        resp (apply str ss)]\n      (println [:RESP resp])\n      resp)\n    \"\")")
+	(source "(println [:TEXT-SEARCH txt])\n(if-let [ans (fainst (cls-instances \"FulltextSearch\") nil)]\n  (let [_ (println [:ANS ans])\n         fts (wiki.gis/submit-search ans nil txt)\n         _ (println [:FTS fts])\n         rr (svs fts \"responses\")\n         _ (println [:RR rr])\n         ss (map #(str (or (sv % \"summary\") \"No summary\")\n	          (if-let [img (sv % \"thumbnailImg\")]\n	            (str \"<br><img src=\\\"\" img \"\\\">\"))\n	          \"<br>\")\n	rr)\n        _ (println [:SS ss])\n        resp (apply str ss)]\n      (println [:RESP resp])\n      resp)\n    \"\")")
 	(title "text-search [txt]"))
 
 ([ProServer_Class240015] of  FulltextSearch

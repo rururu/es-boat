@@ -940,3 +940,20 @@
 2016.06.24 18:08:22.509 MSK WARNING: Look and feel not found: com.apple.laf.AquaLookAndFeel -- SystemUtilities.setLookAndFeel()
 2016.06.24 18:08:23.103 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
 2016.06.24 18:08:24.197 MSK INFO: Load time for file:/home/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.06.24 21:15:24.215 MSK INFO: *** SYSTEM START ***
+2016.06.24 21:15:25.494 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.06.24 21:15:27.356 MSK INFO: Load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 1 sec (ui) -- ProjectManager$3.run()
+2016.06.24 21:20:33.222 MSK INFO: *** SYSTEM START ***
+2016.06.24 21:20:33.721 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.06.24 21:20:34.617 MSK INFO: Load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.06.24 21:27:11.170 MSK INFO: *** SYSTEM START ***
+2016.06.24 21:27:11.626 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.06.24 21:27:12.530 MSK INFO: Load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.06.24 21:36:00.010 MSK INFO: Project load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/WikipediaGIS.pprj: 0 sec -- ProjectChooser.loadProject()
+2016.06.24 21:36:00.162 MSK INFO: UI display time = 0 sec -- ProjectManager$2.run()
+2016.06.24 21:39:55.142 MSK INFO: *** SYSTEM START ***
+2016.06.24 21:39:55.545 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.06.24 21:39:56.365 MSK INFO: Load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.06.24 21:44:54.531 MSK INFO: *** SYSTEM START ***
+2016.06.24 21:44:54.982 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.06.24 21:44:55.926 MSK INFO: Load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()

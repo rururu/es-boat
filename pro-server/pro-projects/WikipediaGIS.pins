@@ -1,4 +1,4 @@
-; Thu Jun 23 19:07:25 MSK 2016
+; Fri Jun 24 21:39:36 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -39,7 +39,7 @@
 
 ([WikipediaGIS_Class17] of  CloFunction
 
-	(source "([hm inst]\n  (let [mp (into {} hm)\n         max (mp \"max-responses\")\n         lang (request-lang (mp \"language\"))\n         text (mp \"text\")]\n    (ssvs inst \"responses\" \n      (if-let [resp (call-wiki-search text max lang)]\n        (map article-from-map resp)\n        [])) ))\n([inst any txt]\n  (ssv inst \"text\" txt)\n  (submit-search (itm inst 0) inst)\n  inst)")
+	(source "([hm inst]\n  (let [mp (into {} hm)\n         max (mp \"max-responses\")\n         lang (request-lang (mp \"language\"))\n         text (mp \"text\")]\n    (ssvs inst \"responses\" \n      (if-let [resp (call-wiki-search text max lang)]\n        (map article-from-map resp)\n        [])) ))\n([inst any txt]\n  (ssv inst \"text\" txt)\n  (ssvs inst \"responses\" \n    (if-let [resp (call-wiki-search txt \n	(sv inst \"max-responses\") \n	(request-lang (sv inst  \"language\")))]\n      (map article-from-map resp)\n      []))\n  inst)")
 	(title "submit-search"))
 
 ([WikipediaGIS_Class18] of  CloFunction
