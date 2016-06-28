@@ -3,14 +3,15 @@
 
 (def LAST-NEAR-SRCH nil)
 (def TIMEOUT 15000)
-(defmacro with-timeout [millis & body]
-  `(let [future# (future ~@body)]
-    (try
-      (.get future# ~millis java.util.concurrent.TimeUnit/MILLISECONDS)
-      (catch java.util.concurrent.TimeoutException x# 
-        (do
-          (future-cancel future#)
-          nil)))))
+(defmacro with-timeout [msec & body]
+  `(let [f# (future (do ~@body))
+         v# (gensym)
+         result# (deref f# ~msec v#)]
+    (if (= v# result#)
+      (do
+        (future-cancel f#)
+        nil)
+      result#)))
 
 (defn current-time []
   (System/currentTimeMillis))
@@ -102,10 +103,34 @@
       (str "<br><img src=\"" img "\">")))
   "Not found"))
 
-(defn text-search [txt]
-  (if-let [ans (fainst (cls-instances "FulltextSearch") nil)]
-  (if-let [fts (with-timeout TIMEOUT (wiki.gis/submit-search ans nil txt))]
-    (let [rr (svs fts "responses")
+(defn near [mp [lat lon] rad]
+  (println [lat (get mp "lat") lon (get mp "lng")])
+(if-let [lat2 (get mp "lat")]
+  (when-let [lon2 (get mp "lng")]
+    (println [lat2 lon2])
+    (let [lat2 (read-string lat2)
+           lon2 (read-string lon2)
+           rdg (float (/ rad 60))
+  res (and (number? lat2)
+          (number? lon2)
+          (< (Math/abs (- lat lat2)) rdg)
+          (< (Math/abs (- lon lon2)) rdg))]
+ (println res)
+ res))))
+
+(defn text-search [txt crd]
+  (if-let [fsi (fainst (cls-instances "FulltextSearch") nil)]
+  (if-let [wsr (with-timeout TIMEOUT 
+	(geo.names/call-wiki-search txt 
+	  (sv fsi "max-responses")  
+	  (wiki.gis/request-lang (sv fsi  "language"))))]
+    (let [_ (println [:WRS wsr])
+           _ (ssv fsi "text" txt)
+           _ (ssvs fsi "responses" 
+	(if-let [wsf (filter #(near % crd 36) wsr)]
+	  (map wiki.gis/article-from-map wsf)
+	  []))
+           rr (svs fsi "responses")
            ss (map #(str (or (sv % "summary") "No summary")
 	          (if-let [img (sv % "thumbnailImg")]
 	            (str "<br><img src=\"" img "\">"))

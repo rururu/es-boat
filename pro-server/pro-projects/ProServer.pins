@@ -1,4 +1,4 @@
-; Mon Jun 27 17:19:14 MSK 2016
+; Tue Jun 28 13:54:33 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -468,8 +468,8 @@
 
 ([ProServer_Class190000] of  CloMacro
 
-	(source "`(let [future# (future ~@body)]\n    (try\n      (.get future# ~millis java.util.concurrent.TimeUnit/MILLISECONDS)\n      (catch java.util.concurrent.TimeoutException x# \n        (do\n          (future-cancel future#)\n          nil))))")
-	(title "with-timeout [millis & body]"))
+	(source "`(let [f# (future (do ~@body))\n         v# (gensym)\n         result# (deref f# ~msec v#)]\n    (if (= v# result#)\n      (do\n        (future-cancel f#)\n        nil)\n      result#))")
+	(title "with-timeout [msec & body]"))
 
 ([ProServer_Class190001] of  Rule
 
@@ -657,30 +657,30 @@
 
 ([ProServer_Class240012] of  Rule
 
-	(lhs "?q (Question predicate \"about\"\n	subject \"island\"\n	object ?tit)")
-	(rhs "(pro.server/pump-in-ans (as/text-search ?tit))\n(retract ?q)")
+	(lhs "?q (Question coord ?crd\n	predicate \"about\"\n	subject \"island\"\n	object ?tit)")
+	(rhs "(pro.server/pump-in-ans (as/text-search ?tit ?crd))\n(retract ?q)")
 	(salience 0)
 	(title "as:AboutIsland"))
 
 ([ProServer_Class240013] of  Rule
 
-	(lhs "?q (Question predicate \"about\"\n	subject ?sub\n	subject-value ?suv\n	(not= ?sub \"thing\"))")
-	(rhs "(pro.server/pump-in-ans (as/text-search ?suv))\n(retract ?q)")
+	(lhs "?q (Question coord ?crd\n	predicate \"about\"\n	subject ?sub\n	subject-value ?suv\n	(not= ?sub \"thing\"))")
+	(rhs "(pro.server/pump-in-ans (as/text-search ?suv ?crd))\n(println [:TEXT-SERCH ?sub :SUV ?suv])\n(retract ?q)")
 	(salience 0)
 	(title "as:AboutObject"))
 
 ([ProServer_Class240014] of  CloFunction
 
-	(source "(if-let [ans (fainst (cls-instances \"FulltextSearch\") nil)]\n  (if-let [fts (with-timeout TIMEOUT (wiki.gis/submit-search ans nil txt))]\n    (let [rr (svs fts \"responses\")\n           ss (map #(str (or (sv % \"summary\") \"No summary\")\n	          (if-let [img (sv % \"thumbnailImg\")]\n	            (str \"<br><img src=\\\"\" img \"\\\">\"))\n	          \"<br>\")\n	rr)\n          resp (apply str ss)]\n      (if (empty? resp)\n        \"No info\"\n        resp))\n      \"Timeout\")\n    \"Not found\")")
-	(title "text-search [txt]"))
+	(source "(if-let [fsi (fainst (cls-instances \"FulltextSearch\") nil)]\n  (if-let [wsr (with-timeout TIMEOUT \n	(geo.names/call-wiki-search txt \n	  (sv fsi \"max-responses\")  \n	  (wiki.gis/request-lang (sv fsi  \"language\"))))]\n    (let [_ (println [:WRS wsr])\n           _ (ssv fsi \"text\" txt)\n           _ (ssvs fsi \"responses\" \n	(if-let [wsf (filter #(near % crd 36) wsr)]\n	  (map wiki.gis/article-from-map wsf)\n	  []))\n           rr (svs fsi \"responses\")\n           ss (map #(str (or (sv % \"summary\") \"No summary\")\n	          (if-let [img (sv % \"thumbnailImg\")]\n	            (str \"<br><img src=\\\"\" img \"\\\">\"))\n	          \"<br>\")\n	rr)\n          resp (apply str ss)]\n      (if (empty? resp)\n        \"No info\"\n        resp))\n      \"Timeout\")\n    \"Not found\")")
+	(title "text-search [txt crd]"))
 
 ([ProServer_Class240015] of  FulltextSearch
 
 	(button-clear-articles "Clear Articles/wiki.gis/clear-articles")
 	(button-search "submit/wiki.gis/submit-search")
 	(language English-en)
-	(max-responses 5)
-	(text "Ulsteinvik"))
+	(max-responses 12)
+	(text "Labrador Swamp"))
 
 ([ProServer_Class240016] of  %3AINSTANCE-ANNOTATION
 
@@ -733,6 +733,10 @@
 
 	(source "(ru.rules/sp :all)"))
 
+([ProServer_Class270000] of  CloFuncall
+
+	(source "(float \"4.2\")"))
+
 ([ProServer_Class270001] of  Answer2
 
 	(time 0))
@@ -782,6 +786,10 @@
 
 	(source "(if-let [rsp (geo.names/call-geonames-weather lat lon)]\n  (let [lat2 (read-string (rsp \"lat\"))\n          lon2 (read-string (rsp \"lng\"))\n          bear (geo.names/bearing lat lon lat2 lon2)\n          dir (geo.names/direction bear)\n          dis (rough-distance lat lon lat2 lon2)\n          name (rsp \"stationName\")\n          wcd (rsp \"weatherCondition\")\n          hym (rsp \"hymidity\")\n          tmp (rsp \"temperature\")\n          wind (rsp \"windDirection\")\n          bwnd (if (some? wind)\n	(let [b (+ (read-string wind) 180)] (if (> b 360) (- b 360) b)))\n          win (if (some? bwnd)\n	(geo.names/direction bwnd)\n	\"n/a\")\n          wins (rsp \"windSpeed\")\n          tim (rsp \"observationTime\")\n          loc (str dis \" miles to \" dir \" from here\")]\n    (str name \" Weather Station<br>\"\n	\"location: \" loc \"<br>\"\n	\"observation time: \" tim \"<br>\"\n	\"weather conditions: \" wcd \"<br>\"\n	\"temperature: \" tmp \" Celsius<br>\"\n	\"hymidity: \" hym \"<br>\"\n	\"wind: \" win \", \" wins \" Knots\"))\n  \"I can not get a weather information\")")
 	(title "weather [[lat lon]]"))
+
+([ProServer_Class300001] of  CloFuncall
+
+	(source "(read-string nil)"))
 
 ([ProServer_Class300005] of  NearbySearch
 
@@ -876,6 +884,14 @@
 	(source "(letfn [(smround [n]\n	(/ (float (Math/round (* n 10))) 10))]\n(let [dlat (- lat1 lat2)\n        dlon (- lon1 lon2)\n        lad (* (if (>= dlat 0) dlat (- 0 dlat)) 60)\n        lod (* (if (>= dlon 0) dlon (- 0 dlon)) 60)\n        dia (Math/sqrt (+ (* lad lad) (* lod lod)))]\n   (if (< dia 1) (smround dia) (Math/round dia)))\n)")
 	(title "rough-distance [lat1 lon1 lat2 lon2]"))
 
+([ProServer_Class310005] of  CloFuncall
+
+	(source "(geo.names/call-wiki-search \"\" 5 \"en\")"))
+
+([ProServer_Class310006] of  CloFuncall
+
+	(source "(geo.names/call-wiki-search \"Mill Cove\" 5 \"en\")"))
+
 ([ProServer_Class310007] of  Rule
 
 	(lhs "?q (Question coord ?crd\n	predicate \"what-is\"\n	subject \"weather\")")
@@ -889,6 +905,11 @@
 	(rhs "(cond\n  (string? ?nat) (vswap! ?nal conj [?nat ?tit])\n  (string? ?pla) (vswap! ?pll conj [?pla ?tit])\n  (string? ?ame) (vswap! ?aml conj [?ame ?tit]))")
 	(salience 0)
 	(title "as:NearbyTypes"))
+
+([ProServer_Class320007] of  CloFunction
+
+	(source "(println [lat (get mp \"lat\") lon (get mp \"lng\")])\n(if-let [lat2 (get mp \"lat\")]\n  (when-let [lon2 (get mp \"lng\")]\n    (println [lat2 lon2])\n    (let [lat2 (read-string lat2)\n           lon2 (read-string lon2)\n           rdg (float (/ rad 60))\n  res (and (number? lat2)\n          (number? lon2)\n          (< (Math/abs (- lat lat2)) rdg)\n          (< (Math/abs (- lon lon2)) rdg))]\n (println res)\n res)))")
+	(title "near [mp [lat lon] rad]"))
 
 ([ProServer_Class340001] of  Rule
 
@@ -1160,6 +1181,7 @@
 		[ProServer_Class300000]
 		[ProServer_Class220001]
 		[ProServer_Class220004]
+		[ProServer_Class320007]
 		[ProServer_Class240014])
 	(cloNamespace [ProServer_Class100008])
 	(cloVars
