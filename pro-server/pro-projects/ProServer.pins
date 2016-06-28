@@ -1,4 +1,4 @@
-; Tue Jun 28 13:54:33 MSK 2016
+; Tue Jun 28 18:46:42 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -680,7 +680,14 @@
 	(button-search "submit/wiki.gis/submit-search")
 	(language English-en)
 	(max-responses 12)
-	(text "Labrador Swamp"))
+	(responses
+		[ProServer_Class280000]
+		[ProServer_Class310001]
+		[ProServer_Class310002]
+		[ProServer_Class310003]
+		[ProServer_Class310004]
+		[ProServer_Class320005])
+	(text "Vinalhaven"))
 
 ([ProServer_Class240016] of  %3AINSTANCE-ANNOTATION
 
@@ -740,6 +747,19 @@
 ([ProServer_Class270001] of  Answer2
 
 	(time 0))
+
+([ProServer_Class280000] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "US")
+	(feature "city")
+	(lang "en")
+	(lat "44.0217")
+	(lng "-68.7936")
+	(rank "96")
+	(summary "Vinalhaven is a town located on the larger of the two Fox Islands in Knox County, Maine, United States. Vinalhaven is also used to refer to the Island itself. The population was 1,165 at the 2010 census. It is home to a thriving lobster fishery and hosts a summer colony (...)")
+	(title "Vinalhaven, Maine")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Vinalhaven%2C_Maine"))
 
 ([ProServer_Class280001] of  Rule
 
@@ -884,6 +904,63 @@
 	(source "(letfn [(smround [n]\n	(/ (float (Math/round (* n 10))) 10))]\n(let [dlat (- lat1 lat2)\n        dlon (- lon1 lon2)\n        lad (* (if (>= dlat 0) dlat (- 0 dlat)) 60)\n        lod (* (if (>= dlon 0) dlon (- 0 dlon)) 60)\n        dia (Math/sqrt (+ (* lad lad) (* lod lod)))]\n   (if (< dia 1) (smround dia) (Math/round dia)))\n)")
 	(title "rough-distance [lat1 lon1 lat2 lon2]"))
 
+([ProServer_Class310001] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "US")
+	(elevation "10")
+	(feature "city")
+	(lang "en")
+	(lat "44.1542")
+	(lng "-68.8781")
+	(population "355")
+	(rank "93")
+	(summary "North Haven is a town in Knox County, Maine, United States, in Penobscot Bay. The town is both a year-round island community and a prominent summer colony. The population was 355 at the 2010 census. North Haven is accessed by three-times daily ferry service from Rockland, or by air taxi from Knox (...)")
+	(title "North Haven, Maine")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/North_Haven%2C_Maine"))
+
+([ProServer_Class310002] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "US")
+	(elevation "15")
+	(feature "airport")
+	(lang "en")
+	(lat "44.06")
+	(lng "-69.0992")
+	(rank "77")
+	(summary "Knox County Regional Airport is a county owned, public use airport in Knox County, Maine, United States. It is located three nautical miles (6 km) south of the central business district of Rockland, Maine. The airport serves the residents of midcoast Maine with commercial and charter aviation (...)")
+	(thumbnailImg "http://www.geonames.org/img/wikipedia/40000/thumb-39772-100.jpg")
+	(title "Knox County Regional Airport")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Knox_County_Regional_Airport"))
+
+([ProServer_Class310003] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "US")
+	(elevation "14")
+	(feature "city")
+	(lang "en")
+	(lat "44.1094")
+	(lng "-69.1147")
+	(rank "97")
+	(summary "Rockland is a city in Knox County, Maine, in the United States. As of the 2010 census, the city population was 7,297. It is the county seat of Knox County. The city is a popular tourist destination. It is a departure point for the Maine State Ferry Service to the islands of Penobscot Bay: (...)")
+	(title "Rockland, Maine")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Rockland%2C_Maine"))
+
+([ProServer_Class310004] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "US")
+	(elevation "9")
+	(lang "en")
+	(lat "44.0505")
+	(lng "-68.8417")
+	(rank "64")
+	(summary "Fox Islands Electric Cooperative is a utility cooperative based in Vinalhaven, Maine. The cooperative provides electricity for the residents of Penobscot Bay islands North Haven and Vinalhaven. Vinalhaven is home to the Fox Islands Wind Project's three 1 (...)")
+	(title "Fox Islands Electric Cooperative")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Fox_Islands_Electric_Cooperative"))
+
 ([ProServer_Class310005] of  CloFuncall
 
 	(source "(geo.names/call-wiki-search \"\" 5 \"en\")"))
@@ -905,6 +982,20 @@
 	(rhs "(cond\n  (string? ?nat) (vswap! ?nal conj [?nat ?tit])\n  (string? ?pla) (vswap! ?pll conj [?pla ?tit])\n  (string? ?ame) (vswap! ?aml conj [?ame ?tit]))")
 	(salience 0)
 	(title "as:NearbyTypes"))
+
+([ProServer_Class320005] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "US")
+	(elevation "8")
+	(feature "city")
+	(lang "en")
+	(lat "43.9042")
+	(lng "-69.0092")
+	(rank "85")
+	(summary "Matinicus Isle is a plantation in Knox County, Maine, United States. The population was 51 at the 2000 census, although during the summer that number can triple or quadruple. Remote Matinicus Island is accessible by ferry from Rockland, located away, or by air taxiAccording to a local, \"(f)lying can (...)")
+	(title "Matinicus Isle, Maine")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Matinicus_Isle%2C_Maine"))
 
 ([ProServer_Class320007] of  CloFunction
 
