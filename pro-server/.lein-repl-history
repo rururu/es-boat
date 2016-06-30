@@ -19,3 +19,6 @@ DOC-SND
 (-main)
 DOC-SND
 (-main)
+)
+(rete.core/facts)
+(as/text-search "vinalhaven" [44.1328 -68.7360])

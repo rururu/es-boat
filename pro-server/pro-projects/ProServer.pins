@@ -1,4 +1,4 @@
-; Tue Jun 28 18:46:42 MSK 2016
+; Wed Jun 29 21:27:43 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -468,7 +468,7 @@
 
 ([ProServer_Class190000] of  CloMacro
 
-	(source "`(let [f# (future (do ~@body))\n         v# (gensym)\n         result# (deref f# ~msec v#)]\n    (if (= v# result#)\n      (do\n        (future-cancel f#)\n        nil)\n      result#))")
+	(source "`(let [f# (future (do ~@body))\n         v# (gensym)\n         result# (deref f# ~msec v#)]\n    (if (= v# result#)\n      (do\n        (println :FUTURE-CANCELLING)\n        (future-cancel f#)\n        (println :FUTURE-CANCELLED)\n        nil)\n      result#))")
 	(title "with-timeout [msec & body]"))
 
 ([ProServer_Class190001] of  Rule
@@ -665,13 +665,13 @@
 ([ProServer_Class240013] of  Rule
 
 	(lhs "?q (Question coord ?crd\n	predicate \"about\"\n	subject ?sub\n	subject-value ?suv\n	(not= ?sub \"thing\"))")
-	(rhs "(pro.server/pump-in-ans (as/text-search ?suv ?crd))\n(println [:TEXT-SERCH ?sub :SUV ?suv])\n(retract ?q)")
+	(rhs "(pro.server/pump-in-ans (as/text-search ?suv ?crd))\n(retract ?q)")
 	(salience 0)
 	(title "as:AboutObject"))
 
 ([ProServer_Class240014] of  CloFunction
 
-	(source "(if-let [fsi (fainst (cls-instances \"FulltextSearch\") nil)]\n  (if-let [wsr (with-timeout TIMEOUT \n	(geo.names/call-wiki-search txt \n	  (sv fsi \"max-responses\")  \n	  (wiki.gis/request-lang (sv fsi  \"language\"))))]\n    (let [_ (println [:WRS wsr])\n           _ (ssv fsi \"text\" txt)\n           _ (ssvs fsi \"responses\" \n	(if-let [wsf (filter #(near % crd 36) wsr)]\n	  (map wiki.gis/article-from-map wsf)\n	  []))\n           rr (svs fsi \"responses\")\n           ss (map #(str (or (sv % \"summary\") \"No summary\")\n	          (if-let [img (sv % \"thumbnailImg\")]\n	            (str \"<br><img src=\\\"\" img \"\\\">\"))\n	          \"<br>\")\n	rr)\n          resp (apply str ss)]\n      (if (empty? resp)\n        \"No info\"\n        resp))\n      \"Timeout\")\n    \"Not found\")")
+	(source "(println [:FULL-TEXT-SEARCH txt crd])\n(if-let [fsi (fainst (cls-instances \"FulltextSearch\") nil)]\n  (if-let [wsr (with-timeout TIMEOUT \n	(geo.names/call-wiki-search txt \n	  (sv fsi \"max-responses\")  \n	  (wiki.gis/request-lang (sv fsi  \"language\"))))]\n    (let [_ (println [:TOTAL (count wsr)])\n           _ (ssv fsi \"text\" txt)\n           _ (ssvs fsi \"responses\" \n	(if-let [wsf (filter #(near % crd 36) wsr)]\n	  (map wiki.gis/article-from-map wsf)\n	  []))\n           rr (svs fsi \"responses\")\n           _ (println [:NEAR (count rr)])\n           ss (map #(str (or (sv % \"summary\") \"No summary\")\n	          (if-let [img (sv % \"thumbnailImg\")]\n	            (str \"<br><img src=\\\"\" img \"\\\">\"))\n	          \"<br>\")\n	rr)\n          resp (apply str ss)]\n      (if (empty? resp)\n        \"No info\"\n        resp))\n      \"Timeout\")\n    \"Not found\")")
 	(title "text-search [txt crd]"))
 
 ([ProServer_Class240015] of  FulltextSearch
@@ -680,14 +680,7 @@
 	(button-search "submit/wiki.gis/submit-search")
 	(language English-en)
 	(max-responses 12)
-	(responses
-		[ProServer_Class280000]
-		[ProServer_Class310001]
-		[ProServer_Class310002]
-		[ProServer_Class310003]
-		[ProServer_Class310004]
-		[ProServer_Class320005])
-	(text "Vinalhaven"))
+	(text "Carver Cove"))
 
 ([ProServer_Class240016] of  %3AINSTANCE-ANNOTATION
 
@@ -740,10 +733,6 @@
 
 	(source "(ru.rules/sp :all)"))
 
-([ProServer_Class270000] of  CloFuncall
-
-	(source "(float \"4.2\")"))
-
 ([ProServer_Class270001] of  Answer2
 
 	(time 0))
@@ -772,6 +761,20 @@
 
 	(source "(let [sta (for [t (tags @DATA)]\n	(let [fl (filter-k t @DATA)]\n	  [t (count fl)]))\n        sta  (filter #(> (second %) 0) sta)]\n  (sort second sta))")
 	(title "tag-stat []"))
+
+([ProServer_Class290000] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "US")
+	(elevation "19")
+	(feature "edu")
+	(lang "en")
+	(lat "44.0486")
+	(lng "-68.8219")
+	(rank "15")
+	(summary "Vinalhaven School is a kindergarten-through-twelfth-grade public school located at 22 Arcola Lane, Vinalhaven, an island located in mid-coast Maine, 75 miles east northeast of Portland. Vinalhaven School is divided into five teams: the K-2 Team, 3-5 Team, Middle School Team, High School Team and (...)")
+	(title "Vinalhaven School")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Vinalhaven_School"))
 
 ([ProServer_Class290001] of  CloFunction
 
@@ -806,10 +809,6 @@
 
 	(source "(if-let [rsp (geo.names/call-geonames-weather lat lon)]\n  (let [lat2 (read-string (rsp \"lat\"))\n          lon2 (read-string (rsp \"lng\"))\n          bear (geo.names/bearing lat lon lat2 lon2)\n          dir (geo.names/direction bear)\n          dis (rough-distance lat lon lat2 lon2)\n          name (rsp \"stationName\")\n          wcd (rsp \"weatherCondition\")\n          hym (rsp \"hymidity\")\n          tmp (rsp \"temperature\")\n          wind (rsp \"windDirection\")\n          bwnd (if (some? wind)\n	(let [b (+ (read-string wind) 180)] (if (> b 360) (- b 360) b)))\n          win (if (some? bwnd)\n	(geo.names/direction bwnd)\n	\"n/a\")\n          wins (rsp \"windSpeed\")\n          tim (rsp \"observationTime\")\n          loc (str dis \" miles to \" dir \" from here\")]\n    (str name \" Weather Station<br>\"\n	\"location: \" loc \"<br>\"\n	\"observation time: \" tim \"<br>\"\n	\"weather conditions: \" wcd \"<br>\"\n	\"temperature: \" tmp \" Celsius<br>\"\n	\"hymidity: \" hym \"<br>\"\n	\"wind: \" win \", \" wins \" Knots\"))\n  \"I can not get a weather information\")")
 	(title "weather [[lat lon]]"))
-
-([ProServer_Class300001] of  CloFuncall
-
-	(source "(read-string nil)"))
 
 ([ProServer_Class300005] of  NearbySearch
 
@@ -914,7 +913,7 @@
 	(lat "44.1542")
 	(lng "-68.8781")
 	(population "355")
-	(rank "93")
+	(rank "94")
 	(summary "North Haven is a town in Knox County, Maine, United States, in Penobscot Bay. The town is both a year-round island community and a prominent summer colony. The population was 355 at the 2010 census. North Haven is accessed by three-times daily ferry service from Rockland, or by air taxi from Knox (...)")
 	(title "North Haven, Maine")
 	(wikipediaUrl "http://en.wikipedia.org/wiki/North_Haven%2C_Maine"))
@@ -928,7 +927,7 @@
 	(lang "en")
 	(lat "44.06")
 	(lng "-69.0992")
-	(rank "77")
+	(rank "84")
 	(summary "Knox County Regional Airport is a county owned, public use airport in Knox County, Maine, United States. It is located three nautical miles (6 km) south of the central business district of Rockland, Maine. The airport serves the residents of midcoast Maine with commercial and charter aviation (...)")
 	(thumbnailImg "http://www.geonames.org/img/wikipedia/40000/thumb-39772-100.jpg")
 	(title "Knox County Regional Airport")
@@ -943,7 +942,7 @@
 	(lang "en")
 	(lat "44.1094")
 	(lng "-69.1147")
-	(rank "97")
+	(rank "98")
 	(summary "Rockland is a city in Knox County, Maine, in the United States. As of the 2010 census, the city population was 7,297. It is the county seat of Knox County. The city is a popular tourist destination. It is a departure point for the Maine State Ferry Service to the islands of Penobscot Bay: (...)")
 	(title "Rockland, Maine")
 	(wikipediaUrl "http://en.wikipedia.org/wiki/Rockland%2C_Maine"))
@@ -956,18 +955,10 @@
 	(lang "en")
 	(lat "44.0505")
 	(lng "-68.8417")
-	(rank "64")
+	(rank "70")
 	(summary "Fox Islands Electric Cooperative is a utility cooperative based in Vinalhaven, Maine. The cooperative provides electricity for the residents of Penobscot Bay islands North Haven and Vinalhaven. Vinalhaven is home to the Fox Islands Wind Project's three 1 (...)")
 	(title "Fox Islands Electric Cooperative")
 	(wikipediaUrl "http://en.wikipedia.org/wiki/Fox_Islands_Electric_Cooperative"))
-
-([ProServer_Class310005] of  CloFuncall
-
-	(source "(geo.names/call-wiki-search \"\" 5 \"en\")"))
-
-([ProServer_Class310006] of  CloFuncall
-
-	(source "(geo.names/call-wiki-search \"Mill Cove\" 5 \"en\")"))
 
 ([ProServer_Class310007] of  Rule
 
@@ -982,6 +973,64 @@
 	(rhs "(cond\n  (string? ?nat) (vswap! ?nal conj [?nat ?tit])\n  (string? ?pla) (vswap! ?pll conj [?pla ?tit])\n  (string? ?ame) (vswap! ?aml conj [?ame ?tit]))")
 	(salience 0)
 	(title "as:NearbyTypes"))
+
+([ProServer_Class320001] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "US")
+	(elevation "29")
+	(feature "city")
+	(lang "en")
+	(lat "44.3061")
+	(lng "-68.9089")
+	(population "566")
+	(rank "94")
+	(summary "Islesboro is a town in Waldo County, Maine, United States. The population was 566 at the 2010 census. It has a summer colony accessible by ferry from Lincolnville Beach 3 miles to the west, or by air taxi service (...)")
+	(title "Islesboro, Maine")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Islesboro%2C_Maine"))
+
+([ProServer_Class320002] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "US")
+	(elevation "24")
+	(feature "city")
+	(lang "en")
+	(lat "44.1683")
+	(lng "-68.6642")
+	(population "1152")
+	(rank "89")
+	(summary "Stonington is a town in Hancock County, Maine, United States, located on the southern portion of Deer Isle. The population was 1,152 at the 2000 census. It includes the villages of Oceanville and West Stonington (...)")
+	(title "Stonington, Maine")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Stonington%2C_Maine"))
+
+([ProServer_Class320003] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "US")
+	(elevation "27")
+	(feature "adm2nd")
+	(lang "en")
+	(lat "44.57")
+	(lng "-68.37")
+	(rank "100")
+	(summary "Hancock County is a county located in the U.S. state of Maine. As of the 2010 census, the population was 54,418. Its county seat is Ellsworth. The county was incorporated on June 25, 1789 and named for John Hancock, the first governor of the Commonwealth of Massachusetts (...)")
+	(title "Hancock County, Maine")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Hancock_County%2C_Maine"))
+
+([ProServer_Class320004] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "US")
+	(elevation "10")
+	(feature "airport")
+	(lang "en")
+	(lat "44.1733")
+	(lng "-68.6803")
+	(rank "33")
+	(summary "Stonington Municipal Airport is a public airport located one mile (1.6 km) northwest of the central business district (CBD) of Stonington, a town in Hancock County, Maine, USA. The airport covers 12 acres and has one runway. It provides service to private and charter aircraft traffic only (...)")
+	(title "Stonington Municipal Airport")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Stonington_Municipal_Airport"))
 
 ([ProServer_Class320005] of  WikiArticle
 
@@ -999,8 +1048,37 @@
 
 ([ProServer_Class320007] of  CloFunction
 
-	(source "(println [lat (get mp \"lat\") lon (get mp \"lng\")])\n(if-let [lat2 (get mp \"lat\")]\n  (when-let [lon2 (get mp \"lng\")]\n    (println [lat2 lon2])\n    (let [lat2 (read-string lat2)\n           lon2 (read-string lon2)\n           rdg (float (/ rad 60))\n  res (and (number? lat2)\n          (number? lon2)\n          (< (Math/abs (- lat lat2)) rdg)\n          (< (Math/abs (- lon lon2)) rdg))]\n (println res)\n res)))")
+	(source "(if-let [lat2 (get mp \"lat\")]\n  (if-let [lon2 (get mp \"lng\")]\n    (let [lat2 (read-string lat2)\n           lon2 (read-string lon2)\n           rdg (float (/ rad 60))]\n      (and (number? lat2)\n        (number? lon2)\n        (< (Math/abs (- lat lat2)) rdg)\n        (< (Math/abs (- lon lon2)) rdg)) ) ))")
 	(title "near [mp [lat lon] rad]"))
+
+([ProServer_Class330005] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "US")
+	(elevation "43")
+	(feature "city")
+	(lang "en")
+	(lat "44.4258")
+	(lng "-69.0117")
+	(rank "98")
+	(summary "Belfast is a city in Waldo County, Maine, in the United States. As of the 2010 census, the city population was 6,668. Located at the mouth of the Passagassawakeag River estuary on Penobscot Bay, Belfast is the county seat of Waldo County (...)")
+	(thumbnailImg "http://www.geonames.org/img/wikipedia/141000/thumb-140626-100.jpg")
+	(title "Belfast, Maine")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Belfast%2C_Maine"))
+
+([ProServer_Class330006] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "US")
+	(elevation "4")
+	(feature "city")
+	(lang "en")
+	(lat "44.571")
+	(lng "-68.7875")
+	(rank "96")
+	(summary "Bucksport is a town in Hancock County, Maine, United States. The population was 4,924 at the 2010 census. Bucksport is a historic town across the Penobscot River estuary from Fort Knox and the Penobscot Narrows Bridge, which replaced the Waldo–Hancock Bridge.  (...)")
+	(title "Bucksport, Maine")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Bucksport%2C_Maine"))
 
 ([ProServer_Class340001] of  Rule
 

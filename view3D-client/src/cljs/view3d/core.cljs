@@ -73,22 +73,6 @@
    (< x 0) (+ x 360)
    true x))
 
-(defn error-handler [{:keys [status status-text]}]
-  (println (str "AJAX ERROR: " status " " status-text)))
-
-(defn no-handler [response])
-
-(defn ask-server [path params resp-format handler]
-  ;;(println [:ASK-SERV path params])
-  (let [url (str BSE-URL path)]
-    (GET url {:params params
-              :handler handler
-              :error-handler error-handler
-              :response-format resp-format})))
-
-(defn get-answer-and-ask [handler]
-  (fn [] (ask-server ANS-PTH nil :transit handler)))
-
 ;; -------------------------- Cesium ---------------------------------
 
 (def terprov (js/Cesium.CesiumTerrainProvider.
@@ -147,6 +131,11 @@
 
 
 ;; ------------------------ Boat movement ----------------------------
+
+(defn error-handler [{:keys [status status-text]}]
+  (println (str "AJAX ERROR: " status " " status-text)))
+
+(defn no-handler [response])
 
 (defn boat-to-server []
   (GET (str BSE-URL CMD-PTH)
@@ -356,8 +345,22 @@
 ;; ------------------------ Questionnaire -----------------------------
 
 (defn display-answer [answer]
-  (set-html! "display2" (get-html "display"))
+  (let [dis (get-html "display")]
+    (if (not (empty? dis))
+      (set-html! "display2" dis)))
   (set-html! "display" answer))
+
+(defn ask-server [path params resp-format handler]
+  ;;(println [:ASK-SERV path params])
+  (display-answer "")
+  (let [url (str BSE-URL path)]
+    (GET url {:params params
+              :handler handler
+              :error-handler error-handler
+              :response-format resp-format})))
+
+(defn get-answer-and-ask [handler]
+  (fn [] (ask-server ANS-PTH nil :transit handler)))
 
 (defn retrieve-answer []
   (ask-server ANS-PTH nil :transit display-answer))

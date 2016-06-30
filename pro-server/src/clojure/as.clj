@@ -9,7 +9,9 @@
          result# (deref f# ~msec v#)]
     (if (= v# result#)
       (do
+        (println :FUTURE-CANCELLING)
         (future-cancel f#)
+        (println :FUTURE-CANCELLED)
         nil)
       result#)))
 
@@ -104,33 +106,31 @@
   "Not found"))
 
 (defn near [mp [lat lon] rad]
-  (println [lat (get mp "lat") lon (get mp "lng")])
-(if-let [lat2 (get mp "lat")]
-  (when-let [lon2 (get mp "lng")]
-    (println [lat2 lon2])
+  (if-let [lat2 (get mp "lat")]
+  (if-let [lon2 (get mp "lng")]
     (let [lat2 (read-string lat2)
            lon2 (read-string lon2)
-           rdg (float (/ rad 60))
-  res (and (number? lat2)
-          (number? lon2)
-          (< (Math/abs (- lat lat2)) rdg)
-          (< (Math/abs (- lon lon2)) rdg))]
- (println res)
- res))))
+           rdg (float (/ rad 60))]
+      (and (number? lat2)
+        (number? lon2)
+        (< (Math/abs (- lat lat2)) rdg)
+        (< (Math/abs (- lon lon2)) rdg)) ) )))
 
 (defn text-search [txt crd]
-  (if-let [fsi (fainst (cls-instances "FulltextSearch") nil)]
+  (println [:FULL-TEXT-SEARCH txt crd])
+(if-let [fsi (fainst (cls-instances "FulltextSearch") nil)]
   (if-let [wsr (with-timeout TIMEOUT 
 	(geo.names/call-wiki-search txt 
 	  (sv fsi "max-responses")  
 	  (wiki.gis/request-lang (sv fsi  "language"))))]
-    (let [_ (println [:WRS wsr])
+    (let [_ (println [:TOTAL (count wsr)])
            _ (ssv fsi "text" txt)
            _ (ssvs fsi "responses" 
 	(if-let [wsf (filter #(near % crd 36) wsr)]
 	  (map wiki.gis/article-from-map wsf)
 	  []))
            rr (svs fsi "responses")
+           _ (println [:NEAR (count rr)])
            ss (map #(str (or (sv % "summary") "No summary")
 	          (if-let [img (sv % "thumbnailImg")]
 	            (str "<br><img src=\"" img "\">"))
