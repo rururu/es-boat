@@ -33,8 +33,7 @@ inst)
 (defn ws-map-list [url]
   ; Get list of maps from url returning collection of entries
 (try
-  (when-let [xml (parse url)]
-    (println [:FROM-URL url (count xml)])
+  (if-let [xml (parse url)]
     (if-let [all (:content xml)]
        (filter #(not (empty? %)) (map xml-to-map all)) ))
   (catch Exception e

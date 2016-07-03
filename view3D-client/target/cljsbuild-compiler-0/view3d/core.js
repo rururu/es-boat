@@ -840,7 +840,7 @@ view3d.core.selector3.call(null,"?",islands,new cljs.core.Keyword(null,"itself",
 view3d.core.function3 = (function view3d$core$where_island_$_function3(a){
 view3d.core.set_html_BANG_.call(null,"element4","");
 
-return view3d.core.ask_server.call(null,view3d.core.QST_PTH,cljs.core.merge.call(null,cljs.core.deref.call(null,view3d.core.boat),new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"predicate","predicate",-1742501860),"where-is",new cljs.core.Keyword(null,"subject","subject",-1411880451),"island",new cljs.core.Keyword(null,"object","object",1474613949),a], null)),new cljs.core.Keyword(null,"transit","transit",359458387),view3d.core.retrieve_answer);
+return view3d.core.ask_server.call(null,view3d.core.QST_PTH,cljs.core.merge.call(null,cljs.core.deref.call(null,view3d.core.boat),new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"predicate","predicate",-1742501860),"where-is",new cljs.core.Keyword(null,"subject","subject",-1411880451),"island",new cljs.core.Keyword(null,"subject-value","subject-value",-1557312678),a], null)),new cljs.core.Keyword(null,"transit","transit",359458387),view3d.core.retrieve_answer);
 });
 });
 view3d.core.about_island = (function view3d$core$about_island(islands){
@@ -896,6 +896,13 @@ view3d.core.function2 = (function view3d$core$about_thing_$_function2(a){
 return view3d.core.ask_server.call(null,view3d.core.QST_PTH,cljs.core.merge.call(null,cljs.core.deref.call(null,view3d.core.boat),new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"predicate","predicate",-1742501860),"about",new cljs.core.Keyword(null,"subject","subject",-1411880451),"thing",new cljs.core.Keyword(null,"subject-value","subject-value",-1557312678),a], null)),new cljs.core.Keyword(null,"transit","transit",359458387),view3d.core.retrieve_answer);
 });
 });
+view3d.core.where_thing = (function view3d$core$where_thing(things){
+view3d.core.selector3.call(null,"?",things,new cljs.core.Keyword(null,"itself","itself",1264932322));
+
+view3d.core.function3 = (function view3d$core$where_thing_$_function3(a){
+return view3d.core.ask_server.call(null,view3d.core.QST_PTH,cljs.core.merge.call(null,cljs.core.deref.call(null,view3d.core.boat),new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"predicate","predicate",-1742501860),"where-is",new cljs.core.Keyword(null,"subject","subject",-1411880451),"thing",new cljs.core.Keyword(null,"subject-value","subject-value",-1557312678),a], null)),new cljs.core.Keyword(null,"transit","transit",359458387),view3d.core.retrieve_answer);
+});
+});
 view3d.core.lst1 = new cljs.core.PersistentVector(null, 10, 5, cljs.core.PersistentVector.EMPTY_NODE, ["ahead","on the starboard bow","on the port bow","on the starboard beam","on the port beam","abaft the starboard beam","abaft the port beam","astern","behind the island","before the island"], null);
 view3d.core.what_is = (function view3d$core$what_is(){
 view3d.core.selector2.call(null,"?",view3d.core.lst1,new cljs.core.Keyword(null,"count","count",2139924085));
@@ -921,7 +928,7 @@ return cljs.core.println.call(null,new cljs.core.PersistentVector(null, 2, 5, cl
 }
 });
 });
-view3d.core.lst2 = new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, ["island","object"], null);
+view3d.core.lst2 = new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, ["island","object","interesting thing"], null);
 view3d.core.where_is = (function view3d$core$where_is(){
 view3d.core.selector2.call(null,"?",view3d.core.lst2,new cljs.core.Keyword(null,"count","count",2139924085));
 
@@ -937,7 +944,11 @@ return view3d.core.ask_server.call(null,view3d.core.QST_PTH,cljs.core.merge.call
 if(cljs.core.truth_(pred__12536.call(null,(1),expr__12537))){
 return view3d.core.ask_server.call(null,view3d.core.QST_PTH,cljs.core.merge.call(null,cljs.core.deref.call(null,view3d.core.boat),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"predicate","predicate",-1742501860),"nearby-types"], null)),new cljs.core.Keyword(null,"transit","transit",359458387),view3d.core.get_answer_and_ask.call(null,view3d.core.where_type));
 } else {
+if(cljs.core.truth_(pred__12536.call(null,(2),expr__12537))){
+return view3d.core.ask_server.call(null,view3d.core.QST_PTH,cljs.core.merge.call(null,cljs.core.deref.call(null,view3d.core.boat),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"predicate","predicate",-1742501860),"nearby-things"], null)),new cljs.core.Keyword(null,"transit","transit",359458387),view3d.core.get_answer_and_ask.call(null,view3d.core.where_thing));
+} else {
 return cljs.core.println.call(null,new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"WHERE-IS","WHERE-IS",859140682),cljs.core.nth.call(null,view3d.core.lst1,n)], null));
+}
 }
 }
 });
@@ -962,8 +973,8 @@ return cljs.core.println.call(null,new cljs.core.PersistentVector(null, 2, 5, cl
 }
 });
 });
-view3d.core.wiki_tells_about = (function view3d$core$wiki_tells_about(){
-return view3d.core.ask_server.call(null,view3d.core.QST_PTH,cljs.core.merge.call(null,cljs.core.deref.call(null,view3d.core.boat),new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"predicate","predicate",-1742501860),"wiki-tells",new cljs.core.Keyword(null,"subject","subject",-1411880451),"about"], null)),new cljs.core.Keyword(null,"transit","transit",359458387),view3d.core.get_answer_and_ask.call(null,view3d.core.about_thing));
+view3d.core.what_interesting = (function view3d$core$what_interesting(){
+return view3d.core.ask_server.call(null,view3d.core.QST_PTH,cljs.core.merge.call(null,cljs.core.deref.call(null,view3d.core.boat),new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"predicate","predicate",-1742501860),"what",new cljs.core.Keyword(null,"subject","subject",-1411880451),"interesting"], null)),new cljs.core.Keyword(null,"transit","transit",359458387),view3d.core.get_answer_and_ask.call(null,view3d.core.about_thing));
 });
 view3d.core.weather = (function view3d$core$weather(){
 return view3d.core.ask_server.call(null,view3d.core.QST_PTH,cljs.core.merge.call(null,cljs.core.deref.call(null,view3d.core.boat),new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"predicate","predicate",-1742501860),"what-is",new cljs.core.Keyword(null,"subject","subject",-1411880451),"weather"], null)),new cljs.core.Keyword(null,"transit","transit",359458387),view3d.core.retrieve_answer);
@@ -971,7 +982,7 @@ return view3d.core.ask_server.call(null,view3d.core.QST_PTH,cljs.core.merge.call
 view3d.core.questionnaire = (function view3d$core$questionnaire(){
 view3d.core.set_html_BANG_.call(null,"ask","Ask a question:");
 
-view3d.core.selector1.call(null,"?",new cljs.core.PersistentVector(null, 6, 5, cljs.core.PersistentVector.EMPTY_NODE, ["What is","Where is","Tell me more about","What Wikipedia tells about","What is the weather","Clear HUD"], null),new cljs.core.Keyword(null,"count","count",2139924085));
+view3d.core.selector1.call(null,"?",new cljs.core.PersistentVector(null, 6, 5, cljs.core.PersistentVector.EMPTY_NODE, ["What is","Where is","Tell me more about","What about nearby interesting things?","What is the weather?","Clear HUD"], null),new cljs.core.Keyword(null,"count","count",2139924085));
 
 view3d.core.clear_hud = (function view3d$core$questionnaire_$_clear_hud(){
 view3d.core.set_html_BANG_.call(null,"display","");
@@ -994,7 +1005,7 @@ if(cljs.core.truth_(pred__12560.call(null,(2),expr__12561))){
 return view3d.core.tell_more.call(null);
 } else {
 if(cljs.core.truth_(pred__12560.call(null,(3),expr__12561))){
-return view3d.core.wiki_tells_about.call(null);
+return view3d.core.what_interesting.call(null);
 } else {
 if(cljs.core.truth_(pred__12560.call(null,(4),expr__12561))){
 return view3d.core.weather.call(null);

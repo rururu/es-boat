@@ -1,4 +1,4 @@
-; Thu Jun 30 12:33:35 MSK 2016
+; Sat Jul 02 20:54:45 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -170,7 +170,7 @@
 
 ([GeoNames_Class28] of  CloFunction
 
-	(source "; Get list of maps from url returning collection of entries\n(try\n  (when-let [xml (parse url)]\n    (println [:FROM-URL url (count xml)])\n    (if-let [all (:content xml)]\n       (filter #(not (empty? %)) (map xml-to-map all)) ))\n  (catch Exception e\n    (ctpl e)\n    ()))")
+	(source "; Get list of maps from url returning collection of entries\n(try\n  (if-let [xml (parse url)]\n    (if-let [all (:content xml)]\n       (filter #(not (empty? %)) (map xml-to-map all)) ))\n  (catch Exception e\n    (ctpl e)\n    ()))")
 	(title "ws-map-list [url]"))
 
 ([GeoNames_Class3] of  CloVar
@@ -227,6 +227,11 @@
 
 	(source ";; Get Wikipedia articles of title\n(let [url (str *wiki-search* \"?title=\" (java.net.URLEncoder/encode title \"utf-8\") \"&lang=\" lang \"&maxRows=\" max)]\n  (seq (ws-map-list url)))")
 	(title "gn-wiki-title [title max lang]"))
+
+([GeoNames_Class60001] of  CloFunction
+
+	(source "(java.io.ByteArrayInputStream.  (.getBytes s java.nio.charset.StandardCharsets/UTF_8))")
+	(title "istream [s]"))
 
 ([GeoNames_Class60030] of  CloFunction
 

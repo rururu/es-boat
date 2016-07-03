@@ -1,4 +1,4 @@
-; Thu Jun 30 12:33:35 MSK 2016
+; Sat Jul 02 20:54:45 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -204,28 +204,28 @@
 	(name "instances_file_name")
 	(string_value "GeoNames.pins"))
 
-([KB_786969_Class205] of  Map
+([KB_885310_Class205] of  Map
 
 	(entries
-		[KB_786969_Class206]
-		[KB_786969_Class207]
-		[KB_786969_Class208]))
+		[KB_885310_Class206]
+		[KB_885310_Class207]
+		[KB_885310_Class208]))
 
-([KB_786969_Class206] of  Map_Entry
+([KB_885310_Class206] of  Map_Entry
 
 	(key "suppress_instance_counting")
 	(key_class "java.lang.String")
 	(value "false")
 	(value_class "java.lang.String"))
 
-([KB_786969_Class207] of  Map_Entry
+([KB_885310_Class207] of  Map_Entry
 
 	(key "add_name_on_instance_form")
 	(key_class "java.lang.String")
 	(value "false")
 	(value_class "java.lang.String"))
 
-([KB_786969_Class208] of  Map_Entry
+([KB_885310_Class208] of  Map_Entry
 
 	(key "change_tracking_active")
 	(key_class "java.lang.String")

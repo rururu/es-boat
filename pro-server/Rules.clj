@@ -165,6 +165,14 @@
 =>
 (retract ?b))
 
+(as:WhatInteresting 0
+?q (Question coord ?crd
+	predicate "what"
+	subject "interesting")
+=>
+(pro.server/pump-in-ans (as/search-nearby-things ?crd))
+(retract ?q))
+
 (as:AnswerNearbyObjects -1
 (Answer accum ?acc)
 ?q (Question predicate "nearby-objects")
@@ -191,23 +199,12 @@
 ?q (Question predicate "where-is"
 	subject "island"
 	object ?tit)
-(Island sector ?sec
-	title ?tit
-	side ?sid
+(Island title ?tit side ?sid
 	polar ?pol
 	coord ?crd)
 =>
 (let [[bea dis] ?pol
-       sid (condp = ?sid
-               "AHEAD"          "ahead"
-               "STAR-BOW"    "on the starboard bow"
-               "STAR-BEAM"   "on the starboard beam"
-               "STAR-ABAFT" "abaft the starboard beam"
-               "ASTERN"         "astern"
-               "PORT-ABAFT" "abaft the port beam"
-               "PORT-BEAM"  "on the port beam"
-               "PORT-BOW"   "on the port bow")
-       ans (str ?tit " is in " (format "%.1f miles" dis) " " sid)]
+       ans (as/where-answer ?tit dis ?sid])]
   (pro.server/pump-in-ans ans)
   (cesium.core/point-out ?tit ?crd dis ?rad))
 (retract ?q))
@@ -368,6 +365,37 @@
   (pro.server/pump-in-ans (sort all)))
 (retract ?q))
 
+(as:AboutThing 0
+?q (Question predicate "about"
+	subject "thing"
+	subject-value ?sval)
+=>
+(pro.server/pump-in-ans (as/about-thing ?sval))
+(retract ?q))
+
+(as:AboutIsland 0
+?q (Question coord ?crd
+	predicate "about"
+	subject "island"
+	object ?tit)
+=>
+(pro.server/pump-in-ans (if (or (.contains ?tit "island")
+		   (.contains ?tit "Island"))
+		(as/text-search ?tit ?crd)
+		(as/text-search (str ?tit " Island") ?crd)))
+(retract ?q))
+
+(as:AboutObject 0
+?q (Question coord ?crd
+	predicate "about"
+	subject ?sub
+	subject-value ?suv
+	((not= ?sub "thing")
+	 (not= ?sub "island")))
+=>
+(pro.server/pump-in-ans (as/text-search ?suv ?crd))
+(retract ?q))
+
 (as:AnswerObjectsOnSide -2
 (Answer2 place-list ?pll
 	natural-list ?nal
@@ -415,6 +443,24 @@
     (asser NamedObject title (get x "name") coord [(get x "lat") (get x "lon")]
 	amenity (get x "amenity") time ?tim2))))
 
+(as:WhereIsObject 0
+(OSMData radius ?rad)
+?q (Question predicate "where-is"
+	subject ?sub
+	subject-value ?suv)
+(NamedObject title ?suv
+	side ?sid
+	polar ?pol
+	coord ?crd
+	((not= ?sub "thing")
+	 (not= ?sub "island")))
+=>
+(let [[bea dis] ?pol
+       ans (as/where-answer (str ?sub " " ?suv) dis ?sid])]
+  (pro.server/pump-in-ans ans)
+  (cesium.core/point-out (str ?sub " " ?suv) ?crd dis ?rad))
+(retract ?q))
+
 (as:WhatIsPortAbaft_Obj 0
 (Answer2 place-list ?pll
 	natural-list ?nal
@@ -433,6 +479,14 @@
   (some? ?nat) (vswap! ?nal conj [?nat ?tit (second ?pol)])
   (some? ?ame) (vswap! ?aml conj [?ame ?tit (second ?pol)])))
 
+(as:Weather 0
+?q (Question coord ?crd
+	predicate "what-is"
+	subject "weather")
+=>
+(pro.server/pump-in-ans (as/weather ?crd))
+(retract ?q))
+
 (as:NearbyTypes 0
 ?a (Answer2 place-list ?pll
 	natural-list ?nal
@@ -447,6 +501,32 @@
   (string? ?nat) (vswap! ?nal conj [?nat ?tit])
   (string? ?pla) (vswap! ?pll conj [?pla ?tit])
   (string? ?ame) (vswap! ?aml conj [?ame ?tit])))
+
+(as:NearbyThings 0
+?q (Question coord ?crd
+	predicate "nearby-things")
+=>
+(pro.server/pump-in-ans (as/nearby-things ?crd))
+(retract ?q))
+
+(as:WhereIsThing 0
+(OSMData radius ?rad)
+?q (Question predicate "where-is"
+	subject "thing"
+	object ?tit
+	coord ?crd
+	course ?crs)
+=>
+(if-let [tcr (as/thing-coord ?tit)]
+  (let [dis (geo.calc/distance-nm ?crd tcr)
+         bea (geo.calc/bear-deg ?crd tcr)
+         sec (geo.calc/sector bea ?crs)
+         sid (geo.calc/side sec)
+         ans (as/where-answer ?tit dis sid])]
+    (pro.server/pump-in-ans ans)
+    (cesium.core/point-out ?tit ?crd dis ?rad))
+  (pro.server/pump-in-ans (str "No coordinates for " ?tit)))
+(retract ?q))
 
 (as:NearbyObjects 0
 ?a (Answer accum ?acc)

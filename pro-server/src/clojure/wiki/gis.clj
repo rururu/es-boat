@@ -11,7 +11,7 @@
 
 (defn article-from-map [mp]
   (if-let [tit (mp "title")]
-    (map-into-inst mp (foc "WikiArticle" "title" tit))))
+  (map-into-inst mp (foc "WikiArticle" "title" tit))))
 
 (defn bbx-of-list
   ;; crds = ([lat lon]..)
@@ -40,7 +40,7 @@
          [west south east north] (seq (svs (mp "bbx") "wsen"))]
     (ssvs inst "responses" 
       (if-let [resp (call-wiki-bbx north west south east max lang)]
-        (map article-from-map resp)
+        (filter some? (map article-from-map resp))
         [])) ))
 ([inst bbx-title bbx]
   (if-let [bbx-inst (fifos "BBX" "title" bbx-title)]
@@ -58,7 +58,7 @@
          text (mp "text")]
     (ssvs inst "responses" 
       (if-let [resp (call-wiki-search text max lang)]
-        (map article-from-map resp)
+        (filter some? (map article-from-map resp))
         [])) ))
 ([inst any txt]
   (ssv inst "text" txt)
@@ -66,7 +66,7 @@
     (if-let [resp (call-wiki-search txt 
 	(sv inst "max-responses") 
 	(request-lang (sv inst  "language")))]
-      (map article-from-map resp)
+      (filter some? (map article-from-map resp))
       []))
   inst))
 
@@ -85,7 +85,7 @@
          lon (mp "lng")]
     (ssvs inst "responses" 
       (if-let [resp (call-wiki-nearby lat lon radius-km max lang)]
-        (map article-from-map resp)
+        (filter some? (map article-from-map resp))
         [])) ))
 ([inst lat lon]
   (ssv inst "lat" (str lat))

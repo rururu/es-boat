@@ -1,4 +1,4 @@
-; Wed Jun 29 21:27:43 MSK 2016
+; Sun Jul 03 23:01:50 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -410,6 +410,7 @@
 		[ProServer_Class200021]
 		[ProServer_Class320000]
 		[ProServer_Class340001]
+		[ProServer_Class320002]
 		[ProServer_Class160000]
 		[ProServer_Class210001]
 		[ProServer_Class100004]
@@ -430,6 +431,7 @@
 		[ProServer_Class110002]
 		[ProServer_Class210000]
 		[ProServer_Class280001]
+		[ProServer_Class320004]
 		[ProServer_Class310007]
 		[ProServer_Class200000]
 		[ProServer_Class220003]
@@ -490,10 +492,10 @@
 
 ([ProServer_Class200000] of  Rule
 
-	(lhs "?q (Question coord ?crd\n	predicate \"wiki-tells\"\n	subject \"about\")")
-	(rhs "(pro.server/pump-in-ans (as/nearby-things ?crd))\n(retract ?q)")
+	(lhs "?q (Question coord ?crd\n	predicate \"what\"\n	subject \"interesting\")")
+	(rhs "(pro.server/pump-in-ans (as/search-nearby-things ?crd))\n(retract ?q)")
 	(salience 0)
-	(title "as:WikiTellsAbout"))
+	(title "as:WhatInteresting"))
 
 ([ProServer_Class200001] of  Rule
 
@@ -533,8 +535,8 @@
 
 ([ProServer_Class210000] of  Rule
 
-	(lhs "(OSMData radius ?rad)\n?q (Question predicate \"where-is\"\n	subject \"island\"\n	object ?tit)\n(Island title ?tit\n	side ?sid\n	polar ?pol\n	coord ?crd)")
-	(rhs "(let [[bea dis] ?pol\n       sid (condp = ?sid\n               \"AHEAD\"          \"ahead\"\n               \"STAR-BOW\"    \"on the starboard bow\"\n               \"STAR-BEAM\"   \"on the starboard beam\"\n               \"STAR-ABAFT\" \"abaft the starboard beam\"\n               \"ASTERN\"         \"astern\"\n               \"PORT-ABAFT\" \"abaft the port beam\"\n               \"PORT-BEAM\"  \"on the port beam\"\n               \"PORT-BOW\"   \"on the port bow\")\n       ans (str ?tit \" is in \" (format \"%.1f miles\" dis) \" \" sid)]\n  (pro.server/pump-in-ans ans)\n  (cesium.core/point-out ?tit ?crd dis ?rad))\n(retract ?q)")
+	(lhs "(OSMData radius ?rad)\n?q (Question predicate \"where-is\"\n	subject \"island\"\n	subject-value ?tit)\n(Island title ?tit side ?sid\n	polar ?pol\n	coord ?crd)")
+	(rhs "(let [[bea dis] ?pol\n       ans (as/where-answer ?tit dis ?sid)]\n  (pro.server/pump-in-ans ans)\n  (cesium.core/point-out ?tit ?crd dis ?rad))\n(retract ?q)")
 	(salience 0)
 	(title "as:WhereIsIsland"))
 
@@ -616,7 +618,7 @@
 ([ProServer_Class220001] of  CloFunction
 
 	(source "(if-let [ans (fainst (cls-instances \"NearbySearch\") nil)]\n  (do (def LAST-NEAR-SRCH (wiki.gis/submit-nearby ans lat lon))\n    (let [rr (svs LAST-NEAR-SRCH \"responses\")]\n      (sort (map #(sv % \"title\") rr))))\n  [])")
-	(title "nearby-things [[lat lon]]"))
+	(title "search-nearby-things [[lat lon]]"))
 
 ([ProServer_Class220002] of  CloVar
 
@@ -632,7 +634,7 @@
 
 ([ProServer_Class220004] of  CloFunction
 
-	(source "(if-let [flt  (seq (filter #(= (sv % \"title\") val) (svs LAST-NEAR-SRCH \"responses\")))]\n  (str (or (sv (first flt) \"summary\") \"No summary\")\n    (if-let [img (sv (first flt) \"thumbnailImg\")]\n      (str \"<br><img src=\\\"\" img \"\\\">\")))\n  \"Not found\")")
+	(source "(if-let [flt  (seq (filter #(= (sv % \"title\") val) (svs LAST-NEAR-SRCH \"responses\")))]\n  (extract (first flt))\n  \"Not found\")")
 	(title "about-thing [val]"))
 
 ([ProServer_Class230000] of  CloFunction
@@ -658,20 +660,20 @@
 ([ProServer_Class240012] of  Rule
 
 	(lhs "?q (Question coord ?crd\n	predicate \"about\"\n	subject \"island\"\n	object ?tit)")
-	(rhs "(pro.server/pump-in-ans (as/text-search ?tit ?crd))\n(retract ?q)")
+	(rhs "(pro.server/pump-in-ans (if (or (.contains ?tit \"island\")\n		   (.contains ?tit \"Island\"))\n		(as/text-search ?tit ?crd)\n		(as/text-search (str ?tit \" Island\") ?crd)))\n(retract ?q)")
 	(salience 0)
 	(title "as:AboutIsland"))
 
 ([ProServer_Class240013] of  Rule
 
-	(lhs "?q (Question coord ?crd\n	predicate \"about\"\n	subject ?sub\n	subject-value ?suv\n	(not= ?sub \"thing\"))")
+	(lhs "?q (Question coord ?crd\n	predicate \"about\"\n	subject ?sub\n	subject-value ?suv\n	((not= ?sub \"thing\")\n	 (not= ?sub \"island\")))")
 	(rhs "(pro.server/pump-in-ans (as/text-search ?suv ?crd))\n(retract ?q)")
 	(salience 0)
 	(title "as:AboutObject"))
 
 ([ProServer_Class240014] of  CloFunction
 
-	(source "(println [:FULL-TEXT-SEARCH txt crd])\n(if-let [fsi (fainst (cls-instances \"FulltextSearch\") nil)]\n  (if-let [wsr (with-timeout TIMEOUT \n	(geo.names/call-wiki-search txt \n	  (sv fsi \"max-responses\")  \n	  (wiki.gis/request-lang (sv fsi  \"language\"))))]\n    (let [_ (println [:TOTAL (count wsr)])\n           _ (ssv fsi \"text\" txt)\n           _ (ssvs fsi \"responses\" \n	(if-let [wsf (filter #(near % crd 36) wsr)]\n	  (map wiki.gis/article-from-map wsf)\n	  []))\n           rr (svs fsi \"responses\")\n           _ (println [:NEAR (count rr)])\n           ss (map #(str (or (sv % \"summary\") \"No summary\")\n	          (if-let [img (sv % \"thumbnailImg\")]\n	            (str \"<br><img src=\\\"\" img \"\\\">\"))\n	          \"<br>\")\n	rr)\n          resp (apply str ss)]\n      (if (empty? resp)\n        \"No info\"\n        resp))\n      \"Timeout\")\n    \"Not found\")")
+	(source "(println [:FULL-TEXT-SEARCH txt crd])\n(if-let [fsi (fainst (cls-instances \"FulltextSearch\") nil)]\n  (if-let [wsr (with-timeout TIMEOUT \n	(geo.names/call-wiki-search txt \n	  (sv fsi \"max-responses\")  \n	  (wiki.gis/request-lang (sv fsi  \"language\"))))]\n    (let [_ (println [:TOTAL-FOUND (count wsr)])\n           _ (ssv fsi \"text\" txt)\n           _ (ssvs fsi \"responses\" \n	(if-let [wsf (filter #(near % crd 36) wsr)]\n                          (filter some? (map wiki.gis/article-from-map wsf))\n	  []))\n           rr (svs fsi \"responses\")\n           _ (println [:NEAR (count rr)])\n           ss (map extract rr)\n          resp (apply str ss)]\n      (if (empty? resp)\n        (str \"No info about this particular \" txt)\n        resp))\n      \"Timeout\")\n    \"Not found\")")
 	(title "text-search [txt crd]"))
 
 ([ProServer_Class240015] of  FulltextSearch
@@ -680,7 +682,7 @@
 	(button-search "submit/wiki.gis/submit-search")
 	(language English-en)
 	(max-responses 12)
-	(text "Carver Cove"))
+	(text "Deer Isle"))
 
 ([ProServer_Class240016] of  %3AINSTANCE-ANNOTATION
 
@@ -733,6 +735,19 @@
 
 	(source "(ru.rules/sp :all)"))
 
+([ProServer_Class270000] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "US")
+	(feature "waterbody")
+	(lang "en")
+	(lat "44.1872")
+	(lng "-68.9211")
+	(rank "96")
+	(summary "Penobscot Bay originates from the mouth of Maine's Penobscot River. 11,000 years ago, at the beginning of the Holocene era, the Gulf of Maine's sea level fell as low as 180 feet (55 m) below its present height. Penobscot Bay was then a continuation of Penobscot River that meandered through a broad (...)")
+	(title "Penobscot Bay")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Penobscot_Bay"))
+
 ([ProServer_Class270001] of  Answer2
 
 	(time 0))
@@ -741,19 +756,21 @@
 
 	(button-open-site "Open Site/wiki.gis/open-site")
 	(countryCode "US")
+	(elevation "10")
 	(feature "city")
 	(lang "en")
-	(lat "44.0217")
-	(lng "-68.7936")
-	(rank "96")
-	(summary "Vinalhaven is a town located on the larger of the two Fox Islands in Knox County, Maine, United States. Vinalhaven is also used to refer to the Island itself. The population was 1,165 at the 2010 census. It is home to a thriving lobster fishery and hosts a summer colony (...)")
-	(title "Vinalhaven, Maine")
-	(wikipediaUrl "http://en.wikipedia.org/wiki/Vinalhaven%2C_Maine"))
+	(lat "44.1542")
+	(lng "-68.8781")
+	(population "355")
+	(rank "94")
+	(summary "North Haven is a town in Knox County, Maine, United States, in Penobscot Bay. The town is both a year-round island community and a prominent summer colony. The population was 355 at the 2010 census. North Haven is accessed by three-times daily ferry service from Rockland, or by air taxi from Knox (...)")
+	(title "North Haven, Maine")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/North_Haven%2C_Maine"))
 
 ([ProServer_Class280001] of  Rule
 
-	(lhs "(OSMData radius ?rad)\n?q (Question predicate \"where-is\"\n	subject ?sub\n	subject-value ?suv)\n(NamedObject title ?suv\n	side ?sid\n	polar ?pol\n	coord ?crd)")
-	(rhs "(let [[bea dis] ?pol\n       sid (condp = ?sid\n               \"AHEAD\"          \"ahead\"\n               \"STAR-BOW\"    \"on the starboard bow\"\n               \"STAR-BEAM\"   \"on the starboard beam\"\n               \"STAR-ABAFT\" \"abaft the starboard beam\"\n               \"ASTERN\"         \"astern\"\n               \"PORT-ABAFT\" \"abaft the port beam\"\n               \"PORT-BEAM\"  \"on the port beam\"\n               \"PORT-BOW\"   \"on the port bow\")\n       ans (str ?sub \" \" ?suv \" is in \" (format \"%.1f miles\" dis) \" \" sid)]\n  (pro.server/pump-in-ans ans)\n  (cesium.core/point-out (str ?sub \" \" ?suv) ?crd dis ?rad))\n(retract ?q)")
+	(lhs "(OSMData radius ?rad)\n?q (Question predicate \"where-is\"\n	subject ?sub\n	subject-value ?suv)\n(NamedObject title ?suv\n	side ?sid\n	polar ?pol\n	coord ?crd\n	((not= ?sub \"thing\")\n	 (not= ?sub \"island\")))")
+	(rhs "(let [[bea dis] ?pol\n       ans (as/where-answer (str ?sub \" \" ?suv) dis ?sid)]\n  (pro.server/pump-in-ans ans)\n  (cesium.core/point-out (str ?sub \" \" ?suv) ?crd dis ?rad))\n(retract ?q)")
 	(salience 0)
 	(title "as:WhereIsObject"))
 
@@ -766,15 +783,14 @@
 
 	(button-open-site "Open Site/wiki.gis/open-site")
 	(countryCode "US")
-	(elevation "19")
-	(feature "edu")
+	(feature "city")
 	(lang "en")
-	(lat "44.0486")
-	(lng "-68.8219")
-	(rank "15")
-	(summary "Vinalhaven School is a kindergarten-through-twelfth-grade public school located at 22 Arcola Lane, Vinalhaven, an island located in mid-coast Maine, 75 miles east northeast of Portland. Vinalhaven School is divided into five teams: the K-2 Team, 3-5 Team, Middle School Team, High School Team and (...)")
-	(title "Vinalhaven School")
-	(wikipediaUrl "http://en.wikipedia.org/wiki/Vinalhaven_School"))
+	(lat "44.0217")
+	(lng "-68.7936")
+	(rank "96")
+	(summary "Vinalhaven is a town located on the larger of the two Fox Islands in Knox County, Maine, United States. Vinalhaven is also used to refer to the Island itself. The population was 1,165 at the 2010 census. It is home to a thriving lobster fishery and hosts a summer colony (...)")
+	(title "Vinalhaven, Maine")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Vinalhaven%2C_Maine"))
 
 ([ProServer_Class290001] of  CloFunction
 
@@ -810,15 +826,40 @@
 	(source "(if-let [rsp (geo.names/call-geonames-weather lat lon)]\n  (let [lat2 (read-string (rsp \"lat\"))\n          lon2 (read-string (rsp \"lng\"))\n          bear (geo.names/bearing lat lon lat2 lon2)\n          dir (geo.names/direction bear)\n          dis (rough-distance lat lon lat2 lon2)\n          name (rsp \"stationName\")\n          wcd (rsp \"weatherCondition\")\n          hym (rsp \"hymidity\")\n          tmp (rsp \"temperature\")\n          wind (rsp \"windDirection\")\n          bwnd (if (some? wind)\n	(let [b (+ (read-string wind) 180)] (if (> b 360) (- b 360) b)))\n          win (if (some? bwnd)\n	(geo.names/direction bwnd)\n	\"n/a\")\n          wins (rsp \"windSpeed\")\n          tim (rsp \"observationTime\")\n          loc (str dis \" miles to \" dir \" from here\")]\n    (str name \" Weather Station<br>\"\n	\"location: \" loc \"<br>\"\n	\"observation time: \" tim \"<br>\"\n	\"weather conditions: \" wcd \"<br>\"\n	\"temperature: \" tmp \" Celsius<br>\"\n	\"hymidity: \" hym \"<br>\"\n	\"wind: \" win \", \" wins \" Knots\"))\n  \"I can not get a weather information\")")
 	(title "weather [[lat lon]]"))
 
+([ProServer_Class300001] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(elevation "56")
+	(lang "en")
+	(lat "44.391")
+	(lng "-68.8056")
+	(rank "96")
+	(summary "The Penobscot Expedition was a 44-ship American naval task force mounted during the Revolutionary War by the Provincial Congress of the Province of Massachusetts Bay. The flotilla of 19 warships and 25 smaller support vessels sailed from Boston on July 19, 1779 for the upper Penobscot Bay in the (...)")
+	(title "Penobscot Expedition")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Penobscot_Expedition"))
+
 ([ProServer_Class300005] of  NearbySearch
 
 	(button-clear-articles "Clear Articles/wiki.gis/clear-articles")
 	(button-nearby "submit/wiki.gis/submit-nearby")
 	(language English-en)
-	(lat "62.4569648148159")
-	(lng "5.88")
+	(lat "44.1299537037053")
+	(lng "-68.736")
 	(max-responses 12)
-	(radius-km 20))
+	(radius-km 20)
+	(responses
+		[ProServer_Class330007]
+		[ProServer_Class330008]
+		[ProServer_Class310006]
+		[ProServer_Class330009]
+		[ProServer_Class330010]
+		[ProServer_Class330011]
+		[ProServer_Class310002]
+		[ProServer_Class330012]
+		[ProServer_Class280000]
+		[ProServer_Class310004]
+		[ProServer_Class330013]
+		[ProServer_Class330014]))
 
 ([ProServer_Class300006] of  %3AINSTANCE-ANNOTATION
 
@@ -907,21 +948,6 @@
 
 	(button-open-site "Open Site/wiki.gis/open-site")
 	(countryCode "US")
-	(elevation "10")
-	(feature "city")
-	(lang "en")
-	(lat "44.1542")
-	(lng "-68.8781")
-	(population "355")
-	(rank "94")
-	(summary "North Haven is a town in Knox County, Maine, United States, in Penobscot Bay. The town is both a year-round island community and a prominent summer colony. The population was 355 at the 2010 census. North Haven is accessed by three-times daily ferry service from Rockland, or by air taxi from Knox (...)")
-	(title "North Haven, Maine")
-	(wikipediaUrl "http://en.wikipedia.org/wiki/North_Haven%2C_Maine"))
-
-([ProServer_Class310002] of  WikiArticle
-
-	(button-open-site "Open Site/wiki.gis/open-site")
-	(countryCode "US")
 	(elevation "15")
 	(feature "airport")
 	(lang "en")
@@ -932,6 +958,20 @@
 	(thumbnailImg "http://www.geonames.org/img/wikipedia/40000/thumb-39772-100.jpg")
 	(title "Knox County Regional Airport")
 	(wikipediaUrl "http://en.wikipedia.org/wiki/Knox_County_Regional_Airport"))
+
+([ProServer_Class310002] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "US")
+	(elevation "19")
+	(feature "edu")
+	(lang "en")
+	(lat "44.0486")
+	(lng "-68.8219")
+	(rank "15")
+	(summary "Vinalhaven School is a kindergarten-through-twelfth-grade public school located at 22 Arcola Lane, Vinalhaven, an island located in mid-coast Maine, 75 miles east northeast of Portland. Vinalhaven School is divided into five teams: the K-2 Team, 3-5 Team, Middle School Team, High School Team and (...)")
+	(title "Vinalhaven School")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Vinalhaven_School"))
 
 ([ProServer_Class310003] of  WikiArticle
 
@@ -960,6 +1000,36 @@
 	(title "Fox Islands Electric Cooperative")
 	(wikipediaUrl "http://en.wikipedia.org/wiki/Fox_Islands_Electric_Cooperative"))
 
+([ProServer_Class310005] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "US")
+	(elevation "29")
+	(feature "city")
+	(lang "en")
+	(lat "44.3061")
+	(lng "-68.9089")
+	(population "566")
+	(rank "94")
+	(summary "Islesboro is a town in Waldo County, Maine, United States. The population was 566 at the 2010 census. It has a summer colony accessible by ferry from Lincolnville Beach 3 miles to the west, or by air taxi service (...)")
+	(title "Islesboro, Maine")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Islesboro%2C_Maine"))
+
+([ProServer_Class310006] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "US")
+	(elevation "24")
+	(feature "city")
+	(lang "en")
+	(lat "44.1683")
+	(lng "-68.6642")
+	(population "1152")
+	(rank "89")
+	(summary "Stonington is a town in Hancock County, Maine, United States, located on the southern portion of Deer Isle. The population was 1,152 at the 2000 census. It includes the villages of Oceanville and West Stonington (...)")
+	(title "Stonington, Maine")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Stonington%2C_Maine"))
+
 ([ProServer_Class310007] of  Rule
 
 	(lhs "?q (Question coord ?crd\n	predicate \"what-is\"\n	subject \"weather\")")
@@ -978,47 +1048,68 @@
 
 	(button-open-site "Open Site/wiki.gis/open-site")
 	(countryCode "US")
-	(elevation "29")
-	(feature "city")
+	(elevation "26")
+	(feature "edu")
 	(lang "en")
-	(lat "44.3061")
-	(lng "-68.9089")
-	(population "566")
-	(rank "94")
-	(summary "Islesboro is a town in Waldo County, Maine, United States. The population was 566 at the 2010 census. It has a summer colony accessible by ferry from Lincolnville Beach 3 miles to the west, or by air taxi service (...)")
-	(title "Islesboro, Maine")
-	(wikipediaUrl "http://en.wikipedia.org/wiki/Islesboro%2C_Maine"))
+	(lat "44.1882")
+	(lng "-68.584")
+	(rank "41")
+	(summary "Haystack Mountain School of Crafts, commonly called \"Haystack,\" is a craft school located on the coast of Deer Isle, Maine. Haystack was founded in 1950 by a group of craft artists in the Belfast, Maine area, with support from Mary Beasom Bishop (...)")
+	(title "Haystack Mountain School of Crafts")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Haystack_Mountain_School_of_Crafts"))
 
-([ProServer_Class320002] of  WikiArticle
+([ProServer_Class320002] of  Rule
+
+	(lhs "?q (Question coord ?crd\n	predicate \"nearby-things\")")
+	(rhs "(pro.server/pump-in-ans (as/nearby-things ?crd))\n(retract ?q)")
+	(salience 0)
+	(title "as:NearbyThings"))
+
+([ProServer_Class320003] of  CloFunction
+
+	(source "(if-let [nts (and LAST-NEAR-SRCH \n	(seq (svs LAST-NEAR-SRCH \"responses\")))]\n  (sort (map #(sv % \"title\") nts))\n  (search-nearby-things crd))")
+	(title "nearby-things [crd]"))
+
+([ProServer_Class320004] of  Rule
+
+	(lhs "(OSMData radius ?rad)\n?q (Question predicate \"where-is\"\n	subject \"thing\"\n	subject-value ?tit\n	coord ?crd\n	course ?crs)")
+	(rhs "(if-let [tcr (as/thing-coord ?tit)]\n  (let [dis (geo.calc/distance-nm ?crd tcr)\n         bea (geo.calc/bear-deg ?crd tcr)\n         sec (geo.calc/sector bea ?crs)\n         sid (geo.calc/side sec)\n         ans (as/where-answer ?tit dis sid)]\n    (pro.server/pump-in-ans ans)\n    (cesium.core/point-out ?tit ?crd dis ?rad))\n  (pro.server/pump-in-ans (str \"No coordinates for \" ?tit)))\n(retract ?q)")
+	(salience 0)
+	(title "as:WhereIsThing"))
+
+([ProServer_Class320005] of  CloFunction
+
+	(source "(if-let [flt  (seq (filter #(= (sv % \"title\") tit) (svs LAST-NEAR-SRCH \"responses\")))]\n  [(read-string (sv (first flt) \"lat\"))\n   (read-string (sv (first flt) \"lng\"))])")
+	(title "thing-coord [tit]"))
+
+([ProServer_Class320007] of  CloFunction
+
+	(source "(if-let [lat2 (get mp \"lat\")]\n  (if-let [lon2 (get mp \"lng\")]\n    (let [lat2 (read-string lat2)\n           lon2 (read-string lon2)\n           rdg (float (/ rad 60))]\n      (and (number? lat2)\n        (number? lon2)\n        (< (Math/abs (- lat lat2)) rdg)\n        (< (Math/abs (- lon lon2)) rdg)) ) ))")
+	(title "near [mp [lat lon] rad]"))
+
+([ProServer_Class330000] of  CloFunction
+
+	(source "(condp = sid\n  \"AHEAD\"          \"ahead\"\n  \"STAR-BOW\"    \"on the starboard bow\"\n  \"STAR-BEAM\"   \"on the starboard beam\"\n  \"STAR-ABAFT\" \"abaft the starboard beam\"\n  \"ASTERN\"         \"astern\"\n  \"PORT-ABAFT\" \"abaft the port beam\"\n  \"PORT-BEAM\"  \"on the port beam\"\n  \"PORT-BOW\"   \"on the port bow\")")
+	(title "nl-side [sid]"))
+
+([ProServer_Class330001] of  CloFunction
+
+	(source "(str tit \" is in \" (format \"%.1f miles\" dis) \" \" (as/nl-side sid))")
+	(title "where-answer [tit dis sid]"))
+
+([ProServer_Class330007] of  WikiArticle
 
 	(button-open-site "Open Site/wiki.gis/open-site")
-	(countryCode "US")
-	(elevation "24")
-	(feature "city")
+	(feature "landmark")
 	(lang "en")
-	(lat "44.1683")
-	(lng "-68.6642")
-	(population "1152")
-	(rank "89")
-	(summary "Stonington is a town in Hancock County, Maine, United States, located on the southern portion of Deer Isle. The population was 1,152 at the 2000 census. It includes the villages of Oceanville and West Stonington (...)")
-	(title "Stonington, Maine")
-	(wikipediaUrl "http://en.wikipedia.org/wiki/Stonington%2C_Maine"))
+	(lat "44.1344")
+	(lng "-68.7033")
+	(rank "23")
+	(summary "Deer Island Thorofare Light, also known as Mark Island Light, is a lighthouse on Penobscot Bay, Maine, about west-southwest of Stonington. It was built in 1857.  (...)")
+	(title "Deer Island Thorofare Light")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Deer_Island_Thorofare_Light"))
 
-([ProServer_Class320003] of  WikiArticle
-
-	(button-open-site "Open Site/wiki.gis/open-site")
-	(countryCode "US")
-	(elevation "27")
-	(feature "adm2nd")
-	(lang "en")
-	(lat "44.57")
-	(lng "-68.37")
-	(rank "100")
-	(summary "Hancock County is a county located in the U.S. state of Maine. As of the 2010 census, the population was 54,418. Its county seat is Ellsworth. The county was incorporated on June 25, 1789 and named for John Hancock, the first governor of the Commonwealth of Massachusetts (...)")
-	(title "Hancock County, Maine")
-	(wikipediaUrl "http://en.wikipedia.org/wiki/Hancock_County%2C_Maine"))
-
-([ProServer_Class320004] of  WikiArticle
+([ProServer_Class330008] of  WikiArticle
 
 	(button-open-site "Open Site/wiki.gis/open-site")
 	(countryCode "US")
@@ -1032,53 +1123,87 @@
 	(title "Stonington Municipal Airport")
 	(wikipediaUrl "http://en.wikipedia.org/wiki/Stonington_Municipal_Airport"))
 
-([ProServer_Class320005] of  WikiArticle
+([ProServer_Class330009] of  WikiArticle
 
 	(button-open-site "Open Site/wiki.gis/open-site")
 	(countryCode "US")
-	(elevation "8")
-	(feature "city")
+	(elevation "36")
+	(feature "isle")
 	(lang "en")
-	(lat "43.9042")
-	(lng "-69.0092")
-	(rank "85")
-	(summary "Matinicus Isle is a plantation in Knox County, Maine, United States. The population was 51 at the 2000 census, although during the summer that number can triple or quadruple. Remote Matinicus Island is accessible by ferry from Rockland, located away, or by air taxiAccording to a local, \"(f)lying can (...)")
-	(title "Matinicus Isle, Maine")
-	(wikipediaUrl "http://en.wikipedia.org/wiki/Matinicus_Isle%2C_Maine"))
+	(lat "44.2125")
+	(lng "-68.775")
+	(rank "12")
+	(summary "Eagle Island is a 263-acre island in Penobscot Bay, Maine, between North Haven and Deer Isle, in Hancock County. It is not part of the nearby Town of Deer Isle but is an unincorporated territory of the state. The island was conveyed to Samuel Quinn by John C (...)")
+	(title "Eagle Island (Penobscot Bay, Maine)")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Eagle_Island_%28Penobscot_Bay%2C_Maine%29"))
 
-([ProServer_Class320007] of  CloFunction
-
-	(source "(if-let [lat2 (get mp \"lat\")]\n  (if-let [lon2 (get mp \"lng\")]\n    (let [lat2 (read-string lat2)\n           lon2 (read-string lon2)\n           rdg (float (/ rad 60))]\n      (and (number? lat2)\n        (number? lon2)\n        (< (Math/abs (- lat lat2)) rdg)\n        (< (Math/abs (- lon lon2)) rdg)) ) ))")
-	(title "near [mp [lat lon] rad]"))
-
-([ProServer_Class330005] of  WikiArticle
+([ProServer_Class330010] of  WikiArticle
 
 	(button-open-site "Open Site/wiki.gis/open-site")
 	(countryCode "US")
-	(elevation "43")
-	(feature "city")
+	(elevation "27")
+	(feature "isle")
 	(lang "en")
-	(lat "44.4258")
-	(lng "-69.0117")
-	(rank "98")
-	(summary "Belfast is a city in Waldo County, Maine, in the United States. As of the 2010 census, the city population was 6,668. Located at the mouth of the Passagassawakeag River estuary on Penobscot Bay, Belfast is the county seat of Waldo County (...)")
-	(thumbnailImg "http://www.geonames.org/img/wikipedia/141000/thumb-140626-100.jpg")
-	(title "Belfast, Maine")
-	(wikipediaUrl "http://en.wikipedia.org/wiki/Belfast%2C_Maine"))
+	(lat "44.21")
+	(lng "-68.6853")
+	(rank "44")
+	(summary "Deer Isle is an island in Hancock County, Maine, United States. There are two communities on the island, Deer Isle and Stonington. It is on the eastern side of Penobscot Bay, connected by road to the Maine mainland through Little Deer Isle (...)")
+	(title "Deer Isle (island)")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Deer_Isle_%28island%29"))
 
-([ProServer_Class330006] of  WikiArticle
+([ProServer_Class330011] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(elevation "11")
+	(feature "landmark")
+	(lang "en")
+	(lat "44.2176")
+	(lng "-68.7678")
+	(rank "26")
+	(summary "For Eagle Island Lighthouse in County Mayo, Ireland, see Eagle Island, County Mayo Eagle Island Light is a lighthouse on Eagle Island in Penobscot Bay. The tower was first lit in 1838 but had to be torn down because of physical defects (...)")
+	(title "Eagle Island Light")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Eagle_Island_Light"))
+
+([ProServer_Class330012] of  WikiArticle
 
 	(button-open-site "Open Site/wiki.gis/open-site")
 	(countryCode "US")
-	(elevation "4")
+	(elevation "22")
 	(feature "city")
 	(lang "en")
-	(lat "44.571")
-	(lng "-68.7875")
-	(rank "96")
-	(summary "Bucksport is a town in Hancock County, Maine, United States. The population was 4,924 at the 2010 census. Bucksport is a historic town across the Penobscot River estuary from Fort Knox and the Penobscot Narrows Bridge, which replaced the Waldo–Hancock Bridge.  (...)")
-	(title "Bucksport, Maine")
-	(wikipediaUrl "http://en.wikipedia.org/wiki/Bucksport%2C_Maine"))
+	(lat "44.2247")
+	(lng "-68.6769")
+	(population "1975")
+	(rank "94")
+	(summary "Deer Isle is a town in Hancock County, Maine, United States. The population was 1,975 at the 2010 census. Notable landmarks in Deer Isle are the Haystack Mountain School of Crafts and the town's many art galleries.  (...)")
+	(title "Deer Isle, Maine")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Deer_Isle%2C_Maine"))
+
+([ProServer_Class330013] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "US")
+	(elevation "126")
+	(feature "city")
+	(lang "en")
+	(lat "44.0483")
+	(lng "-68.6237")
+	(rank "90")
+	(summary "Isle au Haut is a town in Knox County, Maine, United States, on an island of the same name in Penobscot Bay. The population was 73 at the 2010 census. Home to portions of Acadia National Park, Isle au Haut is accessible by mailboat (no auto ferries) from Stonington.  (...)")
+	(title "Isle au Haut, Maine")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Isle_au_Haut%2C_Maine"))
+
+([ProServer_Class330014] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(elevation "6")
+	(lang "en")
+	(lat "44.0381")
+	(lng "-68.8336")
+	(rank "1")
+	(summary "Lane's Island is an island which is part of the town of Vinalhaven in Knox County, Maine. It is approximately 45 acres in size and connected by causeway to mainland Vinalhaven. About 2/3 of the island is protected by a nature preserve (...)")
+	(title "Lane's Island")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Lane%27s_Island"))
 
 ([ProServer_Class340001] of  Rule
 
@@ -1086,6 +1211,25 @@
 	(rhs "(if (or (= ?sub ?pla)\n         (= ?sub ?nat)\n         (= ?sub ?ame))\n  (vswap! ?acc conj ?tit))")
 	(salience 0)
 	(title "as:NearbyObjects"))
+
+([ProServer_Class340005] of  CloFunction
+
+	(source "(let [ell \"(...)\"\n       sum (sv ins \"summary\")\n       img (sv ins \"thumbnailImg\")\n       lnk (sv ins \"wikipediaUrl\")\n       sum (if (and (not (empty? lnk)) (.contains sum ell))\n	(.replace sum ell (str \"<a href=\\\"\" lnk \"\\\">\" ell \"</a>\"))\n	sum)]\n  (str (or sum \"No summary\")\n        (or (and img (str \"<br><img src=\\\"\" img \"\\\">\")) \"\")\n        \"<br>\"))")
+	(title "extract [ins]"))
+
+([ProServer_Class350003] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "US")
+	(elevation "17")
+	(feature "isle")
+	(lang "en")
+	(lat "44.2361")
+	(lng "-68.825")
+	(rank "2")
+	(summary "Great Spruce Head Island is a privately owned island in Penobscot Bay, Maine. It is part of the Town of Deer Isle, in Hancock County. It has long belonged to the family of the painter Fairfield Porter and his brother, photographer Eliot Porter, both of whom did creative work there (...)")
+	(title "Great Spruce Head Island")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Great_Spruce_Head_Island"))
 
 ([ProServer_Class40000] of  ShareOnto
 
@@ -1349,9 +1493,14 @@
 		[ProServer_Class310000]
 		[ProServer_Class300000]
 		[ProServer_Class220001]
+		[ProServer_Class320003]
+		[ProServer_Class340005]
 		[ProServer_Class220004]
 		[ProServer_Class320007]
-		[ProServer_Class240014])
+		[ProServer_Class240014]
+		[ProServer_Class330000]
+		[ProServer_Class320005]
+		[ProServer_Class330001])
 	(cloNamespace [ProServer_Class100008])
 	(cloVars
 		[ProServer_Class220002]

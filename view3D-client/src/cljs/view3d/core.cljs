@@ -403,7 +403,7 @@
       (set-html! "element4" "")
       (ask-server QST-PTH (merge @boat {:predicate "where-is"
                                         :subject "island"
-                                        :object a})
+                                        :subject-value a})
                   :transit retrieve-answer))))
 
 (defn about-island [islands]
@@ -465,6 +465,15 @@
                                         :subject-value a})
                   :transit retrieve-answer))))
 
+(defn where-thing [things]
+  (selector3 "?" things :itself)
+  (def function3
+    (fn [a]
+      (ask-server QST-PTH (merge @boat {:predicate "where-is"
+                                        :subject "thing"
+                                        :subject-value a})
+                  :transit retrieve-answer))))
+
 (def lst1 ["ahead"
            "on the starboard bow"
            "on the port bow"
@@ -493,7 +502,8 @@
           (println [:WHAT-IS (nth lst1 n)]))))))
 
 (def lst2 ["island"
-           "object"])
+           "object"
+           "interesting thing"])
 
 (defn where-is []
   (selector2 "?" lst2 :count)
@@ -506,6 +516,8 @@
                         :transit (get-answer-and-ask where-island))
           1 (ask-server QST-PTH (merge @boat {:predicate "nearby-types"})
                         :transit (get-answer-and-ask where-type))
+          2 (ask-server QST-PTH (merge @boat {:predicate "nearby-things"})
+                        :transit (get-answer-and-ask where-thing))
           (println [:WHERE-IS (nth lst1 n)]))))))
 
 (defn tell-more []
@@ -521,9 +533,9 @@
                         :transit (get-answer-and-ask about-type))
           (println [:WHERE-IS (nth lst1 n)]))))))
 
-(defn wiki-tells-about []
-  (ask-server QST-PTH (merge @boat {:predicate "wiki-tells"
-                                    :subject "about"})
+(defn what-interesting []
+  (ask-server QST-PTH (merge @boat {:predicate "what"
+                                    :subject "interesting"})
               :transit (get-answer-and-ask about-thing)))
 
 (defn weather []
@@ -536,8 +548,8 @@
   (selector1 "?" ["What is"
                   "Where is"
                   "Tell me more about"
-                  "What Wikipedia tells about"
-                  "What is the weather"
+                  "What about nearby interesting things?"
+                  "What is the weather?"
                   "Clear HUD"] :count)
 (defn clear-hud []
   (set-html! "display" "")
@@ -550,7 +562,7 @@
         0 (what-is)
         1 (where-is)
         2 (tell-more)
-        3 (wiki-tells-about)
+        3 (what-interesting)
         4 (weather)
         5 (clear-hud)))))
 

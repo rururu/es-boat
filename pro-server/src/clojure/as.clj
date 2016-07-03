@@ -91,18 +91,34 @@
 	"wind: " win ", " wins " Knots"))
   "I can not get a weather information"))
 
-(defn nearby-things [[lat lon]]
+(defn search-nearby-things [[lat lon]]
   (if-let [ans (fainst (cls-instances "NearbySearch") nil)]
   (do (def LAST-NEAR-SRCH (wiki.gis/submit-nearby ans lat lon))
     (let [rr (svs LAST-NEAR-SRCH "responses")]
       (sort (map #(sv % "title") rr))))
   []))
 
+(defn nearby-things [crd]
+  (if-let [nts (and LAST-NEAR-SRCH 
+	(seq (svs LAST-NEAR-SRCH "responses")))]
+  (sort (map #(sv % "title") nts))
+  (search-nearby-things crd)))
+
+(defn extract [ins]
+  (let [ell "(...)"
+       sum (sv ins "summary")
+       img (sv ins "thumbnailImg")
+       lnk (sv ins "wikipediaUrl")
+       sum (if (and (not (empty? lnk)) (.contains sum ell))
+	(.replace sum ell (str "<a href=\"" lnk "\">" ell "</a>"))
+	sum)]
+  (str (or sum "No summary")
+        (or (and img (str "<br><img src=\"" img "\">")) "")
+        "<br>")))
+
 (defn about-thing [val]
   (if-let [flt  (seq (filter #(= (sv % "title") val) (svs LAST-NEAR-SRCH "responses")))]
-  (str (or (sv (first flt) "summary") "No summary")
-    (if-let [img (sv (first flt) "thumbnailImg")]
-      (str "<br><img src=\"" img "\">")))
+  (extract (first flt))
   "Not found"))
 
 (defn near [mp [lat lon] rad]
@@ -123,23 +139,38 @@
 	(geo.names/call-wiki-search txt 
 	  (sv fsi "max-responses")  
 	  (wiki.gis/request-lang (sv fsi  "language"))))]
-    (let [_ (println [:TOTAL (count wsr)])
+    (let [_ (println [:TOTAL-FOUND (count wsr)])
            _ (ssv fsi "text" txt)
            _ (ssvs fsi "responses" 
 	(if-let [wsf (filter #(near % crd 36) wsr)]
-	  (map wiki.gis/article-from-map wsf)
+                          (filter some? (map wiki.gis/article-from-map wsf))
 	  []))
            rr (svs fsi "responses")
            _ (println [:NEAR (count rr)])
-           ss (map #(str (or (sv % "summary") "No summary")
-	          (if-let [img (sv % "thumbnailImg")]
-	            (str "<br><img src=\"" img "\">"))
-	          "<br>")
-	rr)
+           ss (map extract rr)
           resp (apply str ss)]
       (if (empty? resp)
-        "No info"
+        (str "No info about this particular " txt)
         resp))
       "Timeout")
     "Not found"))
+
+(defn nl-side [sid]
+  (condp = sid
+  "AHEAD"          "ahead"
+  "STAR-BOW"    "on the starboard bow"
+  "STAR-BEAM"   "on the starboard beam"
+  "STAR-ABAFT" "abaft the starboard beam"
+  "ASTERN"         "astern"
+  "PORT-ABAFT" "abaft the port beam"
+  "PORT-BEAM"  "on the port beam"
+  "PORT-BOW"   "on the port bow"))
+
+(defn thing-coord [tit]
+  (if-let [flt  (seq (filter #(= (sv % "title") tit) (svs LAST-NEAR-SRCH "responses")))]
+  [(read-string (sv (first flt) "lat"))
+   (read-string (sv (first flt) "lng"))]))
+
+(defn where-answer [tit dis sid]
+  (str tit " is in " (format "%.1f miles" dis) " " (as/nl-side sid)))
 

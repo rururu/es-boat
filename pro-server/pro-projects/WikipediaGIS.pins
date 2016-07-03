@@ -1,4 +1,4 @@
-; Mon Jun 27 15:54:56 MSK 2016
+; Sat Jul 02 21:29:51 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -29,7 +29,7 @@
 
 ([WikipediaGIS_Class10003] of  CloFunction
 
-	(source "([hm inst]\n  (let [mp (into {} hm)\n         max (mp \"max-responses\")\n         lang (request-lang (mp \"language\"))\n         [west south east north] (seq (svs (mp \"bbx\") \"wsen\"))]\n    (ssvs inst \"responses\" \n      (if-let [resp (call-wiki-bbx north west south east max lang)]\n        (map article-from-map resp)\n        [])) ))\n([inst bbx-title bbx]\n  (if-let [bbx-inst (fifos \"BBX\" \"title\" bbx-title)]\n    (ssv inst \"bbx\" bbx-inst)\n    (let [[w s e n] bbx]\n      (ssv inst \"bbx\" (bbx-of-list [[n w] [s e]] bbx-title))))\n  (submit-bbx (itm inst 0) inst)\n  inst)")
+	(source "([hm inst]\n  (let [mp (into {} hm)\n         max (mp \"max-responses\")\n         lang (request-lang (mp \"language\"))\n         [west south east north] (seq (svs (mp \"bbx\") \"wsen\"))]\n    (ssvs inst \"responses\" \n      (if-let [resp (call-wiki-bbx north west south east max lang)]\n        (filter some? (map article-from-map resp))\n        [])) ))\n([inst bbx-title bbx]\n  (if-let [bbx-inst (fifos \"BBX\" \"title\" bbx-title)]\n    (ssv inst \"bbx\" bbx-inst)\n    (let [[w s e n] bbx]\n      (ssv inst \"bbx\" (bbx-of-list [[n w] [s e]] bbx-title))))\n  (submit-bbx (itm inst 0) inst)\n  inst)")
 	(title "submit-bbx"))
 
 ([WikipediaGIS_Class11] of  CloFunction
@@ -39,12 +39,12 @@
 
 ([WikipediaGIS_Class17] of  CloFunction
 
-	(source "([hm inst]\n  (let [mp (into {} hm)\n         max (mp \"max-responses\")\n         lang (request-lang (mp \"language\"))\n         text (mp \"text\")]\n    (ssvs inst \"responses\" \n      (if-let [resp (call-wiki-search text max lang)]\n        (map article-from-map resp)\n        [])) ))\n([inst any txt]\n  (ssv inst \"text\" txt)\n  (ssvs inst \"responses\" \n    (if-let [resp (call-wiki-search txt \n	(sv inst \"max-responses\") \n	(request-lang (sv inst  \"language\")))]\n      (map article-from-map resp)\n      []))\n  inst)")
+	(source "([hm inst]\n  (let [mp (into {} hm)\n         max (mp \"max-responses\")\n         lang (request-lang (mp \"language\"))\n         text (mp \"text\")]\n    (ssvs inst \"responses\" \n      (if-let [resp (call-wiki-search text max lang)]\n        (filter some? (map article-from-map resp))\n        [])) ))\n([inst any txt]\n  (ssv inst \"text\" txt)\n  (ssvs inst \"responses\" \n    (if-let [resp (call-wiki-search txt \n	(sv inst \"max-responses\") \n	(request-lang (sv inst  \"language\")))]\n      (filter some? (map article-from-map resp))\n      []))\n  inst)")
 	(title "submit-search"))
 
 ([WikipediaGIS_Class18] of  CloFunction
 
-	(source "(if-let [tit (mp \"title\")]\n    (map-into-inst mp (foc \"WikiArticle\" \"title\" tit)))")
+	(source "(if-let [tit (mp \"title\")]\n  (map-into-inst mp (foc \"WikiArticle\" \"title\" tit)))")
 	(title "article-from-map [mp]"))
 
 ([WikipediaGIS_Class2] of  %3AINSTANCE-ANNOTATION
@@ -89,7 +89,7 @@
 
 ([WikipediaGIS_Class40028] of  CloFunction
 
-	(source "([hm inst]\n  (let [mp (into {} hm)\n         max (mp \"max-responses\")\n         lang (request-lang (mp \"language\"))\n         radius-km (mp \"radius-km\")\n         lat (mp \"lat\")\n         lon (mp \"lng\")]\n    (ssvs inst \"responses\" \n      (if-let [resp (call-wiki-nearby lat lon radius-km max lang)]\n        (map article-from-map resp)\n        [])) ))\n([inst lat lon]\n  (ssv inst \"lat\" (str lat))\n  (ssv inst \"lng\" (str lon))\n  (submit-nearby (itm inst 0) inst)\n  inst)")
+	(source "([hm inst]\n  (let [mp (into {} hm)\n         max (mp \"max-responses\")\n         lang (request-lang (mp \"language\"))\n         radius-km (mp \"radius-km\")\n         lat (mp \"lat\")\n         lon (mp \"lng\")]\n    (ssvs inst \"responses\" \n      (if-let [resp (call-wiki-nearby lat lon radius-km max lang)]\n        (filter some? (map article-from-map resp))\n        [])) ))\n([inst lat lon]\n  (ssv inst \"lat\" (str lat))\n  (ssv inst \"lng\" (str lon))\n  (submit-nearby (itm inst 0) inst)\n  inst)")
 	(title "submit-nearby"))
 
 ([WikipediaGIS_Class50001] of  BBXWiki
