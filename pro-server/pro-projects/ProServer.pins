@@ -1,4 +1,4 @@
-; Sun Jul 03 23:01:50 MSK 2016
+; Mon Jul 04 17:26:17 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -843,7 +843,7 @@
 	(button-clear-articles "Clear Articles/wiki.gis/clear-articles")
 	(button-nearby "submit/wiki.gis/submit-nearby")
 	(language English-en)
-	(lat "44.1299537037053")
+	(lat "44.12571296296343")
 	(lng "-68.736")
 	(max-responses 12)
 	(radius-km 20)
@@ -855,9 +855,9 @@
 		[ProServer_Class330010]
 		[ProServer_Class330011]
 		[ProServer_Class310002]
-		[ProServer_Class330012]
 		[ProServer_Class280000]
 		[ProServer_Class310004]
+		[ProServer_Class330012]
 		[ProServer_Class330013]
 		[ProServer_Class330014]))
 
@@ -1073,7 +1073,7 @@
 ([ProServer_Class320004] of  Rule
 
 	(lhs "(OSMData radius ?rad)\n?q (Question predicate \"where-is\"\n	subject \"thing\"\n	subject-value ?tit\n	coord ?crd\n	course ?crs)")
-	(rhs "(if-let [tcr (as/thing-coord ?tit)]\n  (let [dis (geo.calc/distance-nm ?crd tcr)\n         bea (geo.calc/bear-deg ?crd tcr)\n         sec (geo.calc/sector bea ?crs)\n         sid (geo.calc/side sec)\n         ans (as/where-answer ?tit dis sid)]\n    (pro.server/pump-in-ans ans)\n    (cesium.core/point-out ?tit ?crd dis ?rad))\n  (pro.server/pump-in-ans (str \"No coordinates for \" ?tit)))\n(retract ?q)")
+	(rhs "(if-let [tcr (as/thing-coord ?tit)]\n  (let [dis (geo.calc/distance-nm ?crd tcr)\n         bea (geo.calc/bear-deg ?crd tcr)\n         sec (geo.calc/sector bea ?crs)\n         sid (geo.calc/side sec)\n         ans (as/where-answer ?tit dis sid)]\n    (pro.server/pump-in-ans ans)\n    (cesium.core/point-out ?tit tcr dis ?rad))\n  (pro.server/pump-in-ans (str \"No coordinates for \" ?tit)))\n(retract ?q)")
 	(salience 0)
 	(title "as:WhereIsThing"))
 
