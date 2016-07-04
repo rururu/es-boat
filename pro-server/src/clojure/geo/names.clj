@@ -18,6 +18,7 @@
 (def ^:dynamic *nearby-pois-osm* "http://api.geonames.org/findNearbyPOIsOSM")
 (def ^:dynamic *weather-url* "http://api.geonames.org/findNearByWeather")
 (def ^:dynamic *username* "liikalanjoki")
+(def ^:dynamic *strm3-url* "http://api.geonames.org/srtm3")
 (defn map-into-inst [mp inst]
   (doseq [[k v] mp]
    (if (slt k)
@@ -183,6 +184,19 @@ inst)
   ; Get Wikipedia articles near some point
 (let [url (str *wiki-nearby* "?lat=" lat "&lng=" lon "&radius=" radius-km "&maxRows=" max "&username=" *username*)]
   (seq (ws-map-list url))))
+
+(defn call-geonames-elevations [lats lngs]
+  ; Get Elevation - Aster Global Digital Elevation Model V1 2009
+(let [lats (apply str (interpose "," (take 20 lats)))
+       lngs (apply str (interpose "," (take 20 lngs)))
+       url (str *strm3-url* "?lats=" lats "&lngs=" lngs "&username=" *username*)]
+ (println [:URL url])
+ (try
+  (if-let [dat (slurp url)]
+    (read-string (str "[" dat "]")))
+  (catch Exception e
+   (ctpl e)
+   nil))))
 
 (defn tag-con-map [lst]
   (letfn [(tac? [x] (let [cnt (:content x)]
