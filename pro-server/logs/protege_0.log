@@ -1104,3 +1104,19 @@
 2016.07.04 21:41:15.522 MSK INFO: Load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 1 sec (project) + 1 sec (ui) -- ProjectManager$3.run()
 2016.07.04 21:41:25.125 MSK INFO: Project load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/GeoNames.pprj: 0 sec -- ProjectChooser.loadProject()
 2016.07.04 21:41:25.298 MSK INFO: UI display time = 0 sec -- ProjectManager$2.run()
+2016.07.05 12:17:51.588 MSK INFO: *** SYSTEM START ***
+2016.07.05 12:17:51.595 MSK WARNING: Look and feel not found: com.apple.laf.AquaLookAndFeel -- SystemUtilities.setLookAndFeel()
+2016.07.05 12:17:52.185 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.07.05 12:17:53.997 MSK INFO: Load time for file:/home/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.07.05 12:18:47.658 MSK INFO: Project load time for file:/home/ru/clojure/es-boat/pro-server/pro-projects/GeoNames.pprj: 0 sec -- ProjectChooser.loadProject()
+2016.07.05 12:18:47.903 MSK INFO: UI display time = 0 sec -- ProjectManager$2.run()
+2016.07.05 13:19:34.222 MSK INFO: *** SYSTEM START ***
+2016.07.05 13:19:34.228 MSK WARNING: Look and feel not found: com.apple.laf.AquaLookAndFeel -- SystemUtilities.setLookAndFeel()
+2016.07.05 13:19:34.464 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.07.05 13:19:35.501 MSK INFO: Load time for file:/home/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.07.05 15:41:12.506 MSK INFO: *** SYSTEM START ***
+2016.07.05 15:41:12.512 MSK WARNING: Look and feel not found: com.apple.laf.AquaLookAndFeel -- SystemUtilities.setLookAndFeel()
+2016.07.05 15:41:12.755 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.07.05 15:41:13.916 MSK INFO: Load time for file:/home/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.07.05 15:41:25.888 MSK INFO: Project load time for file:/home/ru/clojure/es-boat/pro-server/pro-projects/GeoNames.pprj: 0 sec -- ProjectChooser.loadProject()
+2016.07.05 15:41:26.103 MSK INFO: UI display time = 0 sec -- ProjectManager$2.run()

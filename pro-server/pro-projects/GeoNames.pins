@@ -1,4 +1,4 @@
-; Mon Jul 04 22:23:48 MSK 2016
+; Tue Jul 05 15:57:07 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -24,6 +24,7 @@
 		[GeoNames_Class25]
 		[GeoNames_Class30]
 		[GeoNames_Class40000]
+		[GeoNames_Class80001]
 		[GeoNames_Class40001]
 		[GeoNames_Class20028]
 		[GeoNames_Class30001]
@@ -47,7 +48,8 @@
 		[GeoNames_Class20027]
 		[GeoNames_Class30000]
 		[GeoNames_Class20004]
-		[GeoNames_Class70001])
+		[GeoNames_Class70001]
+		[GeoNames_Class50000])
 	(title "geonames"))
 
 ([Example_Class10001] of  CloNamespace
@@ -212,8 +214,8 @@
 
 ([GeoNames_Class40000] of  CloFunction
 
-	(source "; Get Elevation - Aster Global Digital Elevation Model V1 2009\n(let [lats (apply str (interpose \",\" (take 20 lats)))\n       lngs (apply str (interpose \",\" (take 20 lngs)))\n       url (str *strm3-url* \"?lats=\" lats \"&lngs=\" lngs \"&username=\" *username*)]\n (try\n  (if-let [dat (slurp url)]\n    (read-string (str \"[\" dat \"]\")))\n  (catch Exception e\n   (ctpl e)\n   nil)))")
-	(title "call-geonames-elevations [lats lngs]"))
+	(source ";: Get Elevation - Aster Global Digital Elevation Model V1 2009\n;: Returns map {coord1 elev1coord2 elev2 ..} \n(let [crds (take 20 coords)\n       lats (map first crds)\n       lngs (map second crds)\n       lats (apply str (interpose \",\" lats))\n       lngs (apply str (interpose \",\" lngs))\n       url (str *strm3-url* \"?lats=\" lats \"&lngs=\" lngs \"&username=\" *username*)]\n (try\n  (if-let [dat (slurp url)]\n    (let [v (read-string (str \"[\" dat \"]\"))\n           v (interleave coords v)]\n      (apply hash-map v)))\n  (catch Exception e\n   (ctpl e)\n   nil)))")
+	(title "call-geonames-20elevations [coords]"))
 
 ([GeoNames_Class40001] of  CloFunction
 
@@ -224,6 +226,11 @@
 
 	(source ";; For q=\"\" and specified bbx return list of gn:Feature-s as rdf standard xml map\n(let [url (str \"http://api.geonames.org/search?q=\" q \"&maxRows=\" lim \"&type=rdf&username=\" *username* \"&south=\" s \"&east=\" e \"&north=\" n \"&west=\" w)]\n (try\n   (if-let [xml (clojure.xml/parse url)]\n      (:content xml))\n (catch Exception e\n   (ctpl e)\n   nil)))")
 	(title "gn-search-bbx-rdf [q lim w e s n]"))
+
+([GeoNames_Class50000] of  CloVar
+
+	(source "\"http://api.geonames.org/gtopo30\"")
+	(title "^:dynamic *gtopo30*"))
 
 ([GeoNames_Class50001] of  CloFunction
 
@@ -260,82 +267,7 @@
 	(source "\"http://api.geonames.org/srtm3\"")
 	(title "^:dynamic *strm3-url*"))
 
-([GeoNames_Class70002] of  CloFuncall
+([GeoNames_Class80001] of  CloFunction
 
-	(source "(geo.names/call-geonames-elevations [50.01 51.01] [10.2 11.2])"))
-
-([GeoNames_Class70003] of  CloFuncall
-
-	(source "(geo.names/call-geonames-elevations [50.01 51.01 52.01] [10.2 11.2 12.2])"))
-
-([GeoNames_Class70004] of  CloFuncall
-
-	(source "(geo.names/call-geonames-elevations [60.0] [30.0])"))
-
-([GeoNames_Class70005] of  CloFuncall
-
-	(source "(geo.names/call-geonames-elevations [60.0] [28.0])"))
-
-([GeoNames_Class70006] of  CloFuncall
-
-	(source "(geo.names/call-geonames-elevations [60.0] [27.0])"))
-
-([GeoNames_Class70007] of  CloFuncall
-
-	(source "(geo.names/call-geonames-elevations [60.0] [26.0])"))
-
-([GeoNames_Class70008] of  CloFuncall
-
-	(source "(geo.names/call-geonames-elevations [60.0] [25.0])"))
-
-([GeoNames_Class70009] of  CloFuncall
-
-	(source "(geo.names/call-geonames-elevations [60.0] [5.0])"))
-
-([GeoNames_Class70010] of  CloFuncall
-
-	(source "(geo.names/call-geonames-elevations [60.0] [5.5])"))
-
-([GeoNames_Class70011] of  CloFuncall
-
-	(source "(geo.names/call-geonames-elevations [60.0] [4.5])"))
-
-([GeoNames_Class70012] of  CloFuncall
-
-	(source "(geo.names/call-geonames-elevations [60.0] [3.5])"))
-
-([GeoNames_Class70013] of  CloFuncall
-
-	(source "(geo.names/call-geonames-elevations [60.0] [-23.5])"))
-
-([GeoNames_Class70014] of  CloFuncall
-
-	(source "(geo.names/call-geonames-elevations [60.0] [-24.5])"))
-
-([GeoNames_Class70015] of  CloFuncall
-
-	(source "(geo.names/call-geonames-elevations [60.0] [-44.5])"))
-
-([GeoNames_Class70016] of  CloFuncall
-
-	(source "(geo.names/call-geonames-elevations [60.0] [-40.5])"))
-
-([GeoNames_Class70017] of  CloFuncall
-
-	(source "(geo.names/call-geonames-elevations [59.8679167] [30.0])"))
-
-([GeoNames_Class70018] of  CloFuncall
-
-	(source "(geo.names/call-geonames-elevations [59.8679166] [30.0])"))
-
-([GeoNames_Class70019] of  CloFuncall
-
-	(source "(geo.names/call-geonames-elevations [59.867916] [30.0])"))
-
-([GeoNames_Class70020] of  CloFuncall
-
-	(source "(geo.names/call-geonames-elevations [59.8679161 59.8679162 59.8679163 59.8679164 59.8679165 59.8679166 59.8679167] [30.0 30.0 30.0 30.0 30.0 30.0 30.0])"))
-
-([GeoNames_Class70021] of  CloFuncall
-
-	(source "(geo.names/call-geonames-elevations [59.8679161 59.8679162 59.8679163 59.8679164 59.8679165 59.8679166 59.8679167 59.8679168] [30.0 30.0 30.0 30.0 30.0 30.0 30.0 30.0])"))
+	(source "; Get Elevation - GTOPO30\n(let [url (str *gtopo30* \"?lat=\" lat \"&lng=\" lng \"&username=\"  *username*)]\n (try\n   (if-let [gtp (slurp url)]\n     (read-string gtp))\n (catch Exception e\n   (ctpl e)\n   nil)))")
+	(title "call-geonames-gtopo30 [lat lng]"))

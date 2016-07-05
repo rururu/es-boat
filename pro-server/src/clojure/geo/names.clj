@@ -19,6 +19,7 @@
 (def ^:dynamic *weather-url* "http://api.geonames.org/findNearByWeather")
 (def ^:dynamic *username* "liikalanjoki")
 (def ^:dynamic *strm3-url* "http://api.geonames.org/srtm3")
+(def ^:dynamic *gtopo30* "http://api.geonames.org/gtopo30")
 (defn map-into-inst [mp inst]
   (doseq [[k v] mp]
    (if (slt k)
@@ -185,16 +186,31 @@ inst)
 (let [url (str *wiki-nearby* "?lat=" lat "&lng=" lon "&radius=" radius-km "&maxRows=" max "&username=" *username*)]
   (seq (ws-map-list url))))
 
-(defn call-geonames-elevations [lats lngs]
-  ; Get Elevation - Aster Global Digital Elevation Model V1 2009
-(let [lats (apply str (interpose "," (take 20 lats)))
-       lngs (apply str (interpose "," (take 20 lngs)))
+(defn call-geonames-20elevations [coords]
+  ;: Get Elevation - Aster Global Digital Elevation Model V1 2009
+;: Returns map {coord1 elev1coord2 elev2 ..} 
+(let [crds (take 20 coords)
+       lats (map first crds)
+       lngs (map second crds)
+       lats (apply str (interpose "," lats))
+       lngs (apply str (interpose "," lngs))
        url (str *strm3-url* "?lats=" lats "&lngs=" lngs "&username=" *username*)]
- (println [:URL url])
  (try
   (if-let [dat (slurp url)]
-    (read-string (str "[" dat "]")))
+    (let [v (read-string (str "[" dat "]"))
+           v (interleave coords v)]
+      (apply hash-map v)))
   (catch Exception e
+   (ctpl e)
+   nil))))
+
+(defn call-geonames-gtopo30 [lat lng]
+  ; Get Elevation - GTOPO30
+(let [url (str *gtopo30* "?lat=" lat "&lng=" lng "&username="  *username*)]
+ (try
+   (if-let [gtp (slurp url)]
+     (read-string gtp))
+ (catch Exception e
    (ctpl e)
    nil))))
 
