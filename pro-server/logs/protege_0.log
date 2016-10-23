@@ -1129,3 +1129,55 @@
 2016.09.02 18:44:13.240 MSK INFO: *** SYSTEM START ***
 2016.09.02 18:44:14.319 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
 2016.09.02 18:44:15.417 MSK INFO: Load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.09.11 13:59:40.478 MSK INFO: *** SYSTEM START ***
+2016.09.11 13:59:40.927 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.09.11 13:59:41.819 MSK INFO: Load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.09.12 11:58:26.587 MSK INFO: *** SYSTEM START ***
+2016.09.12 11:58:27.910 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.09.12 11:58:29.850 MSK INFO: Load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 1 sec (ui) -- ProjectManager$3.run()
+2016.10.20 19:18:18.509 MSK INFO: *** SYSTEM START ***
+2016.10.20 19:18:19.322 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.10.20 19:18:20.430 MSK INFO: Load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.10.23 13:11:42.018 MSK INFO: *** SYSTEM START ***
+2016.10.23 13:11:45.424 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.10.23 13:11:46.386 MSK SEVERE: non-existent slot: butt-reset -- Parser.recordError()
+2016.10.23 13:11:46.386 MSK SEVERE: non-existent slot: butt-retr-inss -- Parser.recordError()
+2016.10.23 13:11:46.386 MSK SEVERE: non-existent slot: trace -- Parser.recordError()
+2016.10.23 13:11:47.999 MSK INFO: Load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 1 sec (ui) -- ProjectManager$3.run()
+2016.10.23 13:17:03.868 MSK INFO: *** SYSTEM START ***
+2016.10.23 13:17:04.856 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.10.23 13:17:05.759 MSK INFO: Load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.10.23 13:25:32.249 MSK INFO: *** SYSTEM START ***
+2016.10.23 13:25:33.256 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.10.23 13:25:34.186 MSK INFO: Load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.10.23 18:33:19.745 MSK INFO: *** SYSTEM START ***
+2016.10.23 18:33:20.784 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.10.23 18:33:21.712 MSK INFO: Load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.10.23 18:52:40.537 MSK INFO: *** SYSTEM START ***
+2016.10.23 18:52:41.315 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.10.23 18:52:42.193 MSK INFO: Load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()
+2016.10.23 19:13:18.725 MSK INFO: Project load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/WikipediaGIS.pprj: 0 sec -- ProjectChooser.loadProject()
+2016.10.23 19:13:18.868 MSK INFO: UI display time = 0 sec -- ProjectManager$2.run()
+2016.10.23 19:13:55.725 MSK INFO: Project load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/GeoNames.pprj: 0 sec -- ProjectChooser.loadProject()
+2016.10.23 19:13:55.850 MSK INFO: UI display time = 0 sec -- ProjectManager$2.run()
+2016.10.23 19:16:34.370 MSK INFO: Project load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj: 0 sec -- ProjectChooser.loadProject()
+2016.10.23 19:16:34.498 MSK INFO: UI display time = 0 sec -- ProjectManager$2.run()
+2016.10.23 19:17:14.189 MSK INFO: Project load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/GeoNames.pprj: 0 sec -- ProjectChooser.loadProject()
+2016.10.23 19:17:14.304 MSK INFO: UI display time = 0 sec -- ProjectManager$2.run()
+2016.10.23 19:21:12.265 MSK INFO: Project load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/WikipediaGIS.pprj: 0 sec -- ProjectChooser.loadProject()
+2016.10.23 19:21:12.396 MSK INFO: UI display time = 0 sec -- ProjectManager$2.run()
+2016.10.23 19:22:06.179 MSK INFO: Project load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj: 0 sec -- ProjectChooser.loadProject()
+2016.10.23 19:22:06.296 MSK INFO: UI display time = 0 sec -- ProjectManager$2.run()
+2016.10.23 19:23:04.429 MSK INFO: Project load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/WikipediaGIS.pprj: 0 sec -- ProjectChooser.loadProject()
+2016.10.23 19:23:04.548 MSK INFO: UI display time = 0 sec -- ProjectManager$2.run()
+2016.10.23 19:24:45.952 MSK INFO: Project load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/GeoNames.pprj: 0 sec -- ProjectChooser.loadProject()
+2016.10.23 19:24:46.058 MSK INFO: UI display time = 0 sec -- ProjectManager$2.run()
+2016.10.23 19:27:19.926 MSK INFO: Project load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/WikipediaGIS.pprj: 0 sec -- ProjectChooser.loadProject()
+2016.10.23 19:27:20.040 MSK INFO: UI display time = 0 sec -- ProjectManager$2.run()
+2016.10.23 19:32:48.443 MSK INFO: Project load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj: 0 sec -- ProjectChooser.loadProject()
+2016.10.23 19:32:48.560 MSK INFO: UI display time = 0 sec -- ProjectManager$2.run()
+2016.10.23 20:11:16.058 MSK INFO: Project load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/WikipediaGIS.pprj: 0 sec -- ProjectChooser.loadProject()
+2016.10.23 20:11:16.178 MSK INFO: UI display time = 0 sec -- ProjectManager$2.run()
+2016.10.23 20:59:39.167 MSK INFO: *** SYSTEM START ***
+2016.10.23 20:59:39.948 MSK WARNING: missing bundle: protege_text -- BundleHelper.<init>()
+2016.10.23 20:59:40.858 MSK INFO: Load time for file:/Users/ru/clojure/es-boat/pro-server/pro-projects/ProServer.pprj = 0 sec (project) + 0 sec (ui) -- ProjectManager$3.run()

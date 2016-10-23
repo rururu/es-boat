@@ -1,4 +1,4 @@
-; Sat May 28 20:01:29 MSK 2016
+; Fri Oct 14 17:30:31 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -479,12 +479,12 @@
 
 ([Clojure_ProjectKB_Class30007] of  Widget
 
-	(height 690)
+	(height 620)
 	(is_hidden FALSE)
 	(name "source")
 	(property_list [Clojure_ProjectKB_Class40008])
-	(widget_class_name "edu.stanford.smi.protege.widget.TextAreaWidget")
-	(width 420)
+	(widget_class_name "edu.stanford.smi.protegex.widget.editorpane.EditorPaneWidget")
+	(width 830)
 	(x 0)
 	(y 0))
 
@@ -580,7 +580,8 @@
 
 	(properties
 		[Clojure_ProjectKB_Class40006]
-		[Clojure_ProjectKB_Class40007]))
+		[Clojure_ProjectKB_Class40007]
+		[Clojure_ProjectKB_Class70004]))
 
 ([Clojure_ProjectKB_Class40006] of  Boolean
 
@@ -629,7 +630,8 @@
 
 	(properties
 		[Clojure_ProjectKB_Class40029]
-		[Clojure_ProjectKB_Class40030]))
+		[Clojure_ProjectKB_Class40030]
+		[Clojure_ProjectKB_Class80117]))
 
 ([Clojure_ProjectKB_Class40029] of  Boolean
 
@@ -670,7 +672,8 @@
 
 	(properties
 		[Clojure_ProjectKB_Class40035]
-		[Clojure_ProjectKB_Class40036]))
+		[Clojure_ProjectKB_Class40036]
+		[Clojure_ProjectKB_Class80118]))
 
 ([Clojure_ProjectKB_Class40035] of  Boolean
 
@@ -771,7 +774,8 @@
 
 	(properties
 		[Clojure_ProjectKB_Class50010]
-		[Clojure_ProjectKB_Class50011]))
+		[Clojure_ProjectKB_Class50011]
+		[Clojure_ProjectKB_Class70005]))
 
 ([Clojure_ProjectKB_Class50010] of  Boolean
 
@@ -981,6 +985,16 @@
 	(boolean_value FALSE)
 	(name "ButtonDisplayed-Delete Instance"))
 
+([Clojure_ProjectKB_Class70004] of  Boolean
+
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Стереть Выделенный Экземпляр"))
+
+([Clojure_ProjectKB_Class70005] of  Boolean
+
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Стереть Выделенный Экземпляр"))
+
 ([Clojure_ProjectKB_Class70008] of  String
 
 	(name "CloProgram")
@@ -1051,6 +1065,16 @@
 	(key_class "java.lang.String")
 	(value "false")
 	(value_class "java.lang.String"))
+
+([Clojure_ProjectKB_Class80117] of  Boolean
+
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Delete Instance"))
+
+([Clojure_ProjectKB_Class80118] of  Boolean
+
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Delete Instance"))
 
 ([CLSES_TAB] of  Widget
 
@@ -1199,7 +1223,7 @@
 ([KB_127677_Class99] of  Property_List
 )
 
-([KB_559190_Class3] of  Map
+([KB_418108_Class3] of  Map
 )
 
 ([LAYOUT_PROPERTIES] of  Property_List

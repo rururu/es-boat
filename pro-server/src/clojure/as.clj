@@ -1,8 +1,8 @@
 (ns as
 (:use protege.core))
 
-(def LAST-NEAR-SRCH nil)
 (def TIMEOUT 15000)
+(def LAST-NEAR-SRCH nil)
 (defmacro with-timeout [msec & body]
   `(let [f# (future (do ~@body))
          v# (gensym)
@@ -92,11 +92,16 @@
   "I can not get a weather information"))
 
 (defn search-nearby-things [[lat lon]]
-  (if-let [ans (fainst (cls-instances "NearbySearch") nil)]
-  (do (def LAST-NEAR-SRCH (wiki.gis/submit-nearby ans lat lon))
-    (let [rr (svs LAST-NEAR-SRCH "responses")]
+  (println [:SEARCH_NEARBY_THINGS [lat lon]])
+(if-let [nsi (fainst (cls-instances "NearbySearch") nil)]
+  (if-let [sbn (with-timeout TIMEOUT 
+	(wiki.gis/submit-nearby nsi lat lon))]
+    (let [rr (svs nsi "responses")]
+      (println [:TOTAL-FOUND (count rr)])
+      (def LAST-NEAR-SRCH nsi)
       (sort (map #(sv % "title") rr))))
-  []))
+  (do (println :NOT-FOUND)
+    [])))
 
 (defn nearby-things [crd]
   (if-let [nts (and LAST-NEAR-SRCH 
@@ -133,7 +138,7 @@
         (< (Math/abs (- lon lon2)) rdg)) ) )))
 
 (defn text-search [txt crd]
-  (println [:FULL-TEXT-SEARCH txt crd])
+  (println [:TEXT-SEARCH txt crd])
 (if-let [fsi (fainst (cls-instances "FulltextSearch") nil)]
   (if-let [wsr (with-timeout TIMEOUT 
 	(geo.names/call-wiki-search txt 

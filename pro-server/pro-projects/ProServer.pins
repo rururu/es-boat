@@ -1,4 +1,4 @@
-; Mon Jul 04 17:26:17 MSK 2016
+; Sun Oct 23 21:00:04 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -323,8 +323,6 @@
 
 	(butt-ass-inss "Assert Instances/ru.rules/ass-inss")
 	(butt-fire "Fire/ru.rules/fire-all-rules")
-	(butt-reset "Reset/ru.rules/do-reset")
-	(butt-retr-inss "Retract Instances/ru.rules/retr-inss")
 	(butt-run "Run/ru.rules/run-engine")
 	(facts
 		[ProServer_Class50001]
@@ -332,9 +330,10 @@
 		[ProServer_Class260002]
 		[ProServer_Class80002]
 		[ProServer_Class270001])
+	(mode run)
 	(rule-sets [ProServer_Class160099])
-	(title "AS Run")
-	(trace FALSE))
+	(steps 1)
+	(title "AS Run"))
 
 ([ProServer_Class160030] of  Rule
 
@@ -617,13 +616,8 @@
 
 ([ProServer_Class220001] of  CloFunction
 
-	(source "(if-let [ans (fainst (cls-instances \"NearbySearch\") nil)]\n  (do (def LAST-NEAR-SRCH (wiki.gis/submit-nearby ans lat lon))\n    (let [rr (svs LAST-NEAR-SRCH \"responses\")]\n      (sort (map #(sv % \"title\") rr))))\n  [])")
+	(source "(println [:SEARCH_NEARBY_THINGS [lat lon]])\n(if-let [nsi (fainst (cls-instances \"NearbySearch\") nil)]\n  (if-let [sbn (with-timeout TIMEOUT \n	(wiki.gis/submit-nearby nsi lat lon))]\n    (let [rr (svs nsi \"responses\")]\n      (println [:TOTAL-FOUND (count rr)])\n      (def LAST-NEAR-SRCH nsi)\n      (sort (map #(sv % \"title\") rr))))\n  (do (println :NOT-FOUND)\n    []))")
 	(title "search-nearby-things [[lat lon]]"))
-
-([ProServer_Class220002] of  CloVar
-
-	(source "nil")
-	(title "LAST-NEAR-SRCH"))
 
 ([ProServer_Class220003] of  Rule
 
@@ -673,7 +667,7 @@
 
 ([ProServer_Class240014] of  CloFunction
 
-	(source "(println [:FULL-TEXT-SEARCH txt crd])\n(if-let [fsi (fainst (cls-instances \"FulltextSearch\") nil)]\n  (if-let [wsr (with-timeout TIMEOUT \n	(geo.names/call-wiki-search txt \n	  (sv fsi \"max-responses\")  \n	  (wiki.gis/request-lang (sv fsi  \"language\"))))]\n    (let [_ (println [:TOTAL-FOUND (count wsr)])\n           _ (ssv fsi \"text\" txt)\n           _ (ssvs fsi \"responses\" \n	(if-let [wsf (filter #(near % crd 36) wsr)]\n                          (filter some? (map wiki.gis/article-from-map wsf))\n	  []))\n           rr (svs fsi \"responses\")\n           _ (println [:NEAR (count rr)])\n           ss (map extract rr)\n          resp (apply str ss)]\n      (if (empty? resp)\n        (str \"No info about this particular \" txt)\n        resp))\n      \"Timeout\")\n    \"Not found\")")
+	(source "(println [:TEXT-SEARCH txt crd])\n(if-let [fsi (fainst (cls-instances \"FulltextSearch\") nil)]\n  (if-let [wsr (with-timeout TIMEOUT \n	(geo.names/call-wiki-search txt \n	  (sv fsi \"max-responses\")  \n	  (wiki.gis/request-lang (sv fsi  \"language\"))))]\n    (let [_ (println [:TOTAL-FOUND (count wsr)])\n           _ (ssv fsi \"text\" txt)\n           _ (ssvs fsi \"responses\" \n	(if-let [wsf (filter #(near % crd 36) wsr)]\n                          (filter some? (map wiki.gis/article-from-map wsf))\n	  []))\n           rr (svs fsi \"responses\")\n           _ (println [:NEAR (count rr)])\n           ss (map extract rr)\n          resp (apply str ss)]\n      (if (empty? resp)\n        (str \"No info about this particular \" txt)\n        resp))\n      \"Timeout\")\n    \"Not found\")")
 	(title "text-search [txt crd]"))
 
 ([ProServer_Class240015] of  FulltextSearch
@@ -701,12 +695,6 @@
 
 	(source "(letfn [(anso [acc cnt pfx]\n	(condp > cnt\n	  1 \"\"\n	  2 (str pfx \" object \" (kind-tit-dis (first acc)) \",<br>\")\n	  6 (str pfx \" objects: \" (apply str (interpose \", \" (map kind-tit-dis acc))) \",<br>\")\n	  (str pfx \" objects: \" (apply str (interpose \", \" (map kind-tit-dis (take 5 acc)))) \" and more \" (- cnt 5) \",<br>\")))]\n  (let [pll (sort-by second pll) cpl (count pll)\n          nal (sort-by second nal) cnl (count nal)\n          aml (sort-by second aml) cal (count aml)]\n    (str\n      (if (= (+ cpl cnl cal) 0)\n        \"No objects in sight \"\n        (str (anso pll cpl \"Place\")\n              (anso nal cnl \"Natural\")\n              (anso aml cal \"Amenity\")))\n      \"are \" subject)))")
 	(title "ans-objects [pll nal aml subject]"))
-
-([ProServer_Class250018] of  %3AINSTANCE-ANNOTATION
-
-	(%3AANNOTATED-INSTANCE [ProServer_Class230002])
-	(%3ACREATION-TIMESTAMP "2016.06.27 14:44:11.236 MSK")
-	(%3ACREATOR "ru"))
 
 ([ProServer_Class260000] of  Rule
 
@@ -843,23 +831,23 @@
 	(button-clear-articles "Clear Articles/wiki.gis/clear-articles")
 	(button-nearby "submit/wiki.gis/submit-nearby")
 	(language English-en)
-	(lat "44.12571296296343")
-	(lng "-68.736")
+	(lat "62.4444")
+	(lng "5.88")
 	(max-responses 12)
 	(radius-km 20)
 	(responses
-		[ProServer_Class330007]
-		[ProServer_Class330008]
-		[ProServer_Class310006]
-		[ProServer_Class330009]
-		[ProServer_Class330010]
-		[ProServer_Class330011]
-		[ProServer_Class310002]
-		[ProServer_Class280000]
-		[ProServer_Class310004]
-		[ProServer_Class330012]
-		[ProServer_Class330013]
-		[ProServer_Class330014]))
+		[ProServer_Class350001]
+		[ProServer_Class350002]
+		[ProServer_Class360003]
+		[ProServer_Class360004]
+		[ProServer_Class360005]
+		[ProServer_Class360006]
+		[ProServer_Class360007]
+		[ProServer_Class360008]
+		[ProServer_Class360009]
+		[ProServer_Class360010]
+		[ProServer_Class360011]
+		[ProServer_Class360012]))
 
 ([ProServer_Class300006] of  %3AINSTANCE-ANNOTATION
 
@@ -1205,6 +1193,12 @@
 	(title "Lane's Island")
 	(wikipediaUrl "http://en.wikipedia.org/wiki/Lane%27s_Island"))
 
+([ProServer_Class340000] of  %3AINSTANCE-ANNOTATION
+
+	(%3AANNOTATED-INSTANCE [ProServer_Class230002])
+	(%3ACREATION-TIMESTAMP "2016.10.23 21:00:02.297 MSK")
+	(%3ACREATOR "ru"))
+
 ([ProServer_Class340001] of  Rule
 
 	(lhs "?a (Answer accum ?acc)\n(Question predicate \"nearby-objects\"\n	subject ?sub)\n(NamedObject title ?tit\n	place ?pla\n	natural ?nat\n	amenity ?ame)")
@@ -1216,6 +1210,37 @@
 
 	(source "(let [ell \"(...)\"\n       sum (sv ins \"summary\")\n       img (sv ins \"thumbnailImg\")\n       lnk (sv ins \"wikipediaUrl\")\n       sum (if (and (not (empty? lnk)) (.contains sum ell))\n	(.replace sum ell (str \"<a href=\\\"\" lnk \"\\\">\" ell \"</a>\"))\n	sum)]\n  (str (or sum \"No summary\")\n        (or (and img (str \"<br><img src=\\\"\" img \"\\\">\")) \"\")\n        \"<br>\"))")
 	(title "extract [ins]"))
+
+([ProServer_Class350000] of  CloVar
+
+	(source "nil")
+	(title "LAST-NEAR-SRCH"))
+
+([ProServer_Class350001] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "NO")
+	(feature "isle")
+	(lang "en")
+	(lat "62.4076")
+	(lng "5.9389")
+	(rank "87")
+	(summary "Hareidlandet is an island in Møre og Romsdal county, Norway. The island is divided between Hareid Municipality and Ulstein Municipality. The island has a population (2008) of 11,687. The island is mentioned by Snorri in his reports about the Battle of Hjörungavágr (today this is Hjørungavåg) in 986 (...)")
+	(title "Hareidlandet")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Hareidlandet"))
+
+([ProServer_Class350002] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "NO")
+	(feature "landmark")
+	(lang "en")
+	(lat "62.4319")
+	(lng "5.7561")
+	(rank "55")
+	(summary "Grasøyane Lighthouse is a coastal lighthouse in Ulstein Municipality in Møre og Romsdal, Norway. It sits on the small island of Grasøya, about northwest of the island of Hareidlandet on which Ulstein Municipality is located and it is east of Runde Lighthouse (...)")
+	(title "Grasøyane Lighthouse")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Gras%C3%B8yane_Lighthouse"))
 
 ([ProServer_Class350003] of  WikiArticle
 
@@ -1230,6 +1255,137 @@
 	(summary "Great Spruce Head Island is a privately owned island in Penobscot Bay, Maine. It is part of the Town of Deer Isle, in Hancock County. It has long belonged to the family of the painter Fairfield Porter and his brother, photographer Eliot Porter, both of whom did creative work there (...)")
 	(title "Great Spruce Head Island")
 	(wikipediaUrl "http://en.wikipedia.org/wiki/Great_Spruce_Head_Island"))
+
+([ProServer_Class360003] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "NO")
+	(feature "city")
+	(lang "en")
+	(lat "62.4856")
+	(lng "5.9742")
+	(rank "71")
+	(summary "Alnes is a small village in Giske Municipality in Møre og Romsdal county, Norway. It is located on the (isolated) north side of the island of Godøya, about northwest of the village of Leitebakk. The rest of the island's population is located on the southern half of the island, separated from Alnes (...)")
+	(thumbnailImg "http://www.geonames.org/img/wikipedia/81000/thumb-80763-100.jpg")
+	(title "Alnes")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Alnes"))
+
+([ProServer_Class360004] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "NO")
+	(feature "isle")
+	(lang "en")
+	(lat "62.4689")
+	(lng "5.9989")
+	(rank "77")
+	(summary "Godøy is an island in Giske Municipality in Møre og Romsdal county, Norway. The island is famous for its beautiful nature, dominated by the tall mountain Storhornet and the large lake Alnesvatnet. Most of the population lives on the southeastern side of the island in Godøy and Leitebakk, although (...)")
+	(title "Godøy")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/God%C3%B8y"))
+
+([ProServer_Class360005] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "NO")
+	(feature "landmark")
+	(lang "en")
+	(lat "62.4897")
+	(lng "5.9672")
+	(rank "66")
+	(summary "Alnes lighthouse was established in 1852 to guide fishing boats safely to the harbor of the small fishing community of Alnes on Godøy island on the west coast of Norway. It is located on the north side of Godøy island in the municipality of Giske in Møre og Romsdal county, about northwest of (...)")
+	(title "Alnes Lighthouse")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Alnes_Lighthouse"))
+
+([ProServer_Class360006] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "NO")
+	(feature "landmark")
+	(lang "en")
+	(lat "62.4683")
+	(lng "6.0152")
+	(rank "42")
+	(summary "Godøy Chapel is a chapel in Giske Municipality in Møre og Romsdal county, Norway. It is located on the island of Godøy. The chapel is part of the Giske parish in the Nordre Sunnmøre deanery in the Diocese of Møre. The stone chapel was built in 1953 by the architect O.S. Solheim (...)")
+	(title "Godøy Chapel")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/God%C3%B8y_Chapel"))
+
+([ProServer_Class360007] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "NO")
+	(feature "city")
+	(lang "en")
+	(lat "62.4006")
+	(lng "6.0081")
+	(rank "73")
+	(summary "Brandal is a village in Hareid Municipality in Møre og Romsdal county, Norway. It is located on the eastern shores of the island of Hareidlandet, along the Sulafjorden. The village lies about north of the municipal centre of Hareid and about northeast of the town of Ulsteinvik on the other side of (...)")
+	(title "Brandal")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Brandal"))
+
+([ProServer_Class360008] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "NO")
+	(feature "city")
+	(lang "en")
+	(lat "62.4794")
+	(lng "6.0289")
+	(rank "70")
+	(summary "Leitebakk is a small village on the island of Godøya in Giske Municipality in Møre og Romsdal county, Norway. The village is located about southeast of the isolated village of Alnes, where Alnes Lighthouse is located (...)")
+	(title "Leitebakk")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Leitebakk"))
+
+([ProServer_Class360009] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "NO")
+	(feature "landmark")
+	(lang "en")
+	(lat "62.4931")
+	(lng "6.0467")
+	(rank "48")
+	(summary "The Godøy Tunnel is a subsea road tunnel which runs between the islands of Giske and Godøy in Giske Municipality, Møre og Romsdal county, Norway. The tunnel is long; it is part of County Road 658 and the Vigra Fixed Link. It opened in 1989 (...)")
+	(title "Godøy Tunnel")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/God%C3%B8y_Tunnel"))
+
+([ProServer_Class360010] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "NO")
+	(feature "landmark")
+	(lang "en")
+	(lat "62.4987")
+	(lng "6.0502")
+	(rank "54")
+	(summary "Giske Church is a 12th-century marble parish church in Giske Municipality in Møre og Romsdal county, Norway. It is located on the south side of the island of Giske, about northwest of the town of Ålesund. The church is part of the Giske parish in the Nordre Sunnmøre deanery in the Diocese of Møre (...)")
+	(title "Giske Church")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Giske_Church"))
+
+([ProServer_Class360011] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "NO")
+	(feature "isle")
+	(lang "en")
+	(lat "62.505")
+	(lng "6.0481")
+	(rank "73")
+	(summary "Giske is an island in Giske Municipality in Møre og Romsdal county, Norway. It covers an area of and had 717 residents in 2010. It is flat, with the highest point above mean sea level. The island is connected by the Giske Bridge to the neighboring island of Valderøya to the east and by the Godøy (...)")
+	(title "Giske (island)")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Giske_%28island%29"))
+
+([ProServer_Class360012] of  WikiArticle
+
+	(button-open-site "Open Site/wiki.gis/open-site")
+	(countryCode "NO")
+	(feature "city")
+	(lang "en")
+	(lat "62.5056")
+	(lng "6.05")
+	(rank "94")
+	(summary "Giske is an island municipality in Møre og Romsdal county, Norway. The municipality lies north-northwest of the town of Ålesund in the traditional district of Sunnmøre. The municipal center is Valderhaugstrand, part of the village of Nordstrand on the southern coast of the island of Valderøya (...)")
+	(title "Giske")
+	(wikipediaUrl "http://en.wikipedia.org/wiki/Giske"))
 
 ([ProServer_Class40000] of  ShareOnto
 
@@ -1503,8 +1659,8 @@
 		[ProServer_Class330001])
 	(cloNamespace [ProServer_Class100008])
 	(cloVars
-		[ProServer_Class220002]
-		[ProServer_Class240006])
+		[ProServer_Class240006]
+		[ProServer_Class350000])
 	(title "Advisor Skipper"))
 
 ([ProServer_Class90012] of  Rule

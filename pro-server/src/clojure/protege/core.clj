@@ -153,7 +153,10 @@ s)
                (recur (rest ail)) ))) )))
 
 (defn itm [val dep]
-  (if (instance? Instance val)
+  ;; instance to map
+;; val - instance
+;; dep - depth of unfolding inner instances
+(if (instance? Instance val)
   (let [typ (.getDirectType val)
          sls (.getTemplateSlots typ)
          mp (apply hash-map (mapcat #(list (.getName %)
@@ -168,46 +171,58 @@ s)
   val))
 
 (defn mti
-  ([mp]
+  ;; map to instance
+;; mp - itm
+([mp]
   (if (and (map? mp) (>= (:DEPTH mp) 0))
     (mti mp (:DEPTH mp))))
 ([mp dep]
   (if (< dep 0)
     mp
-    (if-let [clz (cls (:DIRTYP mp))]
-      (reduce-kv #(mti %1 %2 %3 dep) 
-	(crin (:DIRTYP mp)) 
+    (if-let [clz (cls (str (:DIRTYP mp)))]
+      (reduce-kv #(mti %1 (str %2) %3 (type %3) dep) 
+	(crin (str (:DIRTYP mp)))
 	(dissoc mp :DIRTYP :DEPTH)))))
-([ins slt vmis dep]
+([ins slt vmis typ dep]
   (cond
     (vector? vmis) (ssvs ins slt (map #(mti % (dec dep)) vmis))
     (map? vmis) (ssv ins slt (mti vmis (dec dep)))
-    true (ssv ins slt vmis))
+    (symbol? vmis) (ssv ins slt (name vmis))
+    (= typ java.lang.Long) (ssv ins slt (int vmis))
+    (= typ java.lang.Double) (ssv ins slt (float vmis))
+    (or (string? vmis)
+         (= typ java.lang.Boolean)
+         (instance? Instance vmis))
+	(ssv ins slt vmis))
   ins))
 
-(defn get-itom [path itm]
-  (if (and (seq path) itm)
+(defn get-itm [itm path]
+  ;; get in itm
+;; path - vector of slot names or [slot_name slot_value]
+(if (and (seq path) itm)
   (let [[kv & rst] path]
-    (get-itom rst 
+    (get-itm
       (if (and (vector? kv) (vector? itm))
-        (first (filter #(= (get % (first kv)) (second kv)) itm))
-        (kv itm))))
+        (first (filter #(= (get % (first kv)) (second kv)) (seq itm)))
+        (get itm kv))
+    rst))
   itm))
 
-(defn put-itom [path itm val]
-  (if (seq path)
-  (let [[kv & rst] path]
-    (if (and (vector? kv) (vector? itm))
-      (if-let [fnd (first (filter #(= (get % (first kv)) (second kv)) itm))]
-        (replace {fnd (put-itom rst fnd val)} itm)
-        itm)
-      (assoc itm kv
-        (if (empty? rst)
-          val
-          (if-let [fnd (kv itm)]
-            (put-itom rst fnd val)
-            itm)))))
-  val))
+(defn put-itm [itm path val]
+  ;; put into itm
+;; path - vector of slot names or [slot_name slot_value](if (seq path)
+;; val - new value
+(let [[kv & rst] path]
+  (if (and (vector? kv) (vector? itm))
+    (if-let [fnd (first (filter #(= (get % (first kv)) (second kv)) itm))]
+      (replace {fnd (put-itm fnd rst val)} itm)
+      itm)
+    (assoc itm kv
+      (if (empty? rst)
+        val
+        (if-let [fnd (kv itm)]
+          (put-itm fnd rst val)
+          itm))))))
 
 (defmacro condp-> [expr & clauses]
   (let [g (gensym) 
@@ -224,7 +239,10 @@ s)
        ~name)))
 
 (defn reg-gen [pfx atm]
-  (let [old (or (@atm pfx) 0)
+  ;; generator of regular names: <pfx>0,<pfx>1, <pfx>2,.. 
+;; pfx - prfix string (can be "")
+;; atm - new = (atom {}), or existing 
+(let [old (or (@atm pfx) 0)
        num (inc old)]
   (swap! atm assoc pfx num)
   (str pfx num)))

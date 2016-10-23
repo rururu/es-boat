@@ -1,4 +1,4 @@
-; Tue Apr 19 22:34:38 MSK 2016
+; Sat Oct 15 15:16:07 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -20,9 +20,9 @@
 ([BROWSER_SLOT_NAMES] of  Property_List
 
 	(properties
-		[RuleEngine_ProjectKB_Class10211]
-		[RuleEngine_ProjectKB_Class10212]
-		[RuleEngine_ProjectKB_Class10213]))
+		[RuleEngine_ProjectKB_Class215]
+		[RuleEngine_ProjectKB_Class216]
+		[RuleEngine_ProjectKB_Class217]))
 
 ([CLSES_TAB] of  Widget
 
@@ -66,34 +66,6 @@
 	(is_hidden FALSE)
 	(widget_class_name "edu.stanford.smi.protege.widget.InstancesTab"))
 
-([KB_614446_Class205] of  Map
-
-	(entries
-		[KB_614446_Class206]
-		[KB_614446_Class207]
-		[KB_614446_Class208]))
-
-([KB_614446_Class206] of  Map_Entry
-
-	(key "suppress_instance_counting")
-	(key_class "java.lang.String")
-	(value "false")
-	(value_class "java.lang.String"))
-
-([KB_614446_Class207] of  Map_Entry
-
-	(key "add_name_on_instance_form")
-	(key_class "java.lang.String")
-	(value "false")
-	(value_class "java.lang.String"))
-
-([KB_614446_Class208] of  Map_Entry
-
-	(key "change_tracking_active")
-	(key_class "java.lang.String")
-	(value "false")
-	(value_class "java.lang.String"))
-
 ([KB_622506_Class0] of  String
 
 	(name "factory_class_name")
@@ -106,7 +78,8 @@
 
 	(properties
 		[KB_622506_Class14]
-		[KB_622506_Class15]))
+		[KB_622506_Class15]
+		[RuleEngine_ProjectKB_Class40213]))
 
 ([KB_622506_Class14] of  Boolean
 
@@ -189,6 +162,34 @@
 
 	(name "instances_file_name")
 	(string_value "RuleEngine.pins"))
+
+([KB_681706_Class209] of  Map
+
+	(entries
+		[KB_681706_Class210]
+		[KB_681706_Class211]
+		[KB_681706_Class212]))
+
+([KB_681706_Class210] of  Map_Entry
+
+	(key "suppress_instance_counting")
+	(key_class "java.lang.String")
+	(value "false")
+	(value_class "java.lang.String"))
+
+([KB_681706_Class211] of  Map_Entry
+
+	(key "add_name_on_instance_form")
+	(key_class "java.lang.String")
+	(value "false")
+	(value_class "java.lang.String"))
+
+([KB_681706_Class212] of  Map_Entry
+
+	(key "change_tracking_active")
+	(key_class "java.lang.String")
+	(value "false")
+	(value_class "java.lang.String"))
 
 ([LAYOUT_PROPERTIES] of  Property_List
 
@@ -277,6 +278,8 @@
 		[STANDARD_CLASS_FORM_WIDGET]
 		[STANDARD_SLOT_FORM_WIDGET]
 		[INSTANCE_ANNOTATION_FORM_WIDGET]
+		[RuleEngine_ProjectKB_Class20213]
+		[RuleEngine_ProjectKB_Class30213]
 		[RETE_ProjectKB_Class10245]
 		[RETE_ProjectKB_Class10226]
 		[STANDARD_FACET_FORM_WIDGET]
@@ -330,7 +333,8 @@
 		[RETE_ProjectKB_Class10215]
 		[RuleEngine_ProjectKB_Class10204]
 		[RuleEngine_ProjectKB_Class10202]
-		[RuleEngine_ProjectKB_Class20204]))
+		[RuleEngine_ProjectKB_Class20204]
+		[RuleEngine_ProjectKB_Class50226]))
 
 ([RETE_ProjectKB_Class10214] of  Property_List
 
@@ -366,7 +370,8 @@
 		[RETE_ProjectKB_Class10228]
 		[RETE_ProjectKB_Class10229]
 		[RETE_ProjectKB_Class10231]
-		[RuleEngine_ProjectKB_Class288]))
+		[RuleEngine_ProjectKB_Class288]
+		[RuleEngine_ProjectKB_Class60230]))
 
 ([RETE_ProjectKB_Class10228] of  Property_List
 
@@ -428,13 +433,14 @@
 		[RETE_ProjectKB_Class10208]
 		[RETE_ProjectKB_Class20214]
 		[RuleEngine_ProjectKB_Class219]
-		[RuleEngine_ProjectKB_Class10218]
 		[RuleEngine_ProjectKB_Class30220]
 		[RuleEngine_ProjectKB_Class20218]
 		[RuleEngine_ProjectKB_Class40222]
 		[RuleEngine_ProjectKB_Class20211]
-		[RuleEngine_ProjectKB_Class30211]
-		[RuleEngine_ProjectKB_Class40211]))
+		[RuleEngine_ProjectKB_Class60234]
+		[RuleEngine_ProjectKB_Class70227]
+		[RuleEngine_ProjectKB_Class10214]
+		[RuleEngine_ProjectKB_Class40216]))
 
 ([RETE_ProjectKB_Class10247] of  Property_List
 
@@ -514,7 +520,8 @@
 
 	(properties
 		[RETE_ProjectKB_Class20216]
-		[RETE_ProjectKB_Class20217]))
+		[RETE_ProjectKB_Class20217]
+		[RuleEngine_ProjectKB_Class50222]))
 
 ([RETE_ProjectKB_Class20216] of  Boolean
 
@@ -530,6 +537,7 @@
 
 	(height 240)
 	(is_hidden FALSE)
+	(label "When")
 	(name "lhs")
 	(property_list [RuleEngine_ProjectKB_Class10203])
 	(widget_class_name "edu.stanford.smi.protege.widget.TextAreaWidget")
@@ -538,7 +546,10 @@
 	(y 60))
 
 ([RuleEngine_ProjectKB_Class10203] of  Property_List
-)
+
+	(properties
+		[RuleEngine_ProjectKB_Class50215]
+		[RuleEngine_ProjectKB_Class50216]))
 
 ([RuleEngine_ProjectKB_Class10204] of  Widget
 
@@ -554,45 +565,22 @@
 ([RuleEngine_ProjectKB_Class10205] of  Property_List
 )
 
-([RuleEngine_ProjectKB_Class10209] of  Widget
-
-	(is_hidden TRUE)
-	(property_list [RuleEngine_ProjectKB_Class10210])
-	(widget_class_name "edu.stanford.smi.protegex.queries_tab.QueriesTab"))
-
-([RuleEngine_ProjectKB_Class10210] of  Property_List
-)
-
-([RuleEngine_ProjectKB_Class10211] of  String
-
-	(name "Rule")
-	(string_value "title"))
-
-([RuleEngine_ProjectKB_Class10212] of  String
-
-	(name "Run")
-	(string_value "title"))
-
-([RuleEngine_ProjectKB_Class10213] of  String
-
-	(name "RuleSet")
-	(string_value "title"))
-
-([RuleEngine_ProjectKB_Class10218] of  Widget
+([RuleEngine_ProjectKB_Class10214] of  Widget
 
 	(height 60)
 	(is_hidden FALSE)
-	(name "trace")
-	(property_list [RuleEngine_ProjectKB_Class20219])
-	(widget_class_name "edu.stanford.smi.protege.widget.CheckBoxWidget")
-	(width 100)
-	(x 100)
-	(y 410))
+	(name "butt-step")
+	(property_list [RuleEngine_ProjectKB_Class40215])
+	(widget_class_name "clojuretab.ClojureActionButton")
+	(width 200)
+	(x 200)
+	(y 470))
 
 ([RuleEngine_ProjectKB_Class20204] of  Widget
 
 	(height 240)
 	(is_hidden FALSE)
+	(label "Then")
 	(name "rhs")
 	(property_list [RuleEngine_ProjectKB_Class20205])
 	(widget_class_name "edu.stanford.smi.protege.widget.TextAreaWidget")
@@ -601,7 +589,10 @@
 	(y 300))
 
 ([RuleEngine_ProjectKB_Class20205] of  Property_List
-)
+
+	(properties
+		[RuleEngine_ProjectKB_Class50217]
+		[RuleEngine_ProjectKB_Class50218]))
 
 ([RuleEngine_ProjectKB_Class20211] of  Widget
 
@@ -611,15 +602,50 @@
 	(property_list [RuleEngine_ProjectKB_Class20212])
 	(widget_class_name "clojuretab.ClojureActionButton")
 	(width 200)
-	(x 0)
-	(y 470))
+	(x 400)
+	(y 410))
 
 ([RuleEngine_ProjectKB_Class20212] of  Property_List
 )
 
+([RuleEngine_ProjectKB_Class20213] of  Widget
+
+	(is_hidden FALSE)
+	(name "Display")
+	(property_list [RuleEngine_ProjectKB_Class20214])
+	(widget_class_name "edu.stanford.smi.protege.widget.FormWidget"))
+
+([RuleEngine_ProjectKB_Class20214] of  Property_List
+
+	(properties
+		[RuleEngine_ProjectKB_Class20215]
+		[RuleEngine_ProjectKB_Class20216]))
+
+([RuleEngine_ProjectKB_Class20215] of  Property_List
+
+	(name "layout properties"))
+
+([RuleEngine_ProjectKB_Class20216] of  Widget
+
+	(height 630)
+	(is_hidden FALSE)
+	(label "messages")
+	(name "source")
+	(property_list [RuleEngine_ProjectKB_Class20217])
+	(widget_class_name "edu.stanford.smi.protegex.widget.editorpane.EditorPanePlainWidget")
+	(width 720)
+	(x 0)
+	(y 0))
+
+([RuleEngine_ProjectKB_Class20217] of  Property_List
+
+	(properties
+		[RuleEngine_ProjectKB_Class50227]
+		[RuleEngine_ProjectKB_Class50228]))
+
 ([RuleEngine_ProjectKB_Class20218] of  Widget
 
-	(height 350)
+	(height 290)
 	(is_hidden FALSE)
 	(name "instances")
 	(property_list [RuleEngine_ProjectKB_Class30219])
@@ -627,9 +653,6 @@
 	(width 200)
 	(x 400)
 	(y 60))
-
-([RuleEngine_ProjectKB_Class20219] of  Property_List
-)
 
 ([RuleEngine_ProjectKB_Class204] of  Property_List
 
@@ -671,6 +694,30 @@
 ([RuleEngine_ProjectKB_Class211] of  Property_List
 )
 
+([RuleEngine_ProjectKB_Class213] of  Widget
+
+	(is_hidden TRUE)
+	(property_list [RuleEngine_ProjectKB_Class214])
+	(widget_class_name "edu.stanford.smi.protegex.queries_tab.QueriesTab"))
+
+([RuleEngine_ProjectKB_Class214] of  Property_List
+)
+
+([RuleEngine_ProjectKB_Class215] of  String
+
+	(name "Rule")
+	(string_value "title{+}salience"))
+
+([RuleEngine_ProjectKB_Class216] of  String
+
+	(name "Run")
+	(string_value "title"))
+
+([RuleEngine_ProjectKB_Class217] of  String
+
+	(name "RuleSet")
+	(string_value "title"))
+
 ([RuleEngine_ProjectKB_Class219] of  Widget
 
 	(height 350)
@@ -686,7 +733,8 @@
 
 	(properties
 		[RuleEngine_ProjectKB_Class221]
-		[RuleEngine_ProjectKB_Class222]))
+		[RuleEngine_ProjectKB_Class222]
+		[RuleEngine_ProjectKB_Class50223]))
 
 ([RuleEngine_ProjectKB_Class221] of  Boolean
 
@@ -735,25 +783,43 @@
 	(boolean_value FALSE)
 	(name "ButtonDisplayed-Delete Instance"))
 
-([RuleEngine_ProjectKB_Class30211] of  Widget
+([RuleEngine_ProjectKB_Class30213] of  Widget
 
-	(height 60)
 	(is_hidden FALSE)
-	(name "butt-reset")
-	(property_list [RuleEngine_ProjectKB_Class30212])
-	(widget_class_name "clojuretab.ClojureActionButton")
-	(width 200)
-	(x 200)
-	(y 470))
+	(name "Document")
+	(property_list [RuleEngine_ProjectKB_Class30214])
+	(widget_class_name "edu.stanford.smi.protege.widget.FormWidget"))
 
-([RuleEngine_ProjectKB_Class30212] of  Property_List
+([RuleEngine_ProjectKB_Class30214] of  Property_List
+
+	(properties
+		[RuleEngine_ProjectKB_Class30215]
+		[RuleEngine_ProjectKB_Class30216]))
+
+([RuleEngine_ProjectKB_Class30215] of  Property_List
+
+	(name "layout properties"))
+
+([RuleEngine_ProjectKB_Class30216] of  Widget
+
+	(height 630)
+	(is_hidden FALSE)
+	(name "source")
+	(property_list [RuleEngine_ProjectKB_Class30217])
+	(widget_class_name "edu.stanford.smi.protegex.widget.editorpane.EditorPaneWidget")
+	(width 720)
+	(x 0)
+	(y 0))
+
+([RuleEngine_ProjectKB_Class30217] of  Property_List
 )
 
 ([RuleEngine_ProjectKB_Class30219] of  Property_List
 
 	(properties
 		[RuleEngine_ProjectKB_Class40220]
-		[RuleEngine_ProjectKB_Class40221]))
+		[RuleEngine_ProjectKB_Class40221]
+		[RuleEngine_ProjectKB_Class50225]))
 
 ([RuleEngine_ProjectKB_Class30220] of  Widget
 
@@ -770,7 +836,8 @@
 
 	(properties
 		[RuleEngine_ProjectKB_Class30222]
-		[RuleEngine_ProjectKB_Class30223]))
+		[RuleEngine_ProjectKB_Class30223]
+		[RuleEngine_ProjectKB_Class50224]))
 
 ([RuleEngine_ProjectKB_Class30222] of  Boolean
 
@@ -782,18 +849,31 @@
 	(boolean_value FALSE)
 	(name "ButtonDisplayed-Delete Instance"))
 
-([RuleEngine_ProjectKB_Class40211] of  Widget
+([RuleEngine_ProjectKB_Class40213] of  Boolean
+
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Стереть Выделенный Экземпляр"))
+
+([RuleEngine_ProjectKB_Class40214] of  Boolean
+
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Стереть Выделенный Экземпляр"))
+
+([RuleEngine_ProjectKB_Class40215] of  Property_List
+)
+
+([RuleEngine_ProjectKB_Class40216] of  Widget
 
 	(height 60)
 	(is_hidden FALSE)
-	(name "butt-retr-inss")
-	(property_list [RuleEngine_ProjectKB_Class40212])
-	(widget_class_name "clojuretab.ClojureActionButton")
-	(width 200)
-	(x 400)
+	(name "steps")
+	(property_list [RuleEngine_ProjectKB_Class40217])
+	(widget_class_name "edu.stanford.smi.protege.widget.IntegerFieldWidget")
+	(width 100)
+	(x 100)
 	(y 470))
 
-([RuleEngine_ProjectKB_Class40212] of  Property_List
+([RuleEngine_ProjectKB_Class40217] of  Property_List
 )
 
 ([RuleEngine_ProjectKB_Class40220] of  Boolean
@@ -815,9 +895,158 @@
 	(widget_class_name "clojuretab.ClojureActionButton")
 	(width 200)
 	(x 400)
-	(y 410))
+	(y 350))
 
 ([RuleEngine_ProjectKB_Class40223] of  Property_List
+)
+
+([RuleEngine_ProjectKB_Class50215] of  String
+
+	(name "tooltip_text"))
+
+([RuleEngine_ProjectKB_Class50216] of  Boolean
+
+	(boolean_value FALSE)
+	(name "readOnly_configured"))
+
+([RuleEngine_ProjectKB_Class50217] of  String
+
+	(name "tooltip_text"))
+
+([RuleEngine_ProjectKB_Class50218] of  Boolean
+
+	(boolean_value FALSE)
+	(name "readOnly_configured"))
+
+([RuleEngine_ProjectKB_Class50222] of  Boolean
+
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Стереть Выделенный Экземпляр"))
+
+([RuleEngine_ProjectKB_Class50223] of  Boolean
+
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Стереть Выделенный Экземпляр"))
+
+([RuleEngine_ProjectKB_Class50224] of  Boolean
+
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Стереть Выделенный Экземпляр"))
+
+([RuleEngine_ProjectKB_Class50225] of  Boolean
+
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Стереть Выделенный Экземпляр"))
+
+([RuleEngine_ProjectKB_Class50226] of  Widget
+
+	(height 60)
+	(is_hidden FALSE)
+	(name "document")
+	(property_list [RuleEngine_ProjectKB_Class60227])
+	(widget_class_name "edu.stanford.smi.protege.widget.InstanceFieldWidget")
+	(width 200)
+	(x 0)
+	(y 540))
+
+([RuleEngine_ProjectKB_Class50227] of  String
+
+	(name "tooltip_text"))
+
+([RuleEngine_ProjectKB_Class50228] of  Boolean
+
+	(boolean_value TRUE)
+	(name "readOnly_configured"))
+
+([RuleEngine_ProjectKB_Class60226] of  Boolean
+
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Стереть Выделенный Экземпляр"))
+
+([RuleEngine_ProjectKB_Class60227] of  Property_List
+
+	(properties
+		[RuleEngine_ProjectKB_Class60228]
+		[RuleEngine_ProjectKB_Class60229]
+		[RuleEngine_ProjectKB_Class40214]))
+
+([RuleEngine_ProjectKB_Class60228] of  Boolean
+
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-View References to Value"))
+
+([RuleEngine_ProjectKB_Class60229] of  Boolean
+
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Delete Instance"))
+
+([RuleEngine_ProjectKB_Class60230] of  Widget
+
+	(height 60)
+	(is_hidden FALSE)
+	(name "document")
+	(property_list [RuleEngine_ProjectKB_Class60231])
+	(widget_class_name "edu.stanford.smi.protege.widget.InstanceFieldWidget")
+	(width 200)
+	(x 200)
+	(y 330))
+
+([RuleEngine_ProjectKB_Class60231] of  Property_List
+
+	(properties
+		[RuleEngine_ProjectKB_Class60232]
+		[RuleEngine_ProjectKB_Class60233]))
+
+([RuleEngine_ProjectKB_Class60232] of  Boolean
+
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-View References to Value"))
+
+([RuleEngine_ProjectKB_Class60233] of  Boolean
+
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Delete Instance"))
+
+([RuleEngine_ProjectKB_Class60234] of  Widget
+
+	(height 60)
+	(is_hidden FALSE)
+	(name "document")
+	(property_list [RuleEngine_ProjectKB_Class60235])
+	(widget_class_name "edu.stanford.smi.protege.widget.InstanceFieldWidget")
+	(width 200)
+	(x 400)
+	(y 470))
+
+([RuleEngine_ProjectKB_Class60235] of  Property_List
+
+	(properties
+		[RuleEngine_ProjectKB_Class60236]
+		[RuleEngine_ProjectKB_Class60237]
+		[RuleEngine_ProjectKB_Class60226]))
+
+([RuleEngine_ProjectKB_Class60236] of  Boolean
+
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-View References to Value"))
+
+([RuleEngine_ProjectKB_Class60237] of  Boolean
+
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Delete Instance"))
+
+([RuleEngine_ProjectKB_Class70227] of  Widget
+
+	(height 60)
+	(is_hidden FALSE)
+	(name "mode")
+	(property_list [RuleEngine_ProjectKB_Class70228])
+	(widget_class_name "edu.stanford.smi.protege.widget.ComboBoxWidget")
+	(width 200)
+	(x 0)
+	(y 410))
+
+([RuleEngine_ProjectKB_Class70228] of  Property_List
 )
 
 ([SLOTS_TAB] of  Widget

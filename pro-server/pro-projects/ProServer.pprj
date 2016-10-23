@@ -1,4 +1,4 @@
-; Mon Jul 04 17:26:17 MSK 2016
+; Sun Oct 23 21:00:04 MSK 2016
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -21,15 +21,14 @@
 ([BROWSER_SLOT_NAMES] of  Property_List
 
 	(properties
-		[ProServer_ProjectKB_Class790]
-		[ProServer_ProjectKB_Class791]
-		[ProServer_ProjectKB_Class792]
-		[ProServer_ProjectKB_Class793]
-		[ProServer_ProjectKB_Class794]
-		[ProServer_ProjectKB_Class795]
-		[ProServer_ProjectKB_Class796]
-		[ProServer_ProjectKB_Class797]
-		[ProServer_ProjectKB_Class798]))
+		[ProServer_ProjectKB_Class822]
+		[ProServer_ProjectKB_Class823]
+		[ProServer_ProjectKB_Class824]
+		[ProServer_ProjectKB_Class825]
+		[ProServer_ProjectKB_Class826]
+		[ProServer_ProjectKB_Class827]
+		[ProServer_ProjectKB_Class828]
+		[ProServer_ProjectKB_Class829]))
 
 ([CLSES_TAB] of  Widget
 
@@ -74,48 +73,94 @@
 	(is_hidden FALSE)
 	(widget_class_name "edu.stanford.smi.protege.widget.InstancesTab"))
 
-([KB_044857_Class769] of  Map
+([KB_089257_Class169] of  Widget
+
+	(is_hidden FALSE)
+	(name "CloNamespace")
+	(property_list [KB_089257_Class170])
+	(widget_class_name "edu.stanford.smi.protege.widget.FormWidget"))
+
+([KB_089257_Class170] of  Property_List
+
+	(properties
+		[KB_089257_Class171]
+		[KB_089257_Class172]
+		[KB_089257_Class174]))
+
+([KB_089257_Class171] of  Property_List
+
+	(name "layout properties"))
+
+([KB_089257_Class172] of  Widget
+
+	(height 60)
+	(is_hidden FALSE)
+	(name "title")
+	(property_list [KB_089257_Class173])
+	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
+	(width 200)
+	(x 0)
+	(y 0))
+
+([KB_089257_Class173] of  Property_List
+)
+
+([KB_089257_Class174] of  Widget
+
+	(height 650)
+	(is_hidden FALSE)
+	(name "source")
+	(property_list [KB_089257_Class175])
+	(widget_class_name "edu.stanford.smi.protege.widget.TextAreaWidget")
+	(width 260)
+	(x 0)
+	(y 60))
+
+([KB_089257_Class175] of  Property_List
+)
+
+([KB_236924_Class808] of  Map
 
 	(entries
-		[KB_044857_Class770]
-		[KB_044857_Class773]
-		[KB_044857_Class774]
-		[KB_044857_Class775])
-	(referenced_maps [KB_044857_Class771]))
+		[KB_236924_Class809]
+		[KB_236924_Class812]
+		[KB_236924_Class813]
+		[KB_236924_Class814])
+	(referenced_maps [KB_236924_Class810]))
 
-([KB_044857_Class770] of  Map_Entry
+([KB_236924_Class809] of  Map_Entry
 
 	(key "suppress_instance_counting")
 	(key_class "java.lang.String")
 	(value "false")
 	(value_class "java.lang.String"))
 
-([KB_044857_Class771] of  Map
+([KB_236924_Class810] of  Map
 
-	(entries [KB_044857_Class772]))
+	(entries [KB_236924_Class811]))
 
-([KB_044857_Class772] of  Map_Entry
+([KB_236924_Class811] of  Map_Entry
 
 	(key "WikipediaGIS_Class2")
 	(key_class "edu.stanford.smi.protege.model.Frame")
 	(value "12 479 212 124")
 	(value_class "java.awt.Rectangle"))
 
-([KB_044857_Class773] of  Map_Entry
+([KB_236924_Class812] of  Map_Entry
 
 	(key "InstanceDisplay.yellow_stickies")
 	(key_class "java.lang.String")
-	(value "KB_044857_Class771")
+	(value "KB_236924_Class810")
 	(value_class "java.util.Map"))
 
-([KB_044857_Class774] of  Map_Entry
+([KB_236924_Class813] of  Map_Entry
 
 	(key "add_name_on_instance_form")
 	(key_class "java.lang.String")
 	(value "false")
 	(value_class "java.lang.String"))
 
-([KB_044857_Class775] of  Map_Entry
+([KB_236924_Class814] of  Map_Entry
 
 	(key "change_tracking_active")
 	(key_class "java.lang.String")
@@ -364,8 +409,8 @@
 
 ([KB_519390_Class1] of  Map
 
-	(entries [ProServer_ProjectKB_Class803])
-	(referenced_maps [ProServer_ProjectKB_Class799]))
+	(entries [ProServer_ProjectKB_Class833])
+	(referenced_maps [ProServer_ProjectKB_Class830]))
 
 ([KB_519390_Class11] of  Property_List
 
@@ -549,7 +594,8 @@
 		[PAL_FORM_WIDGET]
 		[KB_346142_Class202]
 		[KB_448730_Class163]
-		[STANDARD_FACET_FORM_WIDGET])
+		[STANDARD_FACET_FORM_WIDGET]
+		[KB_089257_Class169])
 	(default_cls_metaclass ":STANDARD-CLASS")
 	(default_facet_metaclass ":STANDARD-FACET")
 	(default_instance_widget_class_name "edu.stanford.smi.protege.widget.FormWidget")
@@ -622,84 +668,71 @@
 ([ProServer_ProjectKB_Class442] of  Property_List
 )
 
-([ProServer_ProjectKB_Class790] of  String
+([ProServer_ProjectKB_Class822] of  String
 
 	(name "Answer2")
 	(string_value "{Answer2+}time"))
 
-([ProServer_ProjectKB_Class791] of  String
+([ProServer_ProjectKB_Class823] of  String
 
 	(name "NearbyIslands")
 	(string_value "{NearbyIslands+}time"))
 
-([ProServer_ProjectKB_Class792] of  String
+([ProServer_ProjectKB_Class824] of  String
 
 	(name "NearbyObjects")
 	(string_value "{NearbyObjects+}list{+}time"))
 
-([ProServer_ProjectKB_Class793] of  String
+([ProServer_ProjectKB_Class825] of  String
 
 	(name "OSMData")
 	(string_value "{OSMData+}volume{+}coord{+rad+}radius{+}time"))
 
-([ProServer_ProjectKB_Class794] of  String
-
-	(name "Rule")
-	(string_value "title{+}salience"))
-
-([ProServer_ProjectKB_Class795] of  String
+([ProServer_ProjectKB_Class826] of  String
 
 	(name "Answer")
 	(string_value "{Answer+}accum{+}time"))
 
-([ProServer_ProjectKB_Class796] of  String
+([ProServer_ProjectKB_Class827] of  String
 
 	(name "Question")
 	(string_value "predicate{+}subject{+}object"))
 
-([ProServer_ProjectKB_Class797] of  String
+([ProServer_ProjectKB_Class828] of  String
 
 	(name "StartPoint")
 	(string_value "title"))
 
-([ProServer_ProjectKB_Class798] of  String
+([ProServer_ProjectKB_Class829] of  String
 
 	(name "NamedObject")
 	(string_value "{NearbyObjects+}time"))
 
-([ProServer_ProjectKB_Class799] of  Map
+([ProServer_ProjectKB_Class830] of  Map
 
 	(entries
-		[ProServer_ProjectKB_Class800]
-		[ProServer_ProjectKB_Class801]
-		[ProServer_ProjectKB_Class802]))
+		[ProServer_ProjectKB_Class831]
+		[ProServer_ProjectKB_Class832]))
 
-([ProServer_ProjectKB_Class800] of  Map_Entry
+([ProServer_ProjectKB_Class831] of  Map_Entry
 
 	(key "ProServer_Class300006")
 	(key_class "edu.stanford.smi.protege.model.Frame")
-	(value "-5 510 210 132")
+	(value "-2 509 210 132")
 	(value_class "java.awt.Rectangle"))
 
-([ProServer_ProjectKB_Class801] of  Map_Entry
+([ProServer_ProjectKB_Class832] of  Map_Entry
 
 	(key "ProServer_Class240016")
 	(key_class "edu.stanford.smi.protege.model.Frame")
-	(value "9 447 224 146")
+	(value "-5 448 224 146")
 	(value_class "java.awt.Rectangle"))
 
-([ProServer_ProjectKB_Class802] of  Map_Entry
-
-	(key "ProServer_Class250018")
-	(key_class "edu.stanford.smi.protege.model.Frame")
-	(value "7 233 210 132")
-	(value_class "java.awt.Rectangle"))
-
-([ProServer_ProjectKB_Class803] of  Map_Entry
+([ProServer_ProjectKB_Class833] of  Map_Entry
 
 	(key "InstanceDisplay.yellow_stickies")
 	(key_class "java.lang.String")
-	(value "ProServer_ProjectKB_Class799")
+	(value "ProServer_ProjectKB_Class830")
 	(value_class "java.util.Map"))
 
 ([QUERIES_TAB] of  Widget
